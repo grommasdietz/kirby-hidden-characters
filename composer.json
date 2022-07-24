@@ -1,13 +1,12 @@
 {
-    "name": "grommas-dietz/kirby-hidden-characters",
+    "name": "grommas/kirby-hidden-characters",
     "description": "Visually shows hidden characters in writer fields, textareas, all input fields as well as field previews",
     "type": "blocks",
     "license": "MIT",
     "version": "0.1.0",
     "authors": [
         {
-            "name": "Grommas Dietz",
-            "email": "info@grommas-dietz.com",
+            "name": "Jakob Grommas",
             "homepage": "https://grommas-dietz.com"
         }
     ],
