@@ -1,16 +1,31 @@
 {
     "name": "grommas/kirby-hidden-characters",
     "description": "Visually shows hidden characters in writer fields, textareas, all input fields as well as field previews",
-    "type": "blocks",
+    "type": "kirby-plugin",
     "license": "MIT",
-    "version": "0.1.0",
+    "version": "0.1.0-beta",
     "authors": [
         {
             "name": "Jakob Grommas",
             "homepage": "https://grommas-dietz.com"
         }
     ],
+    "keywords": [
+        "kirby3",
+        "kirby3-cms",
+        "kirby3-plugin",
+        "hidden-characters",
+        "panel"
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "getkirby/composer-installer": true
+        }
+    },
     "require": {
-        "getkirby/composer-installer": "^1.1"
+        "php": ">=8.0.0",
+        "getkirby/cms": ">=3.6.0",
+        "getkirby/composer-installer": "^1.2"
     }
 }
