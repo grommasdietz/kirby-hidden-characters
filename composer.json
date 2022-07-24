@@ -1,6 +1,6 @@
 {
     "name": "grommas/kirby-hidden-characters",
-    "description": "Visually show hidden characters in writer fields, textareas, all input fields as well as field previews",
+    "description": "Visually show hidden characters in writer fields, textareas, text fields as well as field previews",
     "type": "kirby-plugin",
     "license": "MIT",
     "version": "0.1.0-beta",
