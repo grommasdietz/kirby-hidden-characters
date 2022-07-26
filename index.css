@@ -27,12 +27,16 @@
 
 .ProseMirror p:after {
   font-family: 'hidden-characters', var(--font-sans) !important;
-  content: "\e000";
+  content: '\e000';
   width: 0;
   position: relative;
   display: inline;
 }
 
 .ProseMirror p:last-child:after {
-  content: "\e001";
+  content: '\e001';
+}
+
+.ProseMirror p:has(.ProseMirror-trailingBreak):after {
+  content:  '';
 }
