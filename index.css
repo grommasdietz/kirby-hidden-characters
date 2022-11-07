@@ -62,5 +62,10 @@
 }
 
 .ProseMirror p:has(.ProseMirror-trailingBreak):after {
+  margin-top: -1.5em;
+  position: absolute;
+}
+
+.ProseMirror p:first-child:last-child:has(.ProseMirror-trailingBreak):after {
   content:  '';
 }
