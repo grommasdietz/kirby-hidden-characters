@@ -31,6 +31,6 @@
         "getkirby/composer-installer": "^1.2"
     },
     "autoload": {
-        "exclude-from-classmap": ["**/*.glyphs"]
+        "exclude-from-classmap": ["*.glyphs"]
     }
 }
