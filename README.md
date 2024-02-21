@@ -13,7 +13,7 @@ Download and copy this repository to `/site/plugins/kirby-hidden-characters`.
 ### Git submodule
 
 ```
-git submodule add https://github.com/grommas/kirby-hidden-characters.git site/plugins/kirby-hidden-characters
+git submodule add https://github.com/grommasdietz/kirby-hidden-characters.git site/plugins/kirby-hidden-characters
 ```
 
 ### Composer
