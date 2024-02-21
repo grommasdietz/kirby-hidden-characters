@@ -1,3 +1,3 @@
 <?php
 
-\Kirby\Cms\App::plugin('grommasdietz/hidden-characters', []);
+Kirby::plugin('grommasdietz/hidden-characters', []);
