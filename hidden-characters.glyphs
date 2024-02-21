@@ -1,32 +1,6 @@
 {
-.appVersion = "3133";
+.appVersion = "3238";
 .formatVersion = 3;
-DisplayStrings = (
-"#",
-"/.notdef",
-" ",
-" /.notdef              ​ #¶",
-"¶",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-" ",
-"​",
-" ",
-"/paragraphend",
-"/totalparagraphend",
-" /.notdef              ​ /paragraphend/totalparagraphend",
-"­"
-);
 customParameters = (
 {
 name = "Color Palettes";
@@ -61,7 +35,6 @@ over = -19;
 pos = -494;
 },
 {
-over = -16;
 }
 );
 name = Regular;
@@ -188,7 +161,7 @@ nodes = (
 width = 911;
 }
 );
-note = ".notdef";
+note = .notdef;
 },
 {
 glyphname = emquad;
@@ -1214,20 +1187,20 @@ type = "italic angle";
 );
 properties = (
 {
-key = designers;
-values = (
-{
-language = ENG;
-value = "Grommas Dietz GbR";
-}
-);
-},
-{
 key = copyrights;
 values = (
 {
 language = ENG;
 value = "© 2022 Grommas Dietz GbR. All rights reserved.";
+}
+);
+},
+{
+key = designers;
+values = (
+{
+language = ENG;
+value = "Grommas Dietz GbR";
 }
 );
 }
