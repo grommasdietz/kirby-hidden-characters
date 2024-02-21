@@ -19,7 +19,7 @@ git submodule add https://github.com/grommas/kirby-hidden-characters.git site/pl
 ### Composer
 
 ```
-composer require grommas/kirby-hidden-characters @dev
+composer require grommasdietz/kirby-hidden-characters
 ```
 
 ## Setup
