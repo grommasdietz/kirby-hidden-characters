@@ -6,3 +6,6 @@
 
 # Composer files
 /vendor
+
+# Glyph files
+*.glyphs
