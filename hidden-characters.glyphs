@@ -1,5 +1,5 @@
 {
-.appVersion = "3241";
+.appVersion = "3245";
 .formatVersion = 3;
 DisplayStrings = (
 " /nonbreakingspace/enspace/emspace/enquad/emquad/thirdemspace/quarteremspace/sixthemspace/figurespace/punctuationspace/thinspace/hairspace/zerowidthspace/nonbreakingspace.narrow/mathspacemedium/.notdef #­¶/paragraphend/totalparagraphend",
@@ -16,7 +16,7 @@ customParameters = (
 name = "Color Palettes";
 value = (
 (
-(194,255)
+(191,255)
 )
 );
 }
@@ -1957,12 +1957,6 @@ instances = (
 {
 axesValues = (
 0
-);
-customParameters = (
-{
-name = "Color Layers to SVG";
-value = 1;
-}
 );
 instanceInterpolations = {
 m01 = 1;
