@@ -176,7 +176,7 @@ width = 1290;
 {
 associatedMasterId = m01;
 attr = {
-colorPalette = "*";
+colorPalette = 0;
 };
 layerId = "C7CE7529-34DC-443E-B2B7-E542EBD4ED71";
 name = "18. Juni 24, 13:11";
@@ -217,7 +217,7 @@ width = 576;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = "*";
+colorPalette = 0;
 };
 layerId = "081B929D-48A9-4CC7-A5EE-E7B94377B7E9";
 name = "18. Juni 24, 13:15";
