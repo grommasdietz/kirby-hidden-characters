@@ -3,11 +3,7 @@
     "description": "Visually show hidden characters in writer fields, textareas, text fields and field previews",
     "type": "kirby-plugin",
     "license": "MIT",
-<<<<<<< Updated upstream
-    "version": "1.0.3",
-=======
-    "version": "1.0.4",
->>>>>>> Stashed changes
+    "version": "1.0.5",
     "homepage": "https://github.com/grommasdietz/kirby-hidden-characters",
     "authors": [
         {
