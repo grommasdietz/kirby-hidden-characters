@@ -2,7 +2,7 @@
 
 [Kirby](https://getkirby.com) plugin to visually show hidden characters in all kind of input fields and their previews. This includes white spaces and paragraph endings for now. The visual feedback is created by a custom colored font and is heavily based on the appearance of Adobe’s solution in InDesign. Currently the plugin aims to work out of the box on writer fields, textareas, text fields as well as field previews, although it has only been tested in a few scenarios so far.
 
-![Cover image showing an example of the plugin in use](https://github.com/user-attachments/assets/1fbbffca-909a-4183-a0eb-9c63b162964a)
+![Cover image showing an example of the plugin in use](https://github.com/user-attachments/assets/27f553c1-e827-44e5-b538-7ba3a2a82b0d)
 
 
 ## Installation
