@@ -18,6 +18,26 @@
   unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000, U+E001;
 }
 
+@font-face {
+  font-display: swap;
+  font-family: "hidden-characters--safari";
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/octet-stream;base64,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)
+    format("woff");
+  unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000, U+E001;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "hidden-characters-mono--safari";
+  font-style: normal;
+  font-weight: 400;
+  src: url(data:application/octet-stream;base64,d09GRgABAAAAAAccAAsAAAAAC9wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEU0lHAAAHFAAAAAgAAAAIAAAAAU9TLzIAAAUIAAAATgAAAGB3i99WY21hcAAABVgAAABXAAAAdADNgmZnbHlmAAABCAAAAycAAAYs1n95cGhlYWQAAAR8AAAANgAAADYp1X8DaGhlYQAABOgAAAAfAAAAJAyHAvBobXR4AAAEtAAAADMAAABOVcoS7GxvY2EAAARQAAAAKgAAACoRDg+UbWF4cAAABDAAAAAgAAAAIAQhAE5uYW1lAAAFsAAAAPgAAAJCMspWC3Bvc3QAAAaoAAAAagAAANpZBjlYeAHFVAOUNEcQruqe2T3bnp2z70ZxzkZs/rZtBQ+nuYvt5CG2bT87tnnsTc9yZmPPe18vv8L3VTUQJN5v6ZfCleCBWgDQDV3XNLW0VPa43G5ZO4IojRkZ6elp7gSSni5rKaWaqvOv0tNcMok56uS+IxpPOfS01S68Vjj55k0rbjn9LuOw7OtLOzqMg9rbDyLipsaa444kdX1VZx+HeOrosf3nHUduW1yoH16ldLAjm1W12QIAEhHPpyI5H2IBwJ7kqN5eTePA832vHMAfgqvZy/Qy/n8XpHC6kipTKjuqk5++e8+FF+55O8jPmLsXv2TJ5GFHHHjfWyuU8DgUEgEypXTJnv192jT7OC4PhGgyySk2MgHw1ooxQW56BFeMmf6BHOWk/v958RGuc794NWfmWkpbRItpUblodgEHTtX1Uw3Dd2qBeEJS6Ct+zm2JiM3W0H5y/l+MzdbYY9MsR2wiAgTmIzNiQn5hWjgip4Y5aqWQw/X/SniTV1oGVQAlEpVTZUPxQaESh+KWqcThyJCZKlHyPrujy+z+NP+Tzm/zv+kwO3Gwy+yYzP+xE7z5rNs8IZD8vB52S8+9bAueb+JuE7ey8yyYbK/JtoRtacPz2FZbj+J1vMccgKLIHg2q0IzINnMyYu6Oycjp1YJfWB0XqCnUmH0hRS3Qen27wj2/TGwL7Uqq4twVXG1tyt1P1wTCim0sGb+cu5cNOzTDq3ic5cJZPg/kX3fBUXl/IObddXWSp7bWgzH8sN6ErSEHWd/YAdT7OEuBJvELoODm+YAqyXJyAE17fI/4BYueTWHRwicsGsDZ5x+7E8Q2/53g7JPAKJ4vjIo6iJAMkCrxrI4NGxXAnDXx8WAUnQGumn3PHgNt9ftqb7LqnSz2x9/rLRYauM/xVnyUPXxTfKvC/4cc5OTUXa9t2fL6rjuvxoOuvposWvrABrLl8ZVTe127p/ZyfgGA8Dnn50Ih5//S1FrTzIH8wOhP8z7vmcyfPGr4KOw+auSoqbzpXhTy2MyxI8ey+44ZJp097L4eHB/FFSN4DttuYYRNjLKVOM5WEhlXsAkA+An+/2w6AAABAAAAFAAvAAMAAAAAAAEAAgAeAAcAAAQAAAAAAAAAAAAARABcAIAAngC8ANoA+AEmAVQBfAHGAfICFgJMAmYCigKsAroC2gMWAAAAAQAAAAEzM2lF5XRfDzz1AAMIAAAAAADilxKaAAAAAONc8Dr/wP4SBQoF7gAAAAcAAgAAAAAAAHgBY+ViZGLlYmIF0vmsXAxPgZgBQTPuBWGIPIMUQh3jfAaG/wegeiZA2AyNDHIAVosLFQB4AWNgZGBgX/NPiIGPlev/gf8HWLmAIqhAGACI1wWDAHgBY2Bh6WScwMDKwMFqxHKOgYFhNoRmOs2QwiTDgAQaGBiYBZD4od7hfgwHGBQeMLLP+yfEwMe+hvEdUJgRJMdixroYSCkwMAAAdxMNLQAAeAFFiIUBwkAMRd8p7gyQDdgIaoN1gLbAQieT4PLzNYAGDLDHoF5pKYAtawwaoaUXIzM5yCmp2w0+P8S+ftxut3yrbg0kE1O8yhbFG3P+cHgM9g4mcRSpAHgBnZAlVsdBAAYHd42/gmTcpeDu7u7ulklETkDBrsYpmIDbH3hr83a+VSCBCyIIi4wDJuCJwyhj4onDSebyiSNo4+qJI99kogh4eOJoSsIinziOIKziiRMpCut74lSyw86fOI30sBvuyaSIAluJ1Mwe22xaZtknkwZWWeSAM3TM0UeeVMuGJZM97TIrerPsmdy37XFkv2CyRb9gWWRLX29ylj3bPAeYw1V0sq3dlnfQsEifbZlDNjBNIXl4P0s1g7QzTJf0duev9s39Yt+hJ7eKhsw3O/9jtx9+yv+w7DhbRb5l+V0yl4WXZB7zaEL/0+fzHwHRzVgHeAFtzTUCwlAURNF/o7jvI24dvhEIDh3bx6fkyZxyjGW+80zM1vybyfttLGwcXDx8GjRp0aZDlx59BgwZMfbvt2MYzsKPcRjGMpGhjGQqM5nLQpaykjM5/xmvf2Zr9S4/rj49P6MXq+Io1QAAAAAAAQAAAAA=)
+    format("woff");
+  unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000, U+E001;
+}
+
 .ProseMirror,
 .k-input-element input,
 .k-html-field-preview,
@@ -35,6 +55,24 @@
 
 .k-textarea-input-native[data-font="monospace"] {
   font-family: "hidden-characters-mono", var(--font-mono) !important;
+}
+
+@supports (font-palette: --light) and (hanging-punctuation: first) and
+  (font: -apple-system-body) and (-webkit-appearance: none) {
+  .ProseMirror,
+  .k-input-element input,
+  .k-html-field-preview,
+  .k-textarea-input-native {
+    font-family: "hidden-characters--safari", var(--font-sans) !important;
+  }
+
+  .ProseMirror p:after {
+    font-family: "hidden-characters--safari", var(--font-sans) !important;
+  }
+
+  .k-textarea-input-native[data-font="monospace"] {
+    font-family: "hidden-characters-mono--safari", var(--font-mono) !important;
+  }
 }
 
 .ProseMirror p:last-child:after {
@@ -75,18 +113,5 @@
   :where([data-theme="dark"]) .k-textarea-input-native,
   :where([data-theme="dark"]) .ProseMirror p:after {
     font-palette: --dark;
-  }
-}
-
-@supports (font-palette: --light) and (hanging-punctuation: first) and
-  (font: -apple-system-body) and (-webkit-appearance: none) {
-  @font-palette-values --light {
-    font-family: "hidden-characters", "hidden-characters-mono";
-    override-colors: 0 rgb(0, 0, 0);
-  }
-
-  @font-palette-values --dark {
-    font-family: "hidden-characters", "hidden-characters-mono";
-    override-colors: 0 rgb(247, 247, 247);
   }
 }
