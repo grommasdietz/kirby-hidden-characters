@@ -3,19 +3,23 @@
     "description": "Kirby plugin to visually show hidden characters in writer fields, textareas, text fields and field previews",
     "type": "kirby-plugin",
     "license": "MIT",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "homepage": "https://github.com/grommasdietz/kirby-hidden-characters",
     "authors": [
         {
             "name": "Grommas Dietz",
             "email": "info@grommas-dietz.com",
-            "homepage": "https://grommas-dietz.com"
+            "homepage": "https://grommas-dietz.com",
+            "role": "Developer"
         }
     ],
+    "support": {
+        "issues": "https://github.com/grommasdietz/kirby-hidden-characters/issues",
+        "source": "https://github.com/grommasdietz/kirby-hidden-characters"
+    },
     "keywords": [
-        "kirby5",
-        "kirby5-cms",
-        "kirby5-plugin",
+        "kirby",
+        "kirby-plugin",
         "hidden-characters",
         "panel"
     ],
@@ -26,8 +30,8 @@
         }
     },
     "require": {
-        "php": ">=8.0.0",
-        "getkirby/cms": ">=3.6.0",
         "getkirby/composer-installer": "^1.2"
-    }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
