@@ -11,14 +11,14 @@ The plugin visualizes the following characters using a custom icon font:
 | ­                             |                                                 Character                                                 | Symbol                                                    |
 | :---------------------------- | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------- |
 | **Space**                     |      ![gd-hc-space](https://github.com/user-attachments/assets/942452b8-4252-499c-a1b9-07ebb5458792)      | Centered dot for a regular space                          |
+| **Thin Space**                |      ![gd-hc-thin](https://github.com/user-attachments/assets/3d86f0a6-c682-40c7-8b54-0f28cc8d1536)       | Centered dot with a chevron above                         |
 | **No-Break Space**            |    ![gd-hc-no_break](https://github.com/user-attachments/assets/c60861c0-919e-4c2b-8c99-a973cd9d5d62)     | Centered dot with an inverted chevron below               |
+| **Narrow No-Break Space**     | ![gd-hc-narrow_no_break](https://github.com/user-attachments/assets/6d735304-8433-40d1-9a82-37c9efa48dd0) | Centered dot with a chevron above                         |
 | **Em Space**                  |       ![gd-hc-em](https://github.com/user-attachments/assets/4a822154-d770-4dc7-af53-d14272a12805)        | Centered dot with an em dash below                        |
 | **En Space**                  |       ![gd-hc-en](https://github.com/user-attachments/assets/54f896e0-8777-4d2c-9bf0-9db4bcd08167)        | Centered dot with an en dash below                        |
 | **Three-Per-Em Space**        |      ![gd-hc-three](https://github.com/user-attachments/assets/5215050d-428a-41db-b710-36b9f6e3ed15)      | Centered dot with a larger dot above                      |
 | **Four-Per-Em Space**         |      ![gd-hc-four](https://github.com/user-attachments/assets/66c7d1af-c648-4dfb-84df-98f81d121a00)       | Centered dot with a larger dot below                      |
 | **Six-Per-Em Space**          |       ![gd-hc-six](https://github.com/user-attachments/assets/f94622b2-3c93-48de-b3ba-5dd0fa8736f8)       | Centered dot with a same-sized dot below                  |
-| **Thin Space**                |      ![gd-hc-thin](https://github.com/user-attachments/assets/3d86f0a6-c682-40c7-8b54-0f28cc8d1536)       | Centered dot with a chevron above                         |
-| **Narrow No-Break Space**     | ![gd-hc-narrow_no_break](https://github.com/user-attachments/assets/6d735304-8433-40d1-9a82-37c9efa48dd0) | Centered dot with a chevron above                         |
 | **Hair Space**                |      ![gd-hc-hair](https://github.com/user-attachments/assets/45d960a4-a140-466c-8b21-5d8c52b93201)       | Centered dot with two small dots above                    |
 | **Punctuation Space**         |   ![gd-hc-punctuation](https://github.com/user-attachments/assets/25eb3b07-dd63-492c-a604-527456298d0b)   | Centered dot with a dot below and vertical stroke above   |
 | **Figure Space**              |     ![gd-hc-figure](https://github.com/user-attachments/assets/4772ae82-ff99-4678-8897-8befa6ed94e2)      | Centered dot inside a number sign                         |
