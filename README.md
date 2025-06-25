@@ -4,7 +4,6 @@
 
 ![Cover image showing an example of the plugin in use](https://github.com/user-attachments/assets/ca199c35-84ab-42de-823c-527bafd4c8b3)
 
-
 ## Legend
 
 The plugin visualizes the following characters using a custom icon font:
