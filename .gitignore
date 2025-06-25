@@ -6,3 +6,4 @@
 
 # Composer files
 /vendor
+composer.lock
