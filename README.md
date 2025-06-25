@@ -10,8 +10,7 @@ The plugin visualizes the following characters using a custom icon font:
 
 | ­                             |                                                 Character                                                 | Symbol                                                    |
 | :---------------------------- | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------- |
-| **Space**                     |      ![gd-hc-space](https://github.com/user-attachments/assets/e2b6b209-9cb5-496b-a242-27238641387b)
-      | Centered dot for a regular space                          |
+| **Space**                     |      ![gd-hc-space](https://github.com/user-attachments/assets/2fa7cfe4-6621-4b0b-a7d3-8b31d56cde3a)      | Centered dot for a regular space                          |
 | **Thin Space**                |      ![gd-hc-thin](https://github.com/user-attachments/assets/3d86f0a6-c682-40c7-8b54-0f28cc8d1536)       | Centered dot with a chevron above                         |
 | **No-Break Space**            |    ![gd-hc-no_break](https://github.com/user-attachments/assets/c60861c0-919e-4c2b-8c99-a973cd9d5d62)     | Centered dot with an inverted chevron below               |
 | **Narrow No-Break Space**     | ![gd-hc-narrow_no_break](https://github.com/user-attachments/assets/6d735304-8433-40d1-9a82-37c9efa48dd0) | Centered dot with a inverted chevron above                |
