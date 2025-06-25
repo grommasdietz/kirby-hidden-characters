@@ -59,7 +59,7 @@ This plugin works out of the box with no configuration required
 
 ## Credits
 
-The foundational logic for v2 of this plugin is adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
+The foundational logic for v2 of this plugin is adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
 
 ## License
 
