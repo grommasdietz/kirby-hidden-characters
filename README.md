@@ -1,12 +1,12 @@
 # Kirby Hidden Characters
 
-[Kirby](https://getkirby.com) plugin to visually show hidden characters like spaces, soft hyphens, line breaks or paragraph endings in focused [writer](https://getkirby.com/docs/reference/panel/fields/writer), [textarea](https://getkirby.com/docs/reference/panel/fields/textarea) and [text fields](https://getkirby.com/docs/reference/panel/fields/text). The dimmed visual feedback is based on the appearance of Adobe’s solution in InDesign, providing a familiar experience for content editors.
+[Kirby](https://getkirby.com) plugin to visually show hidden characters like spaces, soft hyphens, line breaks or paragraph endings in focused [writer](https://getkirby.com/docs/reference/panel/fields/writer), [textarea](https://getkirby.com/docs/reference/panel/fields/textarea) and [text fields](https://getkirby.com/docs/reference/panel/fields/text). The dimmed visual feedback is based on the appearance of Adobe’s solution in InDesign, providing a familiar experience for content editors.
 
 ![Cover image showing an example of the plugin in use](https://github.com/user-attachments/assets/ca199c35-84ab-42de-823c-527bafd4c8b3)
 
 ## Legend
 
-The plugin visualizes the following characters using a custom icon font:
+The plugin visualizes the following characters using a custom icon font:
 
 | ­                             |                                                 Character                                                 | Symbol                                                    |
 | :---------------------------- | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------- |
@@ -55,11 +55,11 @@ composer require grommasdietz/kirby-hidden-characters
 
 ## Configuration
 
-This plugin works out of the box with no configuration required
+This plugin works out of the box with no configuration required
 
 ## Credits
 
-The foundational logic for v2 of this plugin is adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
+The foundational logic for v2 of this plugin is adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
 
 ## License
 
