@@ -1,1 +1,13 @@
-/src export-ignore
+# Git
+.github/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+
+# Source files
+src/ export-ignore
+
+# Development files
+.vscode/ export-ignore
+.editorconfig export-ignore
+composer.lock export-ignore
+package.json export-ignore

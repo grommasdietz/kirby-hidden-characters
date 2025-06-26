@@ -5,5 +5,4 @@
 /node_modules
 
 # Composer files
-/vendor
 composer.lock
