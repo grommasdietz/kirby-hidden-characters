@@ -1,12 +1,12 @@
 @font-face {
   font-display: swap;
-  font-family: 'hidden-characters';
+  font-family: "hidden-characters";
   font-style: normal;
   font-weight: normal;
   src: url(data:application/octet-stream;base64,d09GMgABAAAAAATcAAoAAAAAC7wAAASSAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmAAdAqMOIl2CywAATYCJANUBCAFhCQHgWQbnwnIHoVN2V0UR5hMQpmM70GdCOL3+9/skS+GmCSxSMKTNpekCW5D4quEShLxqtoIUY9yrtkmLZDgkusTMS+iovc29Qr///uxmbh7/+Chet0jIXKEROgwa4tvKhJd0zxpEo1bEktqbStp08wtfVwOMZmYuIGSR6NJ1VFV8XPAWdo8vRCWJMH0pQG5P/zSupWeDnAE1FeMbeAfP3C3z8U7IKAsoI9iPEBCxmCYgAq3Oas/3rqrxhuiMIqklKjAB9j/JQ1QBaBeQwDqS+9/vb88e5ke6CVVm6wYSIAgPoAhADO9yngG0jhGVdgoCcmJyhzm6BBbTOLkZOPEHcZLfIEkzslTEQDAicIZfDw3Xv4yxus3ntevI1T8+hpR89JNkEDX31wna19dBWjcnl5YAl1x8zUqLq+FoivE7fTQSNKf8PEi7qvr3PmA95e8UrmQ87uNuEAhUAgUSBh4p97ZzZH82tLAG2llKOFJ+noq0otLQ7oRSsKXMyJTGOr6+O1ekMshs6aXlfRc0luf5EdcguPz+Hu3U7gDt1z3iPqKXJJGMDzGEZ17UY43t87lRQI48WQNm2wik6h5HXRKygWVhok8gAuXG2fwHEdH4o7pXiq28gauRjQl+jhvWT2/hCC6K4wgzMercdLlSNyU3foKt7R4PuLgep2c2pjllCMLY3V1L0NL2xwEf7VhptJmhYZGexAYcnaV1bS/E2cterDbsJPARcYtxnu9qwrSAFrcUi8479O9Pc9gXh8NDR8tLRCR2DEdWn2rM/nQ2G02zFVU6Oag3UzV3ubSa8nmV5YFnwO7TxZZLZbHHK1ICf+RDf9eAf+V/6wr4SRx5VZDWBWe8vQ9Zis0lG51Nqq15s3DuVV6mWxGNb/iDVdZD+WTlSG5+h6zqvWWyXx7hnmX6QLBZzYGRn3XfC8S2KtlMGCx+es5Tf5H/Z9jCS3Qmp9XAqd4ELR/bGDhDoGCc1GZW2kpK/PwfFzBCrSdGBKo4ALpVFjRei3R+JYV+0Oy4YdjWYMKLGis/1Oi4ZdNLF6dT3dpaYQ9a1VLg+VEViyrCPS/XVru5QACiUNXv38M5NH/yo6xA/x0dVula2dLYPM/frah+g5ol0Yktp/7uvM7wGbHz/YhQf0hed7mOPKE6Y2wwIQOoOTkhMC2CbWjT0KqS3nG0nIkLEnJtTEftIJxCCXYSSEZi43CvqrbGciicADrAWcOE/mZkz7HzdkSdeZijkvmamTg5jazQjqisw4dzD3mRNTA/nNzB3zXNIynSpkqdRQrKRLFixcsFcVctHBpcuqfE8KFIoqJOHEoKaJFipImNRcRTiw8IkOMCOv1HGvRwoQJl4BiJkqwFMFCpYkZqVxQFSldXG2VKkXKzl/0uLPlyYHeDN2LQyigtysORUkxHnVZ0RL7h+2hT9ft6d1FRHGqNEkZupScwZG9DArCshSF1ibR2G7/q0GYnxgC5KAhDOGIjhiIDbEjDkQgEnEiLsSNeBAv4kP8SAAJsqUnRCsrmyhT4G+Cg2qojCqojhqoiVqojTpowjOVqlpyNaIt1ggEKqNKpCo=)
-    format('woff2');
-  unicode-range:
-    U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000, U+E001, U+E002, U+E003;
+    format("woff2");
+  unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000, U+E001,
+    U+E002, U+E003;
 }
 
 /*
@@ -42,18 +42,18 @@
 
   // Use the `data-tag` (set by JS) to mimic styles Kirby applies to native elements,
   // preventing layout shifts between the real input and the overlay.
-  &[data-tag='textarea'] {
+  &[data-tag="textarea"] {
     line-height: 1.5;
     white-space-collapse: preserve;
     text-wrap-mode: wrap;
   }
 
-  &:where([data-tag='textarea'], [data-tag='input']) {
+  &:where([data-tag="textarea"], [data-tag="input"]) {
     font-variant-numeric: tabular-nums;
     line-height: normal;
   }
 
-  &[data-tag='input'] {
+  &[data-tag="input"] {
     -webkit-rtl-ordering: logical;
   }
 
@@ -78,7 +78,7 @@
   ::before,
   ::after {
     color: var(--color-text);
-    font-family: 'hidden-characters'; // Use the custom icon font.
+    font-family: "hidden-characters"; // Use the custom icon font.
     font-weight: normal;
     width: max-content;
   }
@@ -99,16 +99,42 @@
   }
 
   p:first-child:last-child:has(.ProseMirror-trailingBreak):after {
-    content: '';
+    content: "";
   }
 
-  // Base setup for our custom elements. They are inline so they flow
-  // with the text, and relative to anchor their pseudo-elements.
+  // --- Base setup for all custom elements ---
+  // These styles are shared by <break>, <space>, and <shy> to ensure they
+  // can correctly host and align their visible pseudo-elements without
+  // disrupting the vertical flow of the text.
   break,
   space,
   shy {
-    display: inline;
+    // Establishes a positioning context. This is essential for the ::before
+    // pseudo-element, which is absolutely positioned to overlay the symbol.
     position: relative;
+
+    // Aligns the element's box with the text's baseline. This prevents the
+    // element from altering the line height, which is critical for keeping
+    // the overlay perfectly in sync with the underlying text.
+    vertical-align: bottom;
+  }
+
+  // --- Element-specific display behavior ---
+
+  // For <break> and <shy>, a simple inline box is sufficient. Their purpose
+  // is to mark a point in the text for a symbol, not to influence wrapping.
+  break,
+  shy {
+    display: inline;
+  }
+
+  // This is the core fix for the line-wrapping synchronization issue.
+  // By setting <space> to `inline-block`, we treat it as a single, atomic "letter".
+  // The browser is prevented from creating a line break *inside* this block.
+  // This forces sequences (e.g., a word followed by a non-breaking space)
+  // to wrap as a single unit, perfectly matching the editor's behavior.
+  space {
+    display: inline-block;
   }
 
   // Setup for the pseudo-elements that contain the visible symbols.
@@ -136,16 +162,16 @@
 
   // Assign content from the icon font's Private Use Area (PUA).
   p::after {
-    content: '\e000';
+    content: "\e000";
   }
   p:last-child:after {
-    content: '\e001';
+    content: "\e001";
   }
   break::before {
-    content: '\e002';
+    content: "\e002";
   }
   shy::before {
-    content: '\e003';
+    content: "\e003";
   }
 
   // Use the original character from the data-attribute. The custom font
