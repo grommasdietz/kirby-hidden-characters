@@ -9,6 +9,13 @@
     U+E002, U+E003;
 }
 
+.k-writer-input .ProseMirror {
+  // Prevent ProseMirror from collapsing whitespace.
+  // This is crucial for the hidden characters overlay to work correctly in some edge cases.
+  word-break: normal;
+  white-space: break-spaces;
+}
+
 /*
  * The .k-input-element is the direct parent of text/textarea inputs.
  * It needs a `position` context for our absolute overlay to work correctly.
@@ -57,10 +64,15 @@
     -webkit-rtl-ordering: logical;
   }
 
+  [data-empty="true"] :focus + & > p:first-child > break:first-child::before {
+    display: none; // Hide the very first marker when the input is empty and focused.
+  }
+
   /* --- 3. Activation Trigger --- */
 
   // Show the overlay when the preceding sibling element has focus.
   // This works because the JS inserts the overlay directly after the input.
+
   :focus + & {
     opacity: 0.4;
   }
