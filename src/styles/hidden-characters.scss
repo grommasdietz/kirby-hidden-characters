@@ -1,31 +1,39 @@
 @font-face {
   font-display: swap;
-  font-family: "hidden-characters";
+  font-family: 'hidden-characters';
   font-style: normal;
   font-weight: normal;
   src: url(data:application/octet-stream;base64,d09GMgABAAAAAATcAAoAAAAAC7wAAASSAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmAAdAqMOIl2CywAATYCJANUBCAFhCQHgWQbnwnIHoVN2V0UR5hMQpmM70GdCOL3+9/skS+GmCSxSMKTNpekCW5D4quEShLxqtoIUY9yrtkmLZDgkusTMS+iovc29Qr///uxmbh7/+Chet0jIXKEROgwa4tvKhJd0zxpEo1bEktqbStp08wtfVwOMZmYuIGSR6NJ1VFV8XPAWdo8vRCWJMH0pQG5P/zSupWeDnAE1FeMbeAfP3C3z8U7IKAsoI9iPEBCxmCYgAq3Oas/3rqrxhuiMIqklKjAB9j/JQ1QBaBeQwDqS+9/vb88e5ke6CVVm6wYSIAgPoAhADO9yngG0jhGVdgoCcmJyhzm6BBbTOLkZOPEHcZLfIEkzslTEQDAicIZfDw3Xv4yxus3ntevI1T8+hpR89JNkEDX31wna19dBWjcnl5YAl1x8zUqLq+FoivE7fTQSNKf8PEi7qvr3PmA95e8UrmQ87uNuEAhUAgUSBh4p97ZzZH82tLAG2llKOFJ+noq0otLQ7oRSsKXMyJTGOr6+O1ekMshs6aXlfRc0luf5EdcguPz+Hu3U7gDt1z3iPqKXJJGMDzGEZ17UY43t87lRQI48WQNm2wik6h5HXRKygWVhok8gAuXG2fwHEdH4o7pXiq28gauRjQl+jhvWT2/hCC6K4wgzMercdLlSNyU3foKt7R4PuLgep2c2pjllCMLY3V1L0NL2xwEf7VhptJmhYZGexAYcnaV1bS/E2cterDbsJPARcYtxnu9qwrSAFrcUi8479O9Pc9gXh8NDR8tLRCR2DEdWn2rM/nQ2G02zFVU6Oag3UzV3ubSa8nmV5YFnwO7TxZZLZbHHK1ICf+RDf9eAf+V/6wr4SRx5VZDWBWe8vQ9Zis0lG51Nqq15s3DuVV6mWxGNb/iDVdZD+WTlSG5+h6zqvWWyXx7hnmX6QLBZzYGRn3XfC8S2KtlMGCx+es5Tf5H/Z9jCS3Qmp9XAqd4ELR/bGDhDoGCc1GZW2kpK/PwfFzBCrSdGBKo4ALpVFjRei3R+JYV+0Oy4YdjWYMKLGis/1Oi4ZdNLF6dT3dpaYQ9a1VLg+VEViyrCPS/XVru5QACiUNXv38M5NH/yo6xA/x0dVula2dLYPM/frah+g5ol0Yktp/7uvM7wGbHz/YhQf0hed7mOPKE6Y2wwIQOoOTkhMC2CbWjT0KqS3nG0nIkLEnJtTEftIJxCCXYSSEZi43CvqrbGciicADrAWcOE/mZkz7HzdkSdeZijkvmamTg5jazQjqisw4dzD3mRNTA/nNzB3zXNIynSpkqdRQrKRLFixcsFcVctHBpcuqfE8KFIoqJOHEoKaJFipImNRcRTiw8IkOMCOv1HGvRwoQJl4BiJkqwFMFCpYkZqVxQFSldXG2VKkXKzl/0uLPlyYHeDN2LQyigtysORUkxHnVZ0RL7h+2hT9ft6d1FRHGqNEkZupScwZG9DArCshSF1ibR2G7/q0GYnxgC5KAhDOGIjhiIDbEjDkQgEnEiLsSNeBAv4kP8SAAJsqUnRCsrmyhT4G+Cg2qojCqojhqoiVqojTpowjOVqlpyNaIt1ggEKqNKpCo=)
-    format("woff2");
-  unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000, U+E001,
-    U+E002, U+E003;
+    format('woff2');
+  unicode-range:
+    U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000, U+E001, U+E002, U+E003;
 }
 
+/* --- 1. Base Setup --- */
+
+.k-string-input.k-text-input,
+.k-textarea-input-native,
 .k-writer-input .ProseMirror {
   // Prevent ProseMirror from collapsing whitespace.
-  // This is crucial for the hidden characters overlay to work correctly in some edge cases.
-  word-break: normal;
-  white-space: break-spaces;
+  // This is crucial for the hidden characters overlay to work correctly in some edge cases
+  // and ensures that spaces are rendered inside the field.
+  word-break: normal !important;
+  white-space: break-spaces !important;
 }
 
-/*
- * The .k-input-element is the direct parent of text/textarea inputs.
- * It needs a `position` context for our absolute overlay to work correctly.
- */
+// overwrite default width of max-content to avoid glitches.
+.k-block-figure-caption .k-writer {
+  width: 100%;
+}
+
+// The .k-input-element is the direct parent of text/textarea inputs.
+// It needs a `position` context for our absolute overlay to work correctly.
 .k-input-element {
   position: relative;
 }
 
 .gd-hidden-characters {
-  /* --- 1. Base Overlay Setup --- */
+  /* --- 2. Base Overlay Setup --- */
 
   // Position the overlay to perfectly cover its sibling input element.
   position: absolute;
@@ -42,33 +50,38 @@
 
   // Ensure spaces and newlines are rendered, not collapsed by the browser.
   // This is critical for making space characters have a visible width.
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  // white-space: pre-wrap;
+  // word-wrap: break-word;
 
-  /* --- 2. Element-Specific Style Adaptations --- */
+  /* --- 3. Element-Specific Style Adaptations --- */
 
   // Use the `data-tag` (set by JS) to mimic styles Kirby applies to native elements,
   // preventing layout shifts between the real input and the overlay.
-  &[data-tag="textarea"] {
+  &[data-tag='textarea'] {
     line-height: 1.5;
     white-space-collapse: preserve;
     text-wrap-mode: wrap;
   }
 
-  &:where([data-tag="textarea"], [data-tag="input"]) {
+  &:where([data-tag='textarea'], [data-tag='input']) {
     font-variant-numeric: tabular-nums;
     line-height: normal;
   }
 
-  &[data-tag="input"] {
+  &[data-tag='input'] {
     -webkit-rtl-ordering: logical;
   }
 
-  [data-empty="true"] :focus + & > p:first-child > break:first-child::before {
+  [data-empty='true'] :focus + & > p:first-child > break:first-child::before {
     display: none; // Hide the very first marker when the input is empty and focused.
   }
 
-  /* --- 3. Activation Trigger --- */
+  // Ensure transparent color for captions in block figures.
+  .k-block-figure-caption .k-writer & {
+    color: transparent !important;
+  }
+
+  /* --- 4. Activation Trigger --- */
 
   // Show the overlay when the preceding sibling element has focus.
   // This works because the JS inserts the overlay directly after the input.
@@ -77,7 +90,7 @@
     opacity: 0.4;
   }
 
-  /* --- 4. Character Rendering --- */
+  /* --- 5. Character Rendering --- */
 
   // Ensure any text inside our custom tags (e.g., the space in <space> </space>)
   // inherits the `color: transparent` from the overlay. This rule excludes
@@ -90,9 +103,15 @@
   ::before,
   ::after {
     color: var(--color-text);
-    font-family: "hidden-characters"; // Use the custom icon font.
+    font-family: 'hidden-characters'; // Use the custom icon font.
     font-weight: normal;
     width: max-content;
+
+    .k-block-figure-caption .k-writer & {
+      // switch to the background color of the caption
+      // due to default mix-blend-mode exclusion of parent.
+      color: var(--color-background) !important;
+    }
   }
 
   // For writer fields: Style the paragraph end markers.
@@ -111,7 +130,7 @@
   }
 
   p:first-child:last-child:has(.ProseMirror-trailingBreak):after {
-    content: "";
+    content: '';
   }
 
   // --- Base setup for all custom elements ---
@@ -170,20 +189,20 @@
     transform: translate(-50%, -50%);
   }
 
-  /* --- 5. Icon Font Mapping --- */
+  /* --- 6. Icon Font Mapping --- */
 
   // Assign content from the icon font's Private Use Area (PUA).
   p::after {
-    content: "\e000";
+    content: '\e000';
   }
   p:last-child:after {
-    content: "\e001";
+    content: '\e001';
   }
   break::before {
-    content: "\e002";
+    content: '\e002';
   }
   shy::before {
-    content: "\e003";
+    content: '\e003';
   }
 
   // Use the original character from the data-attribute. The custom font
