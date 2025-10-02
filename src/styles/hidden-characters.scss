@@ -36,17 +36,26 @@
   /* --- 2. Base Overlay Setup --- */
 
   // Position the overlay to perfectly cover its sibling input element.
-  position: absolute;
   inset: 0;
+  position: absolute;
   z-index: 1; // Ensure overlay is on top of the input.
 
   // Make the overlay non-interactive and initially invisible.
-  pointer-events: none;
+  border-color: transparent !important;
+  color: transparent !important; // Hide all regular text within the overlay.
   contain: content;
-  opacity: 0;
-  color: transparent; // Hide all regular text within the overlay.
   height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  text-decoration-color: transparent !important;
   width: 100%;
+
+  * {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: transparent !important;
+    text-decoration-color: transparent !important;
+  }
 
   // Ensure spaces and newlines are rendered, not collapsed by the browser.
   // This is critical for making space characters have a visible width.
@@ -59,8 +68,8 @@
   // preventing layout shifts between the real input and the overlay.
   &[data-tag="textarea"] {
     line-height: 1.5;
-    white-space-collapse: preserve;
     text-wrap-mode: wrap;
+    white-space-collapse: preserve;
   }
 
   &:where([data-tag="textarea"], [data-tag="input"]) {
@@ -100,8 +109,8 @@
   }
 
   // General style for all our character indicator pseudo-elements.
-  ::before,
-  ::after {
+  :is(space, break, shy)::before,
+  :is(p)::after {
     color: var(--color-text);
     font-family: "hidden-characters"; // Use the custom icon font.
     font-weight: normal;
