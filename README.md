@@ -37,21 +37,21 @@ The plugin visualizes the following characters using a custom icon font:
 
 You can install the plugin via one of three methods:
 
-### 1. Download
+1. ### Download
 
-Download and copy this repository to `/site/plugins/kirby-hidden-characters`
+   Download and copy this repository to `/site/plugins/kirby-hidden-characters`.
 
-### 2. Git Submodule
+2. ### Git Submodule
 
-```bash
-git submodule add https://github.com/grommasdietz/kirby-hidden-characters.git site/plugins/kirby-hidden-characters
-```
+   ```bash
+   git submodule add https://github.com/grommasdietz/kirby-hidden-characters.git site/plugins/kirby-hidden-characters
+   ```
 
-### 3. Composer
+3. ### Composer
 
-```bash
-composer require grommasdietz/kirby-hidden-characters
-```
+   ```bash
+   composer require grommasdietz/kirby-hidden-characters
+   ```
 
 ## Configuration
 
