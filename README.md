@@ -1,6 +1,6 @@
 # Kirby Hidden Characters
 
-[Kirby](https://getkirby.com) plugin to visually show hidden characters like spaces, soft hyphens, line breaks or paragraph endings in focused [writer](https://getkirby.com/docs/reference/panel/fields/writer), [textarea](https://getkirby.com/docs/reference/panel/fields/textarea) and [text fields](https://getkirby.com/docs/reference/panel/fields/text). The dimmed visual feedback is based on the appearance of Adobe’s solution in InDesign, providing a familiar experience for content editors.
+[Kirby CMS](https://getkirby.com) plugin to visually show hidden characters like spaces, soft hyphens, line breaks or paragraph endings in focused [writer](https://getkirby.com/docs/reference/panel/fields/writer), [textarea](https://getkirby.com/docs/reference/panel/fields/textarea) and [text fields](https://getkirby.com/docs/reference/panel/fields/text). The dimmed visual feedback is based on the appearance of Adobe’s solution in InDesign, providing a familiar experience for content editors.
 
 ![Cover image showing an example of the plugin in use](https://github.com/user-attachments/assets/ca199c35-84ab-42de-823c-527bafd4c8b3)
 
