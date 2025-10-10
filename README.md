@@ -63,4 +63,4 @@ The foundational logic for v2 of this plugin is adapted from the [Kirby Soft Hyp
 
 ## License
 
-MIT
+[MIT](LICENSE.md)
