@@ -19,9 +19,9 @@
     },
     "keywords": [
         "kirby",
+        "kirby-cms",
         "kirby-plugin",
-        "hidden-characters",
-        "panel"
+        "hidden-characters"
     ],
     "require": {
         "getkirby/composer-installer": "^1.2"
