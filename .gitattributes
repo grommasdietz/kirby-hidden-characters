@@ -7,7 +7,8 @@
 src/ export-ignore
 
 # Development files
-.vscode/ export-ignore
 .editorconfig export-ignore
+.vscode/ export-ignore
 composer.lock export-ignore
+package-lock.json export-ignore
 package.json export-ignore
