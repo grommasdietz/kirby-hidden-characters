@@ -6,6 +6,14 @@ import "./styles/hidden-characters.scss";
  * @param {string} input - The raw value from a Kirby field.
  * @returns {string} The processed HTML string.
  */
+function escapeHTML(input) {
+  if (input == null) return "";
+  return String(input)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 function renderHiddenCharacters(input) {
   // Return an empty string for null or empty inputs to prevent errors.
   if (!input) {
@@ -139,9 +147,15 @@ window.panel.plugin("grommasdietz/hidden-characters", {
             // The function to update the overlay's content.
             const updateOverlay = () => {
               // For Writer fields, get content from innerHTML. For others, use the value.
-              const content = inputEl.matches(".ProseMirror")
+              let content = inputEl.matches(".ProseMirror")
                 ? inputEl.innerHTML
                 : this.value;
+
+              // For non-writer fields, escape HTML so it is treated as text
+              if (!inputEl.matches(".ProseMirror")) {
+                content = escapeHTML(content || "");
+              }
+
               this.$overlayEl.innerHTML = renderHiddenCharacters(content || "");
             };
 
@@ -183,7 +197,9 @@ window.panel.plugin("grommasdietz/hidden-characters", {
             ) {
               return;
             }
-            this.$overlayEl.innerHTML = renderHiddenCharacters(newVal || "");
+            // Escape HTML so it is treated as text in non-writer fields
+            const processedVal = escapeHTML(newVal || "");
+            this.$overlayEl.innerHTML = renderHiddenCharacters(processedVal);
           },
         },
       });
