@@ -1,6 +1,6 @@
 {
     "name": "grommasdietz/kirby-hidden-characters",
-    "description": "Kirby plugin to visually show hidden characters like spaces, soft hyphens, line breaks or paragraph endings in focused writer, textarea and text fields",
+    "description": "Visually show hidden characters on Kirby CMS",
     "type": "kirby-plugin",
     "license": "MIT",
     "homepage": "https://github.com/grommasdietz/kirby-hidden-characters",
@@ -25,11 +25,17 @@
     "require": {
         "getkirby/composer-installer": "^1.2"
     },
+    "require-dev": {
+        "getkirby/cms": "^5.0"
+    },
     "config": {
         "optimize-autoloader": true,
         "allow-plugins": {
             "getkirby/composer-installer": true
         }
+    },
+    "extra": {
+        "kirby-cms-path": false
     },
     "archive": {
         "exclude": [
@@ -37,13 +43,10 @@
             "/.gitattributes",
             "/.github",
             "/.gitignore",
-            "/.vscode",
             "/composer.lock",
             "/package-lock.json",
             "/package.json",
-            "/src/"
+            "/src"
         ]
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    }
 }

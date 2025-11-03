@@ -4,5 +4,12 @@
 # npm modules
 /node_modules
 
+# Parcel cache folder
+.cache
+
 # Composer files
-composer.lock
+/vendor
+
+# kirbyup temp development entry
+/index.dev.mjs
+

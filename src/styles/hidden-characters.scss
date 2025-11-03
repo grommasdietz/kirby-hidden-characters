@@ -229,6 +229,7 @@
   > .k-toolbar {
   grid-row: 1;
   grid-column: 1;
+  z-index: 2; // Ensure toolbar is above the overlay.
 }
 
 .k-textarea-input
