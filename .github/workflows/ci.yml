@@ -1,0 +1,229 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  # 1. Run PHP Quality Checks
+  php-quality:
+    name: PHP Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: curl, json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - name: Install playground dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+        working-directory: playground
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Validate Composer
+        run: composer validate --no-check-lock
+
+      - name: Check Platform Requirements
+        run: composer check-platform-reqs
+
+      - name: Lint Code
+        run: composer lint
+
+      - name: Static Analysis
+        run: composer psalm -- --show-info=false --output-format=github --no-cache
+
+  # 1.5 Run JavaScript Linting
+  js-lint:
+    name: JavaScript Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint
+        run: pnpm run lint
+
+  # 1.75 Run Docs Linting
+  docs-lint:
+    name: Docs Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run docs verify (markdownlint + "Next" checks)
+        run: pnpm run docs:verify
+
+  # 1.9 Ensure third-party notices are up to date
+  third-party-notices:
+    name: Third-party Notices
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: curl, json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Regenerate third-party notices
+        run: composer notices:generate
+
+      - name: Ensure third-party notices are committed
+        run: git diff --exit-code -- THIRD_PARTY_NOTICES.md
+
+  # 2. Run PHP Tests
+  php-tests:
+    name: PHP Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ["8.3", "8.4"]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: curl, json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - name: Install playground dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+        working-directory: playground
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Unit Tests
+        run: composer test:unit
+
+      - name: Integration Tests
+        run: composer test:integration
+
+  # 3. Run Browser Tests
+  browser-tests:
+    name: Browser Tests
+    runs-on: ubuntu-latest
+    needs: [php-quality, php-tests, js-lint, docs-lint, third-party-notices]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: curl, json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Install playground dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+        working-directory: playground
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run Browser Tests
+        run: pnpm run test:browser
+
+  # 4. Run Semantic Release (Only on main, only if tests pass)
+  semantic-release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    needs: [php-quality, php-tests, js-lint, docs-lint, third-party-notices, browser-tests]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: curl, json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Install production dependencies
+        run: composer install --no-dev --prefer-dist --no-progress --no-interaction
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run Semantic Release
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: 0
