@@ -1,0 +1,70 @@
+# Conventional Commit Template
+#
+# CI enforces Conventional Commits on pull requests.
+# Use this template to avoid lint failures.
+# When drafting PRs, trim unused changelog sections.
+#
+# Format: <type>(<scope>): <subject>
+#
+# Allowed types:
+# feat:      New feature (triggers MINOR release)
+# fix:       Bug fix (triggers PATCH release)
+# docs:      Documentation changes
+# style:     Formatting, whitespace, no code changes
+# refactor:  Code restructure (not fix/feature)
+# perf:      Performance improvements
+# test:      Tests only
+# build:     Build system or dependencies
+# ci:        CI configuration or scripts
+# chore:     Misc changes (no src or tests)
+# revert:    Revert a previous commit
+#
+# Example: feat(panel): support translated sections
+#
+<type>(<scope>): <subject>
+
+# -- Guidelines -------------------------------------------------------
+# Testing:
+# - Note commands you ran (composer test, pnpm test). If you skipped suites, explain why.
+# Documentation:
+# - Mention doc updates or state “docs: n/a” so reviewers know whether guidance changed.
+# -- Formatting -------------------------------------------------------
+# Subject:
+# - Max 50 characters
+# - Imperative mood (e.g. "add", "update", "fix")
+# - No trailing period
+#
+# Leave one blank line before the body.
+#
+# Body (optional):
+# - Explain WHAT and WHY (not HOW)
+# - Wrap lines at 72 characters
+# - Use plain prose; Conventional Commit formatting is only required for
+#   the subject line
+# - Emojis allowed here (e.g. ✨) if helpful
+#
+# Footer (optional):
+# - Closes #12
+# - BREAKING CHANGE: description
+# - Co-authored-by: Name <email>
+#
+# -- Helpful Gitmoji Reference -----------------------------
+# These are NOT required, but may be used in the body for common types:
+#
+# ✨ feat (new features)
+# 🐛 fix (bug fixes)
+# 📝 docs (documentation)
+# 🎨 style (formatting/style)
+# ♻️ refactor (code restructure)
+# ⚡️ perf (performance)
+# 🧪 test (tests)
+# 🏗️ build (build system/deps)
+# 🚀 ci (CI/CD)
+# 🔧 chore (misc)
+# 🔒 security (security fixes)
+# ⬆️ upgrade (dependency upgrades)
+# ⬇️ downgrade (dependency downgrades)
+# 🚨 lint (fix linter warnings)
+# 🚧 wip (work in progress)
+#
+# For more options, see https://gitmoji.dev
