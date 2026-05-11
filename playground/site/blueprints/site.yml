@@ -1,0 +1,37 @@
+title: Playground
+
+tabs:
+  content:
+    label: Content
+    sections:
+      pages:
+        type: pages
+
+  fields:
+    label: Fields
+    fields:
+      writer:
+        label: Writer (rich text)
+        type: writer
+        marks:
+          - bold
+          - italic
+          - code
+          - link
+        nodes:
+          - paragraph
+
+      textarea:
+        label: Textarea
+        type: textarea
+        size: medium
+
+      text:
+        label: Text input
+        type: text
+
+      blocks:
+        label: Blocks
+        type: blocks
+        fieldsets:
+          - text

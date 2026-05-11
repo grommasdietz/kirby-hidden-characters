@@ -1,0 +1,40 @@
+title: Home
+
+fields:
+  writer:
+    label: Writer (rich text)
+    type: writer
+    marks:
+      - bold
+      - italic
+      - code
+      - link
+    nodes:
+      - paragraph
+
+  textarea:
+    label: Textarea
+    type: textarea
+    size: medium
+
+  textarea_monospace:
+    label: Textarea (monospace)
+    type: textarea
+    font: monospace
+    size: medium
+
+  textarea_notoolbar:
+    label: Textarea (no toolbar)
+    type: textarea
+    buttons: false
+    size: medium
+
+  text:
+    label: Text input
+    type: text
+
+  blocks:
+    label: Blocks
+    type: blocks
+    fieldsets:
+      - text
