@@ -1,0 +1,23 @@
+{
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "grommasdietz/kirby-hidden-characters": "*@dev",
+        "getkirby/cms": "^5.2"
+    },
+    "require-dev": {
+        "bnomei/kirby-mcp": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "getkirby/composer-installer": true,
+            "php-http/discovery": true
+        }
+    }
+}

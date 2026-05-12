@@ -1,0 +1,307 @@
+/* =============================================================================
+   hidden-characters.css
+   Font declarations and overlay styles for the Kirby Hidden Characters plugin.
+
+   Rendering strategy:
+   - The "hidden-characters" font is applied to field elements unconditionally
+     so space glyph metrics are always stable (no layout shift on focus).
+     font-palette keeps the glyphs transparent by default and switches to
+     25% opacity on focus. Browsers without font-palette support see the glyphs
+     at their baked-in color — acceptable progressive enhancement.
+   - Soft hyphens (<shy>), line breaks (<break>), tabs (<tab>), and paragraph
+     end markers (p::after) are shown via an absolutely-positioned overlay clone
+     (.gd-hidden-characters) that fades in on focus. The writer and textarea
+     fields both use this overlay; the single-line text input does not (its
+     value can scroll horizontally, making an overlay clone unreliable).
+   ============================================================================= */
+
+/* --- Font Declaration --- */
+
+@font-face {
+  font-display: swap;
+  font-family: "hidden-characters";
+  font-style: normal;
+  font-weight: normal;
+  src: url("/media/plugins/grommasdietz/hidden-characters/fonts/hidden-characters.woff2")
+    format("woff2");
+  unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000-E004;
+}
+
+/* --- Apply hidden-characters font unconditionally ---
+   Stable space metrics require the font to be active at all times.
+   unicode-range limits substitution to space codepoints + PUA glyphs;
+   all other characters still use var(--font-sans). */
+
+.k-writer-input .ProseMirror,
+.k-textarea-input-native,
+.k-string-input.k-text-input {
+  font-family: "hidden-characters", var(--font-sans) !important;
+  font-variation-settings: "MONO" 0;
+}
+
+.k-textarea-input-native[data-font="monospace"] {
+  font-family: "hidden-characters", var(--font-mono) !important;
+  font-variation-settings: "MONO" 1;
+}
+
+/* --- Font palette: hide glyphs by default, reveal on focus ---
+   font-palette is unprefixed in Chrome 101+, Firefox 107+, Safari 15.4+.
+   No PostCSS/autoprefixer prefixes exist or are needed.
+   Fallback (no @supports match): glyphs render at their baked-in color. */
+
+@supports (font-palette: normal) {
+  @font-palette-values --gd-hc-hidden-light {
+    font-family: "hidden-characters";
+    override-colors: 0 transparent, 1 #000;
+  }
+
+  @font-palette-values --gd-hc-hidden-dark {
+    font-family: "hidden-characters";
+    override-colors: 0 transparent, 1 #fff;
+  }
+
+  @font-palette-values --gd-hc-light {
+    font-family: "hidden-characters";
+    override-colors: 0 rgba(0, 0, 0, 0.4), 1 #000;
+  }
+
+  @font-palette-values --gd-hc-dark {
+    font-family: "hidden-characters";
+    override-colors: 0 rgba(255, 255, 255, 0.4), 1 #fff;
+  }
+
+  /* Writer real element: spaces always invisible; the overlay handles
+     rendering them at 25% so there is no double-rendering on focus. */
+  .k-writer-input .ProseMirror:not(.gd-hidden-characters) {
+    font-palette: --gd-hc-hidden-light;
+  }
+
+  :where([data-theme="dark"])
+    .k-writer-input
+    .ProseMirror:not(.gd-hidden-characters) {
+    font-palette: --gd-hc-hidden-dark;
+  }
+
+  /* Writer overlay: show palette entry 0 at 25% — opacity: 0→1 on focus
+     controls visibility, so no focus selector is needed here.
+     PUA glyphs (break/shy/para markers) share entry 0 and therefore also
+     appear at 25% — consistent with the marker colour variable. */
+  .gd-hidden-characters {
+    font-palette: --gd-hc-light;
+  }
+
+  :where([data-theme="dark"]) .gd-hidden-characters {
+    font-palette: --gd-hc-dark;
+  }
+
+  /* Textarea: overlay handles visibility; keep spaces always hidden on the
+     native element so they don't double-render. */
+  .k-textarea-input-native {
+    font-palette: --gd-hc-hidden-light;
+  }
+
+  :where([data-theme="dark"]) .k-textarea-input-native {
+    font-palette: --gd-hc-hidden-dark;
+  }
+
+  /* Text field: no overlay (single-line values can scroll); toggle on focus */
+  .k-string-input.k-text-input {
+    font-palette: --gd-hc-hidden-light;
+  }
+
+  :where([data-theme="dark"]) .k-string-input.k-text-input {
+    font-palette: --gd-hc-hidden-dark;
+  }
+
+  .k-string-input.k-text-input:focus-within {
+    font-palette: --gd-hc-light;
+  }
+
+  :where([data-theme="dark"]) .k-string-input.k-text-input:focus-within {
+    font-palette: --gd-hc-dark;
+  }
+}
+
+/* --- Paragraph end markers (overlay only) ---
+   p::after lives in the overlay clone so it fades in together with
+   break/shy on focus. Explicit color needed: p inherits color:transparent
+   from the overlay, so without it the glyph would stay invisible.        */
+
+.ProseMirror.gd-hidden-characters p::after {
+  color: var(--gd-hc-marker-color);
+  content: "\e000";
+  display: inline-block;
+  font-family: "hidden-characters", var(--font-sans) !important;
+  font-weight: normal;
+  height: 0;
+  position: relative;
+  width: 0;
+}
+
+.ProseMirror.gd-hidden-characters p:last-child::after {
+  content: "\e001";
+}
+
+.ProseMirror.gd-hidden-characters p:has(.ProseMirror-trailingBreak)::after {
+  margin-top: -1.5em;
+  position: absolute;
+}
+
+.ProseMirror.gd-hidden-characters
+  p:first-child:last-child:has(.ProseMirror-trailingBreak)::after {
+  content: "";
+}
+
+/* Prevent caption writer from overflowing its block figure container */
+.k-block-figure-caption .k-writer {
+  width: 100%;
+}
+
+/* --- Positioning context for overlay inside writer --- */
+
+.k-writer-input {
+  position: relative;
+}
+
+/* --- Textarea toolbar grid fix ---
+   The overlay is inserted after .k-textarea-input-native, inside
+   .k-textarea-input-wrapper. When a Kirby toolbar sits above the textarea,
+   a simple absolute-positioned overlay would cover the toolbar buttons.
+   Converting the wrapper to a CSS grid places both the native textarea and
+   the overlay into the same second row, leaving the toolbar in row 1. */
+
+.k-textarea-input .k-textarea-input-wrapper:has(.gd-hidden-characters) {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  position: relative;
+}
+
+.k-textarea-input
+  .k-textarea-input-wrapper:has(.gd-hidden-characters)
+  > .k-toolbar {
+  grid-column: 1;
+  grid-row: 1;
+  z-index: 2;
+}
+
+.k-textarea-input
+  .k-textarea-input-wrapper:has(.gd-hidden-characters)
+  > .k-textarea-input-native {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.k-textarea-input
+  .k-textarea-input-wrapper:has(.gd-hidden-characters)
+  > .gd-hidden-characters[data-tag="textarea"] {
+  grid-column: 1;
+  grid-row: 2;
+  height: 100%;
+  inset: auto;
+  overflow-wrap: break-word;
+  position: relative;
+  white-space: pre-wrap;
+  width: 100%;
+}
+
+/* =============================================================================
+   Overlay (.gd-hidden-characters)
+   A non-interactive clone of the field element positioned on top of it.
+/* Only <break>::before, <shy>::before, <tab>::before, and p::after are made visible; all
+   other content inherits the parent's transparent colour.
+   ============================================================================= */
+
+.gd-hidden-characters {
+  border-color: transparent !important;
+  color: transparent;
+  contain: content;
+  font-variation-settings: "MONO" 0;
+  height: 100%;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  text-decoration-color: transparent !important;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Show overlay when the preceding sibling field is focused */
+:focus-visible + .gd-hidden-characters {
+  opacity: 1;
+}
+
+/* Ensure all descendant elements stay transparent */
+.gd-hidden-characters * {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: transparent;
+  text-decoration-color: transparent !important;
+}
+
+/* --- Visible marker pseudo-elements --- */
+/* <break>, <shy>, and p::after are all rendered exclusively via the overlay. */
+
+/* 25% color matches the font-palette used on direct field elements */
+.gd-hidden-characters {
+  --gd-hc-marker-color: rgba(0, 0, 0, 0.25);
+}
+
+:where([data-theme="dark"]) .gd-hidden-characters {
+  --gd-hc-marker-color: rgba(255, 255, 255, 0.25);
+}
+
+.gd-hidden-characters break::before,
+.gd-hidden-characters shy::before,
+.gd-hidden-characters tab::before {
+  color: var(--gd-hc-marker-color);
+  font-family: "hidden-characters", var(--font-sans) !important;
+  font-weight: normal;
+  width: max-content;
+}
+
+/* Caption blocks: use background colour to work around mix-blend-mode */
+.k-block-figure-caption .k-writer .gd-hidden-characters break::before,
+.k-block-figure-caption .k-writer .gd-hidden-characters shy::before,
+.k-block-figure-caption .k-writer .gd-hidden-characters tab::before {
+  color: var(--color-background) !important;
+}
+
+/* --- <break>, <shy>, and <tab> positioning context --- */
+
+.gd-hidden-characters break,
+.gd-hidden-characters shy,
+.gd-hidden-characters tab {
+  display: inline;
+  position: relative;
+  vertical-align: bottom;
+}
+
+.gd-hidden-characters break::before,
+.gd-hidden-characters shy::before,
+.gd-hidden-characters tab::before {
+  display: inline-block;
+  position: absolute;
+}
+
+/* PUA glyph assignments */
+.gd-hidden-characters break::before {
+  content: "\e002";
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.gd-hidden-characters shy::before {
+  content: "\e003";
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gd-hidden-characters tab::before {
+  content: "\e004";
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

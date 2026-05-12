@@ -1,0 +1,17 @@
+{
+  "playwright.configPath": "playwright.config.ts",
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": ".gitmessage"
+    },
+    {
+      "text": "Ensure the subject line is under 50 chars. Use the types defined in the provided file."
+    }
+  ],
+  "intelephense.environment.includePaths": [
+    "vendor",
+    "playground/vendor",
+    "playground/kirby",
+    "playground/site"
+  ]
+}

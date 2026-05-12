@@ -1,0 +1,20 @@
+{
+    "cache": {
+        "ttlSeconds": 60
+    },
+    "docs": {
+        "ttlSeconds": 86400
+    },
+    "dumps": {
+        "enabled": true,
+        "maxBytes": 2097152
+    },
+    "cli": {
+        "allow": [],
+        "allowWrite": [],
+        "deny": []
+    },
+    "ide": {
+        "typeHintScanBytes": 16384
+    }
+}

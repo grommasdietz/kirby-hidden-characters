@@ -1,12 +1,12 @@
 {
     "name": "grommasdietz/kirby-hidden-characters",
-    "description": "Visually show hidden characters on Kirby CMS",
+    "description": "Kirby CMS plugin for visualising hidden characters in the Panel",
+    "version": "3.0.0",
     "type": "kirby-plugin",
     "license": "MIT",
-    "homepage": "https://github.com/grommasdietz/kirby-hidden-characters",
     "authors": [
         {
-            "name": "Grommas Dietz",
+            "name": "Grommas Dietz",
             "email": "info@grommas-dietz.com",
             "homepage": "https://grommas-dietz.com",
             "role": "Developer"
@@ -20,33 +20,55 @@
         "kirby",
         "kirby-cms",
         "kirby-plugin",
-        "hidden-characters"
+        "hidden-characters",
+        "panel"
     ],
+    "autoload": {
+        "psr-4": {
+            "GrommasDietz\\HiddenCharacters\\": "lib/"
+        }
+    },
     "require": {
+        "php": "^8.2",
         "getkirby/composer-installer": "^1.2"
     },
     "require-dev": {
-        "getkirby/cms": "^5.0"
+        "phpunit/phpunit": "^12.5",
+        "vimeo/psalm": "^6.15",
+        "friendsofphp/php-cs-fixer": "^3.93"
     },
     "config": {
         "optimize-autoloader": true,
+        "platform": {
+            "php": "8.3.16"
+        },
         "allow-plugins": {
             "getkirby/composer-installer": true
         }
     },
-    "extra": {
-        "kirby-cms-path": false
-    },
-    "archive": {
-        "exclude": [
-            "/.editorconfig",
-            "/.gitattributes",
-            "/.github",
-            "/.gitignore",
-            "/composer.lock",
-            "/package-lock.json",
-            "/package.json",
-            "/src"
-        ]
+    "scripts": {
+        "test": [
+            "@test:unit",
+            "@test:integration"
+        ],
+        "test:unit": "phpunit --testsuite Unit",
+        "test:integration": "phpunit --testsuite Integration",
+        "test:coverage": "phpunit --coverage-text",
+        "psalm": "./vendor/bin/psalm --no-cache --show-info=true",
+        "lint": "php-cs-fixer fix --dry-run",
+        "lint:fix": "php-cs-fixer fix",
+        "format": "@lint:fix",
+        "setup": [
+            "composer install",
+            "composer install -d playground"
+        ],
+        "verify": [
+            "@lint",
+            "@psalm",
+            "@test"
+        ],
+        "package:clean": "rm -rf dist && mkdir -p dist && git archive --format=zip --worktree-attributes HEAD -o dist/kirby-hidden-characters.zip",
+        "notices:generate": "php tools/generate-third-party-notices.php",
+        "post-update-cmd": "@notices:generate"
     }
 }

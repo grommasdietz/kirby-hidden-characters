@@ -1,15 +1,53 @@
-# OS files
+# OS / editor
 .DS_Store
+Thumbs.db
+.idea/
 
-# npm modules
-/node_modules
+# Kirby playground runtime artifacts
+/playground/content/**/_changes/
+/playground/content/**/.lock
 
-# Parcel cache folder
-.cache
+# Env
+.env
 
-# Composer files
-/vendor
+# Node
+node_modules/
+.pnpm-store/
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# kirbyup temp development entry
-/index.dev.mjs
+# Composer
+vendor/
 
+# PHPUnit / QA
+.phpunit.cache/
+.phpunit.result.cache
+.phpunit.*
+.php-cs-fixer.cache
+coverage/
+
+# Psalm
+.psalm/
+psalm-baseline.xml
+
+# Playwright
+playwright-report/
+test-results/
+
+# Playground (local runtime artifacts)
+playground/kirby/
+playground/vendor/
+playground/media/
+playground/site/cache/
+playground/site/accounts/
+playground/site/logs/
+playground/site/sessions/
+playground/site/plugins/*
+!playground/site/plugins/.gitkeep
+!playground/site/plugins/gd-*/
+!playground/site/plugins/gd-*/**
+
+# Temporary plugin sandbox used by tests
+tests/.plugins/

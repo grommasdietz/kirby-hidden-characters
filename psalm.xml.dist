@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+    Psalm configuration for the Kirby Hidden Characters plugin.
+
+    Important: Psalm errors if directories in issueHandlers don't exist.
+    This boilerplate uses only global suppressions for common Kirby patterns,
+    with directory-specific rules only for folders that always exist (config, templates).
+
+    When you add plugin folders (snippets, models, blueprints, assets, routes, etc.),
+    add directory-specific suppressions as needed. See docs/contributions/structure.md
+    for guidance.
+-->
+<psalm
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    errorLevel="7"
+    findUnusedIssueHandlerSuppression="false"
+    resolveFromConfigFile="true"
+>
+    <projectFiles>
+        <directory name="playground" />
+        <directory name="lib" />
+        <file name="index.php" />
+        <ignoreFiles>
+            <directory name="playground/kirby" />
+            <directory name="playground/site/plugins" />
+            <directory name="playground/vendor" />
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <!-- Don't warn about "$this in a non-class context" in config overrides -->
+        <InvalidScope>
+            <errorLevel type="suppress">
+                <directory name="playground/site/config" />
+            </errorLevel>
+        </InvalidScope>
+
+        <!-- PHP 8.1+ no longer requires setAccessible for public reflection -->
+        <UnusedMethodCall>
+            <errorLevel type="suppress">
+                <referencedMethod name="ReflectionProperty::setAccessible" />
+            </errorLevel>
+        </UnusedMethodCall>
+
+        <!-- Kirby content fields and field methods are resolved dynamically at runtime -->
+        <UndefinedMagicMethod>
+            <errorLevel type="suppress">
+                <directory name="playground/site/templates" />
+            </errorLevel>
+        </UndefinedMagicMethod>
+
+        <!-- Global suppressions for Kirby framework patterns -->
+        <DuplicateArrayKey errorLevel="suppress" />
+        <MissingTemplateParam errorLevel="suppress" />
+        <MissingOverrideAttribute errorLevel="suppress" />
+        <PossiblyUnusedMethod errorLevel="suppress" />
+        <PossiblyUnusedParam errorLevel="suppress" />
+        <UnusedParam errorLevel="suppress" />
+        <PossiblyUnusedProperty errorLevel="suppress" />
+        <PossiblyUnusedReturnValue errorLevel="suppress" />
+        <UnusedClass errorLevel="suppress" />
+        <UnusedClosureParam errorLevel="suppress" />
+        <UnusedForeachValue errorLevel="suppress" />
+        <UnusedVariable errorLevel="suppress" />
+        <UndefinedClass errorLevel="suppress" />
+        <RiskyTruthyFalsyComparison errorLevel="suppress" />
+        <ImplicitToStringCast errorLevel="suppress" />
+        <PropertyNotSetInConstructor errorLevel="suppress" />
+        <RedundantCondition errorLevel="suppress" />
+        <RedundantConditionGivenDocblockType errorLevel="suppress" />
+        <TypeDoesNotContainType errorLevel="suppress" />
+        <TypeDoesNotContainNull errorLevel="suppress" />
+        <DocblockTypeContradiction errorLevel="suppress" />
+        <RedundantCast errorLevel="suppress" />
+        <RedundantCastGivenDocblockType errorLevel="suppress" />
+        <RedundantFunctionCall errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="suppress" />
+        <InvalidThrow errorLevel="suppress" />
+
+        <!-- Site extends ModelWithContent, so returning Site when declared type is
+             ModelWithContent is valid (Liskov Substitution). Psalm's inference is
+             more precise than necessary. -->
+        <InvalidReturnType errorLevel="suppress" />
+    </issueHandlers>
+</psalm>

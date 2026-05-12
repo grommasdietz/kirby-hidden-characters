@@ -1,0 +1,9 @@
+if command -v composer >/dev/null 2>&1; then
+  if [ -d "vendor" ]; then
+    composer lint && composer test:unit
+  else
+    echo "Skipping PHP checks: run 'composer install' to enable pre-commit linting and unit tests." >&2
+  fi
+else
+  echo "Skipping PHP checks: composer is not available in PATH." >&2
+fi
