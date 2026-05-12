@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Psalm configuration for the Kirby plugin boilerplate.
+    Psalm configuration for the Kirby Hidden Characters plugin.
 
     Important: Psalm errors if directories in issueHandlers don't exist.
     This boilerplate uses only global suppressions for common Kirby patterns,

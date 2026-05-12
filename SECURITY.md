@@ -1,6 +1,6 @@
 # Security Policy
 
-We take the security of the Kirby plugin seriously.
+We take the security of the Kirby Hidden Characters plugin seriously.
 
 ## Supported Versions
 

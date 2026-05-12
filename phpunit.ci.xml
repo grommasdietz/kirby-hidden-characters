@@ -23,12 +23,6 @@
     failOnWarning="true"
     stderr="true"
 >
-    <!--
-        Coverage source configuration.
-        The boilerplate ships with minimal PHP (just index.php bootstrap).
-        Coverage metrics become meaningful once you add PHP classes to lib/.
-        Add directories as you create PHP code (models, services, config, etc.).
-    -->
     <source>
         <include>
             <file>./index.php</file>
