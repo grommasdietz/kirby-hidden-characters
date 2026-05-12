@@ -32,7 +32,9 @@ jobs:
           tools: composer:v2
 
       - name: Install playground dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
+        run: |
+          mkdir -p site/plugins
+          composer install --prefer-dist --no-progress --no-interaction
         working-directory: playground
 
       - name: Install dependencies
