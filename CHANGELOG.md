@@ -1,3 +1,18 @@
+# [2.1.0](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.0.12...v2.1.0) (2026-05-12)
+
+
+### Bug Fixes
+
+* **ci:** create site/plugins dir before composer install in playground ([cab926c](https://github.com/grommasdietz/kirby-hidden-characters/commit/cab926c89e2ff41bfdaa2d7043cc17846df60ac7))
+* **ci:** track plugins dir and fix docs table alignment ([60aaf93](https://github.com/grommasdietz/kirby-hidden-characters/commit/60aaf93a200d5f00a4de4962736f9ef508cd949b))
+* **deps:** update config.platform to 8.3.16 and regenerate lock files ([afd0ff5](https://github.com/grommasdietz/kirby-hidden-characters/commit/afd0ff574df45c954b3dcf5549e25ebc1b326175))
+* **home:** correct soft hyphen in textarea content ([9e80434](https://github.com/grommasdietz/kirby-hidden-characters/commit/9e80434664d34daf2c9626fe31ec8d11c4392bd3))
+
+
+### Features
+
+* **svg:** add gd-hc-tabulator SVG for dark and light themes ([ea3e962](https://github.com/grommasdietz/kirby-hidden-characters/commit/ea3e9621aaad48974bb75e9b993e6f69f27a18ed))
+
 # [1.3.0](https://github.com/grommasdietz/kirby-hidden-characters/compare/v1.2.0...v1.3.0) (2026-03-11)
 
 
