@@ -24,44 +24,27 @@ The plugin visualizes the following characters using a custom icon font:
 | **Figure Space**              | `U+2007` |                   ![Figure](/.github/assets/characters/dark/gd-hc-figure.svg#gh-dark-mode-only) ![Figure](/.github/assets/characters/light/gd-hc-figure.svg#gh-light-mode-only)                   | Centered dot inside number sign                           |
 | **Medium Mathematical Space** | `U+205F` |                       ![Math](/.github/assets/characters/dark/gd-hc-math.svg#gh-dark-mode-only) ![Math](/.github/assets/characters/light/gd-hc-math.svg#gh-light-mode-only)                       | Centered dot with negation sign above                     |
 | **Zero-Width Space**          | `U+200B` |           ![Zero width](/.github/assets/characters/dark/gd-hc-zero_width.svg#gh-dark-mode-only) ![Zero width](/.github/assets/characters/light/gd-hc-zero_width.svg#gh-light-mode-only)           | Dashed vertical stroke                                    |
-| **Soft Hyphen**               | `U+00AD` |         ![Soft hyphen](/.github/assets/characters/dark/gd-hc-soft_hyphen.svg#gh-dark-mode-only) ![Soft hyphen](/.github/assets/characters/light/gd-hc-soft_hyphen.svg#gh-light-mode-only)         | Vertical stroke indicating possible hyphenation [^1]   |
-| **Tab**                       | `U+0009` |                   ![Tab](/.github/assets/characters/dark/gd-hc-tabulator.svg#gh-dark-mode-only) ![Tab](/.github/assets/characters/light/gd-hc-tabulator.svg#gh-light-mode-only)                   | Two rightward arrows spanning the tab stop width [^1]  |
-| **Line Break**                | `U+000A` |                     ![Break](/.github/assets/characters/dark/gd-hc-break.svg#gh-dark-mode-only) ![Break](/.github/assets/characters/light/gd-hc-break.svg#gh-light-mode-only)                     | Negation sign representing hard line break [^1]        |
+| **Soft Hyphen**               | `U+00AD` |         ![Soft hyphen](/.github/assets/characters/dark/gd-hc-soft_hyphen.svg#gh-dark-mode-only) ![Soft hyphen](/.github/assets/characters/light/gd-hc-soft_hyphen.svg#gh-light-mode-only)         | Vertical stroke indicating possible hyphenation [^1]      |
+| **Tab**                       | `U+0009` |                   ![Tab](/.github/assets/characters/dark/gd-hc-tabulator.svg#gh-dark-mode-only) ![Tab](/.github/assets/characters/light/gd-hc-tabulator.svg#gh-light-mode-only)                   | Two rightward arrows spanning the tab stop width [^1]     |
+| **Line Break**                | `U+000A` |                     ![Break](/.github/assets/characters/dark/gd-hc-break.svg#gh-dark-mode-only) ![Break](/.github/assets/characters/light/gd-hc-break.svg#gh-light-mode-only)                     | Negation sign representing hard line break [^1]           |
 | **Paragraph End**             |          |             ![Paragraph](/.github/assets/characters/dark/gd-hc-paragraph.svg#gh-dark-mode-only) ![Paragraph](/.github/assets/characters/light/gd-hc-paragraph.svg#gh-light-mode-only)             | Pilcrow sign representing the end of a paragraph          |
 | **Story End**                 |          |     ![Paragraph end](/.github/assets/characters/dark/gd-hc-paragraph_end.svg#gh-dark-mode-only) ![Paragraph end](/.github/assets/characters/light/gd-hc-paragraph_end.svg#gh-light-mode-only)     | Number sign representing the end of the entire text block |
 
 [^1]: Only rendered in `writer` and `textarea`. Single-line `<input>` elements don't support line breaks, collapse tabs to spaces, and never create hyphenation opportunities for soft hyphens.
-
----
 
 ## Requirements
 
 - Kirby 5+
 - PHP 8.2+
 
----
-
 ## Installation
 
-You can install the plugin via one of three methods:
+```bash
+composer require grommasdietz/kirby-hidden-characters
+```
 
-1. ### Download
-
-   Download and copy this repository to `site/plugins/kirby-hidden-characters`.
-
-2. ### Git Submodule
-
-   ```shell
-   git submodule add https://github.com/grommasdietz/kirby-hidden-characters.git site/plugins/kirby-hidden-characters
-   ```
-
-3. ### Composer
-
-   ```shell
-   composer require grommasdietz/kirby-hidden-characters
-   ```
-
----
+> [!TIP]
+> If you don’t use Composer, you can download this repository and copy it to `site/plugins/kirby-hidden-characters`.
 
 ## Quickstart
 
