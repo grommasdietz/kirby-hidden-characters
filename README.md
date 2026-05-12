@@ -30,7 +30,7 @@ The plugin visualizes the following characters using a custom icon font:
 | **Paragraph End**             |          |             ![Paragraph](/.github/assets/characters/dark/gd-hc-paragraph.svg#gh-dark-mode-only) ![Paragraph](/.github/assets/characters/light/gd-hc-paragraph.svg#gh-light-mode-only)             | Pilcrow sign representing the end of a paragraph          |
 | **Story End**                 |          |     ![Paragraph end](/.github/assets/characters/dark/gd-hc-paragraph_end.svg#gh-dark-mode-only) ![Paragraph end](/.github/assets/characters/light/gd-hc-paragraph_end.svg#gh-light-mode-only)     | Number sign representing the end of the entire text block |
 
-> Soft hyphen, tabulator, line breaks and paragraph endings are only rendered in `writer` and `textarea`, not on single-line `<input>` elements.
+> Soft hyphens, tabulators, line breaks and paragraph endings are only rendered in `writer` and `textarea`, not on single-line `<input>` elements.
 
 ## Requirements
 
