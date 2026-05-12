@@ -14,9 +14,9 @@ Single-line `text` fields use only the font mechanism — a scrollable overlay c
 | :--------- | :----------------------------------------------------------------------- |
 | `writer`   | Overlay mirrors the ProseMirror DOM; updated via `MutationObserver`      |
 | `textarea` | Overlay mirrors the textarea value; updated via the native `input` event |
-| `text`     | Custom icon font applied directly; revealed on focus via CSS [^1]     |
+| `text`     | Custom icon font applied directly; revealed on focus via CSS             |
 
-[^1]: Tab, Soft Hyphen, and Line Break are not visible in `text` fields. Single-line `<input>` elements don't support line breaks, collapse tabs to spaces, and never create hyphenation opportunities for soft hyphens.
+> Soft hyphens, tabs, line breaks, and paragraph endings are only rendered in `writer` and `textarea`, not in single-line `<input>` elements.
 
 ---
 

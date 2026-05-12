@@ -45,6 +45,7 @@ playground/site/accounts/
 playground/site/logs/
 playground/site/sessions/
 playground/site/plugins/*
+!playground/site/plugins/.gitkeep
 !playground/site/plugins/gd-*/
 !playground/site/plugins/gd-*/**
 
