@@ -1,1 +1,25 @@
 Title: Kirby Playground
+
+----
+
+Writer:
+
+<p>Hello world with spaces and a&nbsp;soft­hyphen.<br>	Hello world with spaces and a&nbsp;soft­hyphen.</p><p>Hello world with spaces and a&nbsp;soft­hyphen. space nbspace&nbsp;enspace emspace enquad emquad threeperemspace fourperemspace sixperemspace figurespace punctuationspace thinspace hairspace narrownbspace mediumspace-math characters.</p>
+
+----
+
+Textarea:
+
+Hello world with spaces and a soft­hyphen.	Hello world with spaces and a soft­hyphen.
+
+Hello world with spaces and a soft­hyphen. space nbspace enspace emspace enquad emquad threeperemspace fourperemspace sixperemspace figurespace punctuationspace thinspace hairspace narrownbspace mediumspace-math characters.
+
+----
+
+Text:
+
+space nbspace enspace emspace enquad emquad threeperemspace fourperemspace sixperemspace figurespace punctuationspace thinspace hairspace narrownbspace mediumspace-math characters.
+
+----
+
+Blocks: 

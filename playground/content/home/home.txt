@@ -11,7 +11,7 @@ Writer:
 Textarea:
 
 Hello world with spaces and a soft­hyphen.
-	Hello world with spaces and a softq­hyphen.
+	Hello world with spaces and a soft­hyphen.
 
 Hello world with spaces and a soft­hyphen. space nbspace enspace emspace enquad emquad threeperemspace fourperemspace sixperemspace figurespace punctuationspace thinspace hairspace narrownbspace mediumspace-math characters.
 
@@ -31,7 +31,7 @@ Textarea-notoolbar:
 Hello world with spaces and a soft­hyphen.
 	Hello world with spaces and a soft­hyphen.
 
-space nbspace enspace emspace threeperemspace fourperemspace sixperemspace figurespace punctuationspace thinspace hairspace nanrownbspace mediumspace-math  characters.
+space nbspace enspace emspace threeperemspace fourperemspace sixperemspace figurespace punctuationspace thinspace hairspace nanrownbspace mediumspace-math characters.
 
 ----
 
