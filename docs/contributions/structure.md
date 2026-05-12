@@ -1,58 +1,48 @@
 # Plugin structure
 
-Runtime entry points:
+This page separates runtime files from development tooling.
 
-- `index.php`: registers the plugin (Composer autoload expected for PHP classes).
-- `index.js` / `index.css`: compiled Panel assets that must be committed for releases.
+---
 
-Authoring sources:
+## Runtime essentials
 
-- `src/index.js`, `src/components/**`: Panel code built with `kirbyup`.
-- `lib/` (PHP): add classes under the `GrommasDietz\\HiddenCharacters\\` namespace.
+These files are required at runtime and must stay in release archives:
 
-Optional plugin folders. Add them only when they contain shipped files. Skip empty placeholders:
+- `index.php` — Plugin entry point
+- `index.js` / `index.css` — Compiled Panel assets (keep committed)
+- `lib` — PHP source (`GrommasDietz\\HiddenCharacters\\`)
 
-- `assets/`: Panel-facing static assets (fonts, extra JS/CSS) that are not bundled via `kirbyup`.
-- `blueprints/`: Panel blueprints for fields, blocks, and sections.
-- `snippets/` / `templates/`: frontend rendering helpers.
-- `models/` / `methods/`: PHP models and global helpers.
-- `translations/`: localized strings for the Panel and site.
-- `config/` / `routes/`: plugin defaults and route definitions.
-- `resources/`: shared files (e.g. images) that should ship with the plugin.
+---
 
-Remove template-only helpers with `php tools/cleanup-template.php --apply` once
-they are no longer useful for local maintenance.
+## Development‑only
 
-Playground:
+The following live in the repository but are excluded from release archives:
 
-- `playground/`: self-contained Kirby site for integration/browser tests.
-- `playground/site/blueprints/site.yml`: includes the demo section so the Panel shows something on first boot (remove or replace as needed).
+- `src` — Panel source for kirbyup
+- `playground` — Local Kirby site for integration and browser tests
+- `tests` — PHPUnit and Playwright suites
+- `tools` — Local helper scripts
+- `docs`, `CONTRIBUTING.md`, `STYLE_GUIDE.md`, `SECURITY.md` — Documentation and policies
+- Tooling config (ESLint, PostCSS, Psalm, PHPUnit, Playwright)
 
-When you add blocks, marks, fields, routes, config folders, or other Kirby pieces:
-
-- Run `pnpm build` (or `pnpm run verify` if you also want linting/tests) so compiled assets stay in sync.
-- Add focused fixtures to `playground/site/**` if tests need them.
-- Update `psalm.xml.dist` when you add new plugin folders (see below).
-- Extend PHPUnit/Playwright coverage for new behavior.
+Packaging rules for release archives live in `.gitattributes`.
 
 ---
 
 ## Psalm configuration
 
-Psalm errors if directories referenced in `issueHandlers` don't exist. The configuration ships with global suppressions for common Kirby patterns, plus directory-specific rules only for folders that always exist (`config`, `templates`).
+Psalm errors if directories referenced in `issueHandlers` do not exist. When you add plugin folders, update `psalm.xml.dist` accordingly:
 
-When you add plugin folders, update `psalm.xml.dist`:
+| Folder added        | Psalm update                                                       |
+| ------------------- | ------------------------------------------------------------------ |
+| `snippets`          | Add `<directory name="snippets" />` under `<UndefinedMagicMethod>` |
+| `models`            | Add to `<projectFiles>` if outside `lib`                           |
+| `blueprints`        | No change needed (YAML only)                                       |
+| `assets`            | No change needed (static files)                                    |
+| `translations`      | No change needed (PHP arrays, covered globally)                    |
+| `config` / `routes` | Add `<directory name="..." />` under `<InvalidScope>`              |
 
-| Folder added          | Psalm update                                                       |
-| --------------------- | ------------------------------------------------------------------ |
-| `snippets/`           | Add `<directory name="snippets" />` under `<UndefinedMagicMethod>` |
-| `models/`             | Add to `<projectFiles>` if outside `lib/`                          |
-| `blueprints/`         | No change needed (YAML only)                                       |
-| `assets/`             | No change needed (static files)                                    |
-| `translations/`       | No change needed (PHP arrays, covered globally)                    |
-| `config/` / `routes/` | Add `<directory name="..." />` under `<InvalidScope>`              |
-
-Example: adding a `snippets/` folder:
+Example (adding `snippets`):
 
 ```xml
 <UndefinedMagicMethod>
@@ -63,13 +53,13 @@ Example: adding a `snippets/` folder:
 </UndefinedMagicMethod>
 ```
 
-Only add directories that actually exist to avoid Psalm errors.
+Only add directories that actually exist.
 
 ---
 
-## Integrations and secrets
+## Environment and secrets
 
-- Keep secrets in `playground/.env` and let `vlucas/phpdotenv` load them during tests.
+Keep secrets in `playground/.env`. If `vlucas/phpdotenv` is installed, tests will load it automatically.
 
 ---
 
