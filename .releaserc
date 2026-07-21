@@ -1,7 +1,5 @@
 {
-  "branches": [
-    "main"
-  ],
+  "branches": ["main"],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -14,20 +12,21 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "node tools/set-version.mjs ${nextRelease.version}"
+        "prepareCmd": "node tools/set-version.mjs ${nextRelease.version} && composer update --lock --no-install --no-scripts --no-interaction && composer release:check"
       }
     ],
-    "@semantic-release/github",
     [
       "@semantic-release/git",
       {
         "assets": [
           "CHANGELOG.md",
-          "package.json",
           "composer.json",
-          "pnpm-lock.yaml"
-        ]
+          "composer.lock",
+          "package.json"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
-    ]
+    ],
+    "@semantic-release/github"
   ]
 }

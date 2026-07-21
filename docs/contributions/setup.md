@@ -12,23 +12,19 @@ Install Composer dependencies for the repo and the playground:
 composer run setup
 ```
 
-> [!NOTE]
-> If you install `vlucas/phpdotenv`, the PHPUnit bootstrap will load
-> `playground/.env` for tests.
-
-> [!NOTE]
-> PHPUnit loads `vendor/autoload.php` by default. If you only install dependencies
-> in `playground/`, the bootstrap loads `playground/vendor/autoload.php` as well.
+The root dependency graph contains PHPUnit, Psalm, PHP CS Fixer and Kirby for self-contained PHP quality checks. The separate playground graph provides the disposable application used by runtime and browser tests.
 
 ---
 
 ## Node
 
-Install Node dependencies and Playwright browsers (with system dependencies):
+Install Node dependencies and the Playwright Chromium browser:
 
 ```bash
 pnpm run setup
 ```
+
+On Linux CI, install Chromium and its operating-system packages with `pnpm exec playwright install --with-deps chromium`.
 
 ---
 

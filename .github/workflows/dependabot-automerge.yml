@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Fetch Dependabot metadata
         id: metadata
-        # Keep the maintained v2 line instead of SHA-pinning:
+        # Keep the maintained major line instead of SHA-pinning:
         # this job does not checkout or execute pull request code.
         uses: dependabot/fetch-metadata@v3
         with:

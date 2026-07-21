@@ -5,134 +5,59 @@ Run tests after PHP or Panel changes and add coverage for bug fixes.
 > [!IMPORTANT]
 > Complete the [Setup](./setup.md) steps first.
 
----
+## Complete verification
 
-## Quick sweep
+```bash
+composer run setup
+pnpm run setup
+pnpm run verify:all
+```
 
-Run the full lint/analysis/test set:
+The command prints one concise status per check, stops at the first failure, and shows the captured output only for that failed check. Browser tests use the compact dot reporter; open the full HTML report with `pnpm run test:browser:report`, or expose the verbose list reporter and raw PHP server logs with `pnpm run test:browser:debug`.
+
+Do not enable `set -e` in an interactive shell.
+
+## PHP
 
 ```bash
 composer run verify
-pnpm run verify
 ```
 
----
-
-## PHP (PHPUnit)
+Target individual checks when debugging:
 
 ```bash
-composer test
+composer run lint
+composer run psalm
+composer run test:unit
+composer run test:integration
+composer run test:smoke
+composer run test:coverage
+composer run release:check
 ```
 
-Use the shared `tests/TestCase.php` base class to boot Kirby with the playground roots. It wraps `tests/Support/TestEnvironment.php` and lets you override config values when needed.
+Use the shared `tests/TestCase.php` base class to boot Kirby with the playground roots. Add the smallest possible blueprint or content fixtures for new behavior.
 
-```php
-final class ExampleTest extends TestCase
-{
-    public function testBootsKirby(): void
-    {
-        $kirby = $this->bootKirby(['options' => ['debug' => true]]);
-
-        $this->assertSame('Kirby Playground', $kirby->site()->title()->value());
-    }
-}
-```
-
-When you need custom blueprints or content fixtures, add the smallest possible
-files under `playground/site/` so tests stay fast to understand.
-
-Targeted runs:
+## Panel, asset and browser checks
 
 ```bash
-composer test:unit
-composer test:integration
-composer test -- --filter ExampleTest
+pnpm run build:check
+pnpm run lint
+pnpm run test:bundle
+pnpm run test:assets
+pnpm run test:archive
+pnpm run docs:verify
+pnpm run test:hygiene
+pnpm run test:browser
 ```
 
-Coverage (requires Xdebug or PCOV):
+`test:assets` verifies the hidden-character icon map and confirms that the embedded WOFF2 payload is byte-identical to the source font. `build:check` rebuilds the compiled Panel output and fails when committed files are stale.
 
-```bash
-composer test:coverage
-```
+Playwright creates a temporary `admin@kirby-hidden-characters.test` user with password `playwright`. Override it with `KIRBY_USER_EMAIL` and `KIRBY_USER_PASSWORD` when needed. Runtime accounts, sessions, cache and media are removed after the suite while Composer-installed plugin links and tracked content are preserved.
 
----
+## Troubleshooting
 
-## Static analysis (Psalm)
-
-```bash
-composer psalm
-```
-
----
-
-## JS lint
-
-```bash
-pnpm lint
-```
-
----
-
-## Browser tests (Playwright)
-
-First run (installs browser binaries with OS dependencies):
-
-```bash
-pnpm run setup
-```
-
-Run browser tests:
-
-```bash
-pnpm test:browser
-```
-
-### Configuration
-
-Playwright starts a PHP server on a stable repo-specific localhost port by default. Override this with environment variables if needed:
-
-- `PLAYWRIGHT_BASE_URL`: full URL (e.g. `http://localhost:3000`)
-- `PLAYWRIGHT_WEB_PORT`: port number only
-- `PLAYWRIGHT_REUSE_SERVER=1`: reuse an already running server on the same URL instead of starting a fresh one
-
-### Panel login for browser tests
-
-Playwright creates temporary Panel users before the suite and removes them afterwards.
-
-**Admin user** (default):
-
-- Email: `admin@kirby-hidden-characters.test`
-- Password: `playwright`
-
-Override with environment variables:
-
-- `KIRBY_USER_EMAIL`
-- `KIRBY_USER_PASSWORD`
-
-Notes:
-
-- Test user files are written to `playground/site/accounts`
-- Playwright uses the built-in PHP server defined in `playwright.config.ts`
-- Playwright does not load `.env` files automatically
-
-You can also create/delete users manually during local debugging:
-
-```bash
-php tools/create-test-user.php --email "admin@kirby-hidden-characters.test" --password "playwright" --role=admin
-php tools/create-test-user.php --delete --email "admin@kirby-hidden-characters.test"
-```
-
----
-
-## Fixtures
-
-Keep fixtures under `playground/site/**` minimal and focused on the behavior under test. Avoid committing runtime data or caches.
-
-### Troubleshooting
-
-- **`Cannot find module '@playwright/test'` in VS Code**: run `pnpm install` and ensure you are not in production-only mode (check `NODE_ENV` and `pnpm config get production`).
-- **Missing Kirby or PHPUnit types in the editor**: run `composer install` and `composer install -d playground`, then clear the Intelephense cache.
-
----
+- If VS Code cannot resolve `@playwright/test`, run `pnpm install --frozen-lockfile`.
+- If PHP or Kirby types are missing, run both `composer install` and `composer install -d playground`, then clear the language-server cache.
+- For server-side browser failures, use `pnpm run test:browser:debug` rather than enabling permanent PHP access logs.
 
 Next: Continue with [Documentation](./documentation.md)

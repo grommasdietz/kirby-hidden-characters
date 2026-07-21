@@ -26,7 +26,7 @@ Use this checklist to keep docs consistent with the style guide.
 - [ ] Each subfolder should start with an [index.md](index.md) file
   - [ ] Each file ends with a next link (`Next: ...`) that points to the next child or sibling
   - [ ] Example: `Next: Continue with [Tests](./tests.md)`
-- [ ] Run `pnpm run docs:verify` to lint docs and validate next links
+- [ ] Run `pnpm run docs:verify` to lint docs and validate local links, navigation and documented commands
 
 ---
 

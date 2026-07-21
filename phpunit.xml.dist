@@ -5,7 +5,7 @@
     beStrictAboutOutputDuringTests="true"
     bootstrap="tests/bootstrap.php"
     cacheDirectory=".phpunit.cache"
-    colors="false"
+    colors="true"
     controlGarbageCollector="true"
     displayDetailsOnIncompleteTests="true"
     displayDetailsOnSkippedTests="true"
@@ -19,14 +19,12 @@
     failOnNotice="true"
     failOnPhpunitDeprecation="true"
     failOnRisky="true"
-    failOnSkipped="true"
     failOnWarning="true"
     stderr="true"
 >
     <source>
         <include>
             <file>./index.php</file>
-            <directory suffix=".php">./lib</directory>
         </include>
     </source>
 

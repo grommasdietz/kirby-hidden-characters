@@ -1,19 +1,25 @@
-# Workflow
+# Release workflow
 
-This repository uses **semantic-release** on the `main` branch. Releases, tags, and the changelog are generated from Conventional Commits.
+Versions are not changed manually during normal development. Conventional Commits on `main` are analyzed by Semantic Release.
 
-> [!IMPORTANT]
-> Don't bump versions by hand. Merge Conventional Commits to `main` and let CI publish the release.
+The release transaction:
 
----
+1. calculates the next semantic version;
+2. writes it to `composer.json` and `package.json`;
+3. refreshes `composer.lock` metadata;
+4. runs `composer release:check`;
+5. updates `CHANGELOG.md`;
+6. commits the synchronized release files and creates the GitHub tag/release.
 
-## Pre-flight checklist
+Before pushing a release-triggering commit, run:
 
-- [ ] Panel assets built and committed via `pnpm build`
-- [ ] All checks pass on `composer run verify` and `pnpm run verify`
-- [ ] No local runtime data or playground content is committed
-- [ ] Third‑party notices are regenerated via `composer run notices:generate` if required
+```bash
+composer install -d playground
+composer install
+pnpm install --frozen-lockfile
+composer verify
+composer release:check
+pnpm verify
+```
 
----
-
-Next: Return to [Documentation](../index.md)
+The manual installation download is GitHub's automatic archive for the immutable release tag. `.gitattributes` filters development files from that archive; no custom ZIP artifact is built or uploaded.

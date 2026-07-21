@@ -34,7 +34,7 @@ The plugin visualizes the following characters using a custom icon font:
 
 ## Requirements
 
-- Kirby 5+
+- Kirby 5.2+
 - PHP 8.2+
 
 ## Installation
@@ -50,10 +50,6 @@ composer require grommasdietz/kirby-hidden-characters
 
 This plugin works out of the box with no configuration required.
 
-### Configuration
-
-Developers building Panel plugins can register additional field components as overlay targets or customize the overlay element before insertion via the JavaScript extension API. See [Extension API](docs/usage/architecture.md#extension-api) for details.
-
 ### Documentation
 
 Full reference for [usage](docs/usage/index.md), [contributions](docs/contributions/index.md) and [maintenance](docs/maintenance/index.md) lives in [documentation](docs/index.md).
@@ -62,7 +58,7 @@ Full reference for [usage](docs/usage/index.md), [contributions](docs/contribut
 
 ## Credits
 
-The overlaying logic is adapted from [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
+The original mirroring approach was adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
 
 ---
 
@@ -86,4 +82,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations.
 
 ## License
 
-[MIT](LICENSE.md) © 2024 Grommas Dietz
+[MIT](LICENSE.md) © 2024–2026 Grommas Dietz

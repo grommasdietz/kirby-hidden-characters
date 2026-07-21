@@ -1,39 +1,44 @@
+#!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
 
-const version = process.argv[2];
-if (!version) {
-  console.error("Usage: node tools/set-version.mjs <version>");
+const version = process.argv[2]?.replace(/^v/, "");
+const semver = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+
+if (!version || !semver.test(version)) {
+  console.error("Usage: node tools/set-version.mjs <semver>");
   process.exit(1);
 }
+
+const root = process.cwd();
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
-function writeJson(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2) + "\n", "utf8");
+function writeJson(file, value) {
+  fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-const root = path.resolve(process.cwd());
+function insertAfter(object, key, insertedKey, insertedValue) {
+  const entries = Object.entries(object).filter(([entryKey]) => entryKey !== insertedKey);
+  const index = entries.findIndex(([entryKey]) => entryKey === key);
+  const position = index >= 0 ? index + 1 : 0;
+
+  return Object.fromEntries([
+    ...entries.slice(0, position),
+    [insertedKey, insertedValue],
+    ...entries.slice(position),
+  ]);
+}
+
 const composerPath = path.join(root, "composer.json");
 const packagePath = path.join(root, "package.json");
 
-if (fs.existsSync(composerPath)) {
-  const composer = readJson(composerPath);
-  const { version: _removed, ...rest } = composer;
-  const entries = Object.entries(rest);
-  const descIdx = entries.findIndex(([k]) => k === "description");
-  const reordered = Object.fromEntries([
-    ...entries.slice(0, descIdx + 1),
-    ["version", version],
-    ...entries.slice(descIdx + 1),
-  ]);
-  writeJson(composerPath, reordered);
-}
+const composer = insertAfter(readJson(composerPath), "description", "version", version);
+const packageJson = insertAfter(readJson(packagePath), "name", "version", version);
 
-if (fs.existsSync(packagePath)) {
-  const pkg = readJson(packagePath);
-  pkg.version = version;
-  writeJson(packagePath, pkg);
-}
+writeJson(composerPath, composer);
+writeJson(packagePath, packageJson);
+
+console.log(`Updated Composer and Node metadata to ${version}.`);

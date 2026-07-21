@@ -4,24 +4,16 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->name('*.php')
     ->exclude([
-        'vendor',
-        'node_modules',
-        '.phpunit.cache',
-        '.husky',
+        '.git',
         '.github',
-        'example',
-        'playground/vendor',
-        'playground/kirby',
-        'playground/site/plugins',
-        'playground/site/cache',
-        'playground/site/accounts',
-        'playground/site/logs',
-        'playground/site/sessions',
-        'playground/media',
-        'playground/site/templates',
-        'playground/site/config',
-        'playground/content',
-    ]);
+        '.husky',
+        '.phpunit.cache',
+        'kirby',
+        'node_modules',
+        'vendor',
+    ])
+    ->notPath('#^playground/(?:vendor|kirby|content|media)(?:/|$)#')
+    ->notPath('#^playground/site/(?:plugins|cache|accounts|logs|sessions|templates|config)(?:/|$)#');
 
 return (new PhpCsFixer\Config())
     ->setRules([

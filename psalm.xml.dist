@@ -2,9 +2,8 @@
 <!--
     Psalm configuration for the Kirby Hidden Characters plugin.
 
-    Important: Psalm errors if directories in issueHandlers don't exist.
-    This boilerplate uses only global suppressions for common Kirby patterns,
-    with directory-specific rules only for folders that always exist (config, templates).
+    Psalm analyzes committed plugin source only and loads Kirby types through the
+    root Composer autoloader. Generated playground paths are intentionally excluded.
 
     When you add plugin folders (snippets, models, blueprints, assets, routes, etc.),
     add directory-specific suppressions as needed. See docs/contributions/structure.md
@@ -16,42 +15,24 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
     xmlns:xi="http://www.w3.org/2001/XInclude"
     errorLevel="7"
+    autoloader="vendor/autoload.php"
     findUnusedIssueHandlerSuppression="false"
     resolveFromConfigFile="true"
 >
     <projectFiles>
-        <directory name="playground" />
-        <directory name="lib" />
         <file name="index.php" />
         <ignoreFiles>
-            <directory name="playground/kirby" />
-            <directory name="playground/site/plugins" />
-            <directory name="playground/vendor" />
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
 
     <issueHandlers>
-        <!-- Don't warn about "$this in a non-class context" in config overrides -->
-        <InvalidScope>
-            <errorLevel type="suppress">
-                <directory name="playground/site/config" />
-            </errorLevel>
-        </InvalidScope>
-
         <!-- PHP 8.1+ no longer requires setAccessible for public reflection -->
         <UnusedMethodCall>
             <errorLevel type="suppress">
                 <referencedMethod name="ReflectionProperty::setAccessible" />
             </errorLevel>
         </UnusedMethodCall>
-
-        <!-- Kirby content fields and field methods are resolved dynamically at runtime -->
-        <UndefinedMagicMethod>
-            <errorLevel type="suppress">
-                <directory name="playground/site/templates" />
-            </errorLevel>
-        </UndefinedMagicMethod>
 
         <!-- Global suppressions for Kirby framework patterns -->
         <DuplicateArrayKey errorLevel="suppress" />

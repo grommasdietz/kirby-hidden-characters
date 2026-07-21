@@ -2,8 +2,8 @@ import "./styles/hidden-characters.css";
 
 // ---------------------------------------------------------------------------
 // Extension registry
-// Third-party plugins can call registerHiddenCharactersExtension() to add
-// extra target components or transform the overlay clone before insertion.
+// Third-party plugins can add target components or adjust the non-interactive
+// overlay layer before it is inserted.
 // ---------------------------------------------------------------------------
 
 /** @type {Set<{ components?: string[], cloneTransform?: (overlayEl: HTMLElement, inputEl: HTMLElement) => void }>} */
@@ -13,21 +13,18 @@ const extensions = new Set();
  * Register an extension for the hidden-characters overlay.
  *
  * @param {{ components?: string[], cloneTransform?: (overlayEl: HTMLElement, inputEl: HTMLElement) => void }} opts
- *   - components: additional Vue component names to target (e.g. ["k-blocks-input"])
- *   - cloneTransform: callback to mutate the overlay element after creation
+ *   - components: additional Vue component names to target
+ *   - cloneTransform: callback to mutate the overlay element before insertion
  */
 export function registerHiddenCharactersExtension(opts) {
   extensions.add(opts);
 }
 
-// Expose extension API on window so other Kirby Panel plugins can call it
-// without a module import. The ??= guard makes order of script execution
-// irrelevant: set the namespace if absent, then assign the function.
 window.gdHiddenCharacters ??= {};
 window.gdHiddenCharacters.registerExtension = registerHiddenCharactersExtension;
 
 // ---------------------------------------------------------------------------
-// HTML helpers
+// Textarea HTML helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -44,112 +41,22 @@ function escapeHTML(input) {
 }
 
 /**
- * Parses `input` HTML and returns a transformed HTML string where:
- * - `<br>` tags are replaced with `<break>` custom elements
- * - Soft-hyphen characters (U+00AD) are wrapped in `<shy>` custom elements
- * - Tab characters (U+0009) are wrapped in `<tab>` custom elements
- * - All other characters (including whitespace) are left as plain text
- *   (whitespace rendering is handled via the hidden-characters font on the real input)
+ * Renders a plain-text textarea value for its grid-aligned mirror.
+ * Newline and tab characters remain in the mirrored text so browser layout
+ * continues to follow the textarea's `pre-wrap` behavior.
  *
- * @param {string} input - Raw field value or innerHTML.
- * @returns {string}
- */
-function renderHiddenCharacters(input) {
-  if (!input) return "";
-
-  // Normalise newlines to <br> so textarea values behave like contenteditable
-  const normalised = input.replace(/\n/g, "<br>");
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(`<div>${normalised}</div>`, "text/html");
-  const container = /** @type {Element} */ (doc.body.firstChild);
-
-  /**
-   * Walk the DOM tree collecting text nodes; convert <br> → <break> en route.
-   * @param {Node} node
-   * @param {Text[]} out
-   * @returns {Text[]}
-   */
-  function collectTextNodes(node, out = []) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      out.push(/** @type {Text} */ (node));
-    } else if (
-      node.nodeType === Node.ELEMENT_NODE &&
-      !["SCRIPT", "STYLE"].includes(/** @type {Element} */ (node).tagName)
-    ) {
-      if (/** @type {Element} */ (node).tagName === "BR") {
-        // ProseMirror adds a trailing <br class="ProseMirror-trailingBreak">
-        // to keep the cursor in empty/last paragraphs. p::after already
-        // renders the paragraph-end glyph for those, so skip this br.
-        if (
-          !(
-            /** @type {Element} */ (node).classList.contains(
-              "ProseMirror-trailingBreak"
-            )
-          )
-        ) {
-          const breakEl = document.createElement("break");
-          node.parentNode?.insertBefore(breakEl, node);
-        }
-        return out;
-      }
-      Array.from(node.childNodes).forEach((child) =>
-        collectTextNodes(child, out)
-      );
-    }
-    return out;
-  }
-
-  const textNodes = collectTextNodes(container);
-
-  for (const textNode of textNodes) {
-    const fragment = document.createDocumentFragment();
-
-    for (const char of /** @type {string} */ (textNode.nodeValue)) {
-      if (char === "\u00AD") {
-        // Soft hyphen → wrap in <shy> so CSS can render a glyph via ::before
-        const shy = document.createElement("shy");
-        shy.textContent = char;
-        fragment.appendChild(shy);
-        continue;
-      }
-      if (char === "\u0009") {
-        // Tab → wrap in <tab> so CSS can render a glyph via ::before
-        const tab = document.createElement("tab");
-        tab.textContent = char;
-        fragment.appendChild(tab);
-        continue;
-      }
-      // All other characters (including whitespace) stay as plain text;
-      // the "spaces" font applied to the real field handles space rendering.
-      fragment.appendChild(document.createTextNode(char));
-    }
-
-    textNode.replaceWith(fragment);
-  }
-
-  return container.innerHTML;
-}
-
-/**
- * Renders a plain-text textarea `value` as an overlay HTML string where:
- * - Newlines (\n) are preceded by a <break> marker and kept for pre-wrap layout
- * - Tabs (\t) are wrapped in a <tab> marker and kept for pre-wrap layout
- * - Soft hyphens (U+00AD) are wrapped in a <shy> marker
- * - All other characters are HTML-escaped plain text
- *
- * @param {string} value - Raw textarea value.
+ * @param {string} value
  * @returns {string}
  */
 function renderTextareaContent(value) {
   if (!value) return "";
+
   const parts = [];
+
   for (const char of value) {
     if (char === "\n") {
-      // Keep the newline so pre-wrap causes the line break; <break> adds the glyph
       parts.push("<break></break>\n");
     } else if (char === "\t") {
-      // Keep the tab so pre-wrap renders the tab stop; <tab> adds the glyph
       parts.push("<tab>\t</tab>");
     } else if (char === "\u00AD") {
       parts.push("<shy>\u00AD</shy>");
@@ -157,45 +64,255 @@ function renderTextareaContent(value) {
       parts.push(escapeHTML(char));
     }
   }
+
   return parts.join("");
+}
+
+// ---------------------------------------------------------------------------
+// Writer marker geometry
+// ---------------------------------------------------------------------------
+
+/**
+ * @param {Range} range
+ * @param {boolean} [preferLast=false]
+ * @returns {DOMRect | null}
+ */
+function rangeRect(range, preferLast = false) {
+  const rects = Array.from(range.getClientRects()).filter(
+    (rect) => rect.width > 0 || rect.height > 0
+  );
+
+  if (rects.length > 0) {
+    return preferLast ? rects.at(-1) ?? null : rects[0] ?? null;
+  }
+
+  const rect = range.getBoundingClientRect();
+  return rect.width > 0 || rect.height > 0 ? rect : null;
+}
+
+/**
+ * Creates a zero-width caret-like rectangle at the end of a visible range.
+ *
+ * @param {Range} range
+ * @returns {{ left: number, right: number, top: number, bottom: number, width: number, height: number } | null}
+ */
+function rangeEndRect(range) {
+  const rect = rangeRect(range, true);
+  if (!rect) return null;
+
+  return {
+    left: rect.right,
+    right: rect.right,
+    top: rect.top,
+    bottom: rect.bottom,
+    width: 0,
+    height: rect.height,
+  };
+}
+
+/**
+ * Finds the last text character inside an element, optionally stopping before
+ * a ProseMirror trailing-break placeholder.
+ *
+ * @param {Element} element
+ * @param {Node | null} stopBefore
+ * @returns {Range | null}
+ */
+function lastCharacterRange(element, stopBefore = null) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  /** @type {Text | null} */
+  let last = null;
+  /** @type {Node | null} */
+  let node = walker.nextNode();
+
+  while (node) {
+    if (
+      stopBefore &&
+      (node.compareDocumentPosition(stopBefore) &
+        Node.DOCUMENT_POSITION_PRECEDING) !==
+        0
+    ) {
+      break;
+    }
+
+    if ((node.nodeValue?.length ?? 0) > 0) {
+      last = /** @type {Text} */ (node);
+    }
+
+    node = walker.nextNode();
+  }
+
+  if (!last || !last.nodeValue) return null;
+
+  const range = document.createRange();
+  range.setStart(last, last.nodeValue.length - 1);
+  range.setEnd(last, last.nodeValue.length);
+  return range;
+}
+
+/**
+ * Returns the visual caret position at the end of a paragraph without letting
+ * ProseMirror's trailing `<br>` move the marker onto an artificial next line.
+ *
+ * @param {HTMLParagraphElement} paragraph
+ * @returns {{ left: number, right: number, top: number, bottom: number, width: number, height: number } | DOMRect | null}
+ */
+function paragraphEndRect(paragraph) {
+  const trailingBreak = paragraph.querySelector(
+    ":scope > br.ProseMirror-trailingBreak:last-child"
+  );
+  const range = document.createRange();
+  range.selectNodeContents(paragraph);
+
+  if (trailingBreak) {
+    range.setEndBefore(trailingBreak);
+  }
+
+  range.collapse(false);
+
+  const collapsedRect = rangeRect(range, true);
+  if (collapsedRect) return collapsedRect;
+
+  const characterRange = lastCharacterRange(paragraph, trailingBreak);
+  if (characterRange) {
+    return rangeEndRect(characterRange);
+  }
+
+  const paragraphRect = paragraph.getBoundingClientRect();
+  if (paragraphRect.width > 0 || paragraphRect.height > 0) {
+    return {
+      left: paragraphRect.left,
+      right: paragraphRect.left,
+      top: paragraphRect.top,
+      bottom: paragraphRect.bottom,
+      width: 0,
+      height: paragraphRect.height,
+    };
+  }
+
+  return null;
+}
+
+/**
+ * @param {HTMLElement} overlay
+ * @param {string} type
+ * @param {{ left: number, top: number, width: number, height: number }} rect
+ */
+function appendMarker(overlay, type, rect) {
+  const overlayRect = overlay.getBoundingClientRect();
+  const scaleX = overlay.offsetWidth > 0 ? overlayRect.width / overlay.offsetWidth : 1;
+  const scaleY = overlay.offsetHeight > 0 ? overlayRect.height / overlay.offsetHeight : 1;
+  const marker = document.createElement("span");
+
+  marker.className = "gd-hidden-character-marker";
+  marker.dataset.character = type;
+  marker.style.left = `${(rect.left - overlayRect.left) / scaleX}px`;
+  marker.style.top = `${(rect.top - overlayRect.top) / scaleY}px`;
+  marker.style.width = `${rect.width / scaleX}px`;
+  marker.style.height = `${rect.height / scaleY}px`;
+  overlay.appendChild(marker);
+}
+
+/**
+ * Builds marker positions from the real ProseMirror DOM. The overlay contains
+ * no mirrored text, so spaces and no-break spaces can never be reflowed by a
+ * second formatting context.
+ *
+ * @param {HTMLElement} inputEl
+ * @param {HTMLElement} overlay
+ */
+function renderWriterMarkers(inputEl, overlay) {
+  overlay.replaceChildren();
+
+  const paragraphs = Array.from(
+    inputEl.querySelectorAll("p")
+  );
+
+  paragraphs.forEach((paragraph, index) => {
+    const trailingBreak = paragraph.querySelector(
+      ":scope > br.ProseMirror-trailingBreak:last-child"
+    );
+    const isSingleEmptyParagraph =
+      paragraphs.length === 1 &&
+      Boolean(trailingBreak) &&
+      (paragraph.textContent ?? "") === "";
+
+    if (!isSingleEmptyParagraph) {
+      const rect = paragraphEndRect(
+        /** @type {HTMLParagraphElement} */ (paragraph)
+      );
+
+      if (rect) {
+        appendMarker(
+          overlay,
+          index === paragraphs.length - 1 ? "paragraph-last" : "paragraph",
+          rect
+        );
+      }
+    }
+  });
+
+  for (const breakEl of inputEl.querySelectorAll(
+    "br:not(.ProseMirror-trailingBreak)"
+  )) {
+    const range = document.createRange();
+    range.setStartBefore(breakEl);
+    range.collapse(true);
+    const rect = rangeRect(range, true) ?? breakEl.getBoundingClientRect();
+
+    if (rect.width > 0 || rect.height > 0) {
+      appendMarker(overlay, "break", rect);
+    }
+  }
+
+  const walker = document.createTreeWalker(inputEl, NodeFilter.SHOW_TEXT);
+  /** @type {Node | null} */
+  let node = walker.nextNode();
+
+  while (node) {
+    const textNode = /** @type {Text} */ (node);
+    const value = textNode.nodeValue ?? "";
+
+    for (let index = 0; index < value.length; index += 1) {
+      const char = value[index];
+      if (char !== "\u00AD" && char !== "\u0009") continue;
+
+      const range = document.createRange();
+      range.setStart(textNode, index);
+      range.setEnd(textNode, index + 1);
+      const rect = rangeRect(range, false);
+
+      if (rect) {
+        appendMarker(overlay, char === "\u00AD" ? "shy" : "tab", rect);
+      }
+    }
+
+    node = walker.nextNode();
+  }
 }
 
 // ---------------------------------------------------------------------------
 // Vue mixin
 // ---------------------------------------------------------------------------
 
-/** Attributes never copied from the real input to the overlay element. */
-const IGNORED_ATTRS = new Set([
-  "aria-hidden",
-  "autofocus",
-  "contenteditable",
-  "id",
-  "name",
-  "placeholder",
-  "spellcheck",
-  "tabindex",
-]);
-
 /**
- * Build the list of component names to target, merging built-ins with any
- * registered extensions.
  * @returns {string[]}
  */
 function resolveTargetComponents() {
   const base = ["k-writer-input", "k-textarea-input"];
+
   for (const ext of extensions) {
     if (Array.isArray(ext.components)) {
       base.push(...ext.components);
     }
   }
+
   return base;
 }
 
 const hiddenCharactersMixin = {
   mounted() {
-    const targetComponents = resolveTargetComponents();
-
-    if (!targetComponents.includes(this.$options.name)) {
+    if (!resolveTargetComponents().includes(this.$options.name)) {
       return;
     }
 
@@ -212,10 +329,8 @@ const hiddenCharactersMixin = {
         overlay.setAttribute("data-tag", "textarea");
         overlay.setAttribute("aria-hidden", "true");
 
-        // Copy typographic and spacing computed styles so overlay text reflows
-        // identically to the textarea and markers land at the right positions.
-        const cs = window.getComputedStyle(inputEl);
-        for (const prop of [
+        const computedStyle = window.getComputedStyle(inputEl);
+        for (const property of [
           "font-family",
           "font-size",
           "font-weight",
@@ -235,27 +350,26 @@ const hiddenCharactersMixin = {
           "box-sizing",
           "tab-size",
         ]) {
-          overlay.style.setProperty(prop, cs.getPropertyValue(prop));
+          overlay.style.setProperty(
+            property,
+            computedStyle.getPropertyValue(property)
+          );
         }
 
-        // Allow extensions to transform the overlay before insertion
         for (const ext of extensions) {
           ext.cloneTransform?.(overlay, inputEl);
         }
 
-        /** Sync scroll position from the real textarea to the overlay */
         const syncScroll = () => {
           overlay.scrollLeft = inputEl.scrollLeft || 0;
           overlay.scrollTop = inputEl.scrollTop || 0;
         };
 
-        /** Re-render overlay content from the textarea value */
         const updateOverlay = () => {
           overlay.innerHTML = renderTextareaContent(inputEl.value);
           syncScroll();
         };
 
-        // Insert overlay after the textarea so `:focus-visible + &` works
         inputEl.after(overlay);
         updateOverlay();
 
@@ -272,90 +386,115 @@ const hiddenCharactersMixin = {
       // -----------------------------------------------------------------------
       // Writer branch (ProseMirror)
       // -----------------------------------------------------------------------
-      // Find the ProseMirror editable node inside the writer component
       const inputEl = this.$el.querySelector?.(".ProseMirror");
-
       if (!inputEl) return;
 
-      // Build the overlay element
       const overlay = document.createElement("div");
-
-      for (const attr of inputEl.attributes) {
-        if (!IGNORED_ATTRS.has(attr.name)) {
-          overlay.setAttribute(attr.name, attr.value);
-        }
-      }
-
-      overlay.classList.add("gd-hidden-characters");
-      overlay.setAttribute("data-tag", inputEl.tagName.toLowerCase());
+      overlay.classList.add(
+        "gd-hidden-characters",
+        "gd-hidden-characters--writer-markers"
+      );
+      overlay.setAttribute("data-tag", "writer-markers");
       overlay.setAttribute("aria-hidden", "true");
 
-      // Allow extensions to transform the overlay before insertion
       for (const ext of extensions) {
         ext.cloneTransform?.(overlay, inputEl);
       }
 
-      /** Sync scroll position from the real input to the overlay */
-      const syncScroll = () => {
-        overlay.scrollLeft = inputEl.scrollLeft || 0;
-        overlay.scrollTop = inputEl.scrollTop || 0;
-      };
-
-      /** Re-render overlay content and keep scroll in sync */
-      const updateOverlay = () => {
-        overlay.innerHTML = renderHiddenCharacters(inputEl.innerHTML);
-        syncScroll();
-      };
-
-      // Insert overlay after the real input so the CSS `:focus + &` selector works
       inputEl.after(overlay);
 
-      // Initial render
-      updateOverlay();
+      let animationFrame = 0;
+      const renderMarkers = () => {
+        animationFrame = 0;
+        renderWriterMarkers(inputEl, overlay);
+      };
+      const scheduleMarkers = () => {
+        // The layer is only visible while the editor is focused. Defer all
+        // geometry work while blurred and perform one complete refresh when
+        // focus returns. Multiple triggers in the same frame are coalesced.
+        if (
+          !overlay.isConnected ||
+          !inputEl.matches(":focus") ||
+          animationFrame !== 0
+        ) {
+          return;
+        }
 
-      // ProseMirror DOM mutations drive updates (no value watcher needed)
-      this.$gdObserver = new MutationObserver(updateOverlay);
+        animationFrame = window.requestAnimationFrame(renderMarkers);
+      };
+
+      scheduleMarkers();
+
+      this.$gdObserver = new MutationObserver(scheduleMarkers);
       this.$gdObserver.observe(inputEl, {
+        attributes: true,
         childList: true,
         subtree: true,
         characterData: true,
       });
 
-      // Keep overlay scroll position in sync during user interaction
-      inputEl.addEventListener("scroll", syncScroll, { passive: true });
-      inputEl.addEventListener("input", syncScroll);
+      const resizeObserver = new ResizeObserver(scheduleMarkers);
+      resizeObserver.observe(inputEl);
+      resizeObserver.observe(this.$el);
+
+      inputEl.addEventListener("focus", scheduleMarkers, { passive: true });
+      inputEl.addEventListener("input", scheduleMarkers, { passive: true });
+      inputEl.addEventListener("scroll", scheduleMarkers, { passive: true });
+      window.addEventListener("resize", scheduleMarkers, { passive: true });
+
+      const fontLoadingDone = () => scheduleMarkers();
+      document.fonts?.addEventListener?.("loadingdone", fontLoadingDone);
+      document.fonts?.ready?.then(scheduleMarkers);
 
       this.$gdOverlay = overlay;
-      this.$gdSyncScroll = syncScroll;
-      this.$gdUpdateOverlay = updateOverlay;
       this.$gdInputEl = inputEl;
+      this.$gdScheduleMarkers = scheduleMarkers;
+      this.$gdResizeObserver = resizeObserver;
+      this.$gdWindowResize = scheduleMarkers;
+      this.$gdFontLoadingDone = fontLoadingDone;
+      this.$gdAnimationFrame = () => animationFrame;
     });
   },
 
   beforeDestroy() {
     this.$gdObserver?.disconnect();
+    this.$gdResizeObserver?.disconnect();
 
     if (this.$gdInputEl && this.$gdSyncScroll) {
       this.$gdInputEl.removeEventListener("scroll", this.$gdSyncScroll);
-      this.$gdInputEl.removeEventListener("input", this.$gdSyncScroll);
     }
 
-    // Textarea uses updateOverlay on `input`; remove it separately
     if (this.$gdInputEl && this.$gdUpdateOverlay) {
       this.$gdInputEl.removeEventListener("input", this.$gdUpdateOverlay);
     }
+
+    if (this.$gdInputEl && this.$gdScheduleMarkers) {
+      this.$gdInputEl.removeEventListener("focus", this.$gdScheduleMarkers);
+      this.$gdInputEl.removeEventListener("input", this.$gdScheduleMarkers);
+      this.$gdInputEl.removeEventListener("scroll", this.$gdScheduleMarkers);
+    }
+
+    if (this.$gdWindowResize) {
+      window.removeEventListener("resize", this.$gdWindowResize);
+    }
+
+    if (this.$gdFontLoadingDone) {
+      document.fonts?.removeEventListener?.(
+        "loadingdone",
+        this.$gdFontLoadingDone
+      );
+    }
+
+    const animationFrame = this.$gdAnimationFrame?.() ?? 0;
+    if (animationFrame !== 0) {
+      window.cancelAnimationFrame(animationFrame);
+    }
+
+    this.$gdOverlay?.remove();
   },
 
-  watch: {
-    // Writer overlay is driven by MutationObserver.
-    // Textarea overlay is driven by the native `input` event.
-    // No Vue watcher needed for either.
-  },
+  watch: {},
 };
-
-// ---------------------------------------------------------------------------
-// Plugin registration
-// ---------------------------------------------------------------------------
 
 window.panel.plugin("grommasdietz/hidden-characters", {
   use: [

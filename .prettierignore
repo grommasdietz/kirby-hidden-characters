@@ -1,1 +1,6 @@
-.gitmessage
+CHANGELOG.md
+composer.lock
+index.css
+index.js
+playground/composer.lock
+pnpm-lock.yaml

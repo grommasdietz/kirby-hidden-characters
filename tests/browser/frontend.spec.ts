@@ -4,7 +4,7 @@ const PANEL_EMAIL =
   process.env.KIRBY_USER_EMAIL ?? "admin@kirby-hidden-characters.test";
 const PANEL_PASSWORD = process.env.KIRBY_USER_PASSWORD ?? "playwright";
 
-test.describe("Panel: hidden-characters overlay", () => {
+test.describe("Panel: hidden-characters rendering", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/panel/login");
     await page.getByLabel("Email").fill(PANEL_EMAIL);
@@ -32,6 +32,29 @@ test.describe("Panel: hidden-characters overlay", () => {
     );
     await expect(overlay).toBeAttached();
     await expect(overlay).toHaveAttribute("aria-hidden", "true");
+    await expect(overlay).toHaveAttribute("data-tag", "writer-markers");
+  });
+
+  test("writer marker layer contains no mirrored text", async ({ page }) => {
+    await page.goto("/panel/pages/home");
+
+    const proseMirror = page.locator(
+      '.k-field-name-writer .k-writer-input .ProseMirror[contenteditable="true"]'
+    );
+    await proseMirror.click();
+
+    const overlay = page.locator(
+      '.k-field-name-writer .k-writer-input .ProseMirror[contenteditable="true"] + .gd-hidden-characters'
+    );
+    await expect(overlay).toBeAttached();
+    await expect(overlay).toHaveText("");
+    await expect(overlay.locator("p, break, shy, tab")).toHaveCount(0);
+    await expect(
+      overlay.locator('.gd-hidden-character-marker[data-character="shy"]').first()
+    ).toBeAttached();
+    await expect(
+      overlay.locator('.gd-hidden-character-marker[data-character="break"]').first()
+    ).toBeAttached();
   });
 
   test("overlay bounding box matches the writer field within 2 px", async ({

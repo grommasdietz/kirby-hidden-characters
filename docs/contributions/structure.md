@@ -8,9 +8,9 @@ This page separates runtime files from development tooling.
 
 These files are required at runtime and must stay in release archives:
 
-- `index.php` — Plugin entry point
+- `index.php` — Plugin entry point that registers the compiled Panel assets
 - `index.js` / `index.css` — Compiled Panel assets (keep committed)
-- `lib` — PHP source (`GrommasDietz\\HiddenCharacters\\`)
+- `assets/fonts/hidden-characters.woff2` — Bundled runtime font
 
 ---
 
@@ -31,35 +31,7 @@ Packaging rules for release archives live in `.gitattributes`.
 
 ## Psalm configuration
 
-Psalm errors if directories referenced in `issueHandlers` do not exist. When you add plugin folders, update `psalm.xml.dist` accordingly:
-
-| Folder added        | Psalm update                                                       |
-| ------------------- | ------------------------------------------------------------------ |
-| `snippets`          | Add `<directory name="snippets" />` under `<UndefinedMagicMethod>` |
-| `models`            | Add to `<projectFiles>` if outside `lib`                           |
-| `blueprints`        | No change needed (YAML only)                                       |
-| `assets`            | No change needed (static files)                                    |
-| `translations`      | No change needed (PHP arrays, covered globally)                    |
-| `config` / `routes` | Add `<directory name="..." />` under `<InvalidScope>`              |
-
-Example (adding `snippets`):
-
-```xml
-<UndefinedMagicMethod>
-    <errorLevel type="suppress">
-        <directory name="playground/site/templates" />
-        <directory name="snippets" />
-    </errorLevel>
-</UndefinedMagicMethod>
-```
-
-Only add directories that actually exist.
-
----
-
-## Environment and secrets
-
-Keep secrets in `playground/.env`. If `vlucas/phpdotenv` is installed, tests will load it automatically.
+Psalm currently analyzes `index.php`, which is the plugin’s only PHP runtime file. If PHP source directories are added later, include them under `<projectFiles>` in `psalm.xml.dist`. Add directory-specific suppressions only when a concrete Kirby framework pattern requires them; YAML and static asset directories do not need Psalm configuration.
 
 ---
 

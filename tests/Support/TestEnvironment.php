@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace GrommasDietz\HiddenCharacters\Tests\Support;
 
 use Kirby\Cms\App;
-use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -33,20 +32,10 @@ final class TestEnvironment
 
         $paths = static::resolvePaths();
 
-        // Optionally load playground/.env when vlucas/phpdotenv is installed.
-        // Useful for secrets (e.g. KQL credentials) without committing them.
-        $envFile = $paths['playground'] . '/.env';
-        $dotenvClass = 'Dotenv\\Dotenv';
-
-        if (is_file($envFile) && class_exists($dotenvClass)) {
-            $dotenv = \call_user_func([$dotenvClass, 'createMutable'], $paths['playground'], '.env');
-            \call_user_func([$dotenv, 'safeLoad']);
-        }
-
         static::prepareContent($paths['playground'] . '/content');
         static::prepareCache($paths['cache']);
         static::prepareAccounts($paths['accounts']);
-        static::preparePluginSandbox($paths['project'], $paths['plugins']);
+        static::preparePluginSandbox($paths['plugins']);
 
         $defaults = [
             'roots' => [
@@ -68,15 +57,23 @@ final class TestEnvironment
         ];
 
         $config = array_replace_recursive($defaults, $overrides);
-        $pluginPath = $paths['project'] . '/index.php';
 
-        static::loadPlugin($pluginPath);
+        // First establish the App singleton and playground roots. Plugin entry
+        // files can then resolve options, blueprints and other installation state.
+        new App($config);
 
+        // Load plugin entry files with plain require on every boot. Kirby's normal
+        // loader uses require_once; after App::destroy() that would leave the static
+        // plugin registry empty for later PHPUnit tests in the same PHP process.
+        static::registerPlugins([$paths['project']]);
+
+        // Rebuild the App so all freshly registered extensions are applied through
+        // Kirby's normal constructor flow before options are baked.
         $app = new App($config);
 
         static::seedUsers($app);
 
-        static::cleanupHandlers();
+        static::restoreHandlers();
 
         return $app;
     }
@@ -85,6 +82,18 @@ final class TestEnvironment
      * Restores error/exception handlers to their state before boot().
      * Called from TestCase::tearDown() to avoid handler leaks between tests.
      */
+    public static function cleanup(): void
+    {
+        static::destroyApp();
+
+        $paths = static::resolvePaths();
+        Dir::remove($paths['cache']);
+        Dir::remove($paths['accounts']);
+        Dir::remove($paths['plugins']);
+        Dir::make($paths['plugins'], true);
+        touch($paths['plugins'] . '/.gitkeep');
+    }
+
     public static function restoreHandlers(): void
     {
         $maxRestoreSteps = 10;
@@ -148,7 +157,7 @@ final class TestEnvironment
             'project'   => $projectRoot,
             'playground' => $playgroundRoot,
             'cache'     => $playgroundRoot . '/site/cache',
-            'plugins'   => $playgroundRoot . '/site/plugins',
+            'plugins'   => $projectRoot . '/tests/.plugins',
             'accounts'  => $playgroundRoot . '/site/accounts',
         ];
     }
@@ -195,44 +204,26 @@ final class TestEnvironment
         }
     }
 
-    private static function preparePluginSandbox(string $projectRoot, string $pluginsRoot): void
+    private static function preparePluginSandbox(string $pluginsRoot): void
     {
         Dir::remove($pluginsRoot);
-        Dir::make($pluginsRoot);
-
-        $target = $pluginsRoot . '/kirby-hidden-characters';
-        if (!symlink($projectRoot, $target)) {
-            throw new \RuntimeException('Unable to link plugin into sandbox');
-        }
+        Dir::make($pluginsRoot, true);
+        touch($pluginsRoot . '/.gitkeep');
     }
 
-    private static function loadPlugin(string $pluginPath): void
+    /**
+     * @param list<string> $pluginSources Absolute plugin source directories.
+     */
+    private static function registerPlugins(array $pluginSources): void
     {
-        if (!is_file($pluginPath)) {
-            throw new \RuntimeException('Plugin entry file missing for tests');
-        }
+        foreach (array_values(array_unique($pluginSources)) as $source) {
+            $entry = rtrim($source, '/\\') . '/index.php';
 
-        try {
-            require $pluginPath;
-        } catch (DuplicateException) {
-            // Plugin already registered for this process; safe to ignore.
-        }
-    }
+            if (is_file($entry) === false) {
+                throw new \RuntimeException('Plugin entry file missing: ' . $entry);
+            }
 
-    private static function cleanupHandlers(): void
-    {
-        $currErrorHandler = set_error_handler(static fn () => false);
-        restore_error_handler();
-
-        if ($currErrorHandler !== static::$prevErrorHandler) {
-            restore_error_handler();
-        }
-
-        $currExceptionHandler = set_exception_handler(static fn () => false);
-        restore_exception_handler();
-
-        if ($currExceptionHandler !== static::$prevExceptionHandler) {
-            restore_exception_handler();
+            require $entry;
         }
     }
 
@@ -248,7 +239,7 @@ final class TestEnvironment
             'email' => 'admin@kirby-hidden-characters.test',
             'name' => 'Test Admin',
             'role' => 'admin',
-            'password' => 'test-password',
+            'password' => 'playwright',
             'language' => 'en',
         ]);
 

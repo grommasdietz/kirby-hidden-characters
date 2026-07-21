@@ -14,7 +14,7 @@ Thanks for your interest in contributing to this plugin.
 ## Before you open a PR
 
 - [ ] Run [tests](docs/contributions/tests.md)
-- [ ] Use [Conventional Commit messages](.gitmessage)
+- [ ] Use [Conventional Commit messages](https://www.conventionalcommits.org/)
 
 ---
 

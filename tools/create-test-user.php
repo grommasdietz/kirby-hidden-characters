@@ -12,10 +12,10 @@ declare(strict_types=1);
  *   php tools/create-test-user.php --email=... --password=... --name="Panel User" --role=editor
  *
  * You can also set environment variables:
- *   KIRBY_TEST_USER_EMAIL
- *   KIRBY_TEST_USER_PASSWORD
- *   KIRBY_TEST_USER_NAME
- *   KIRBY_TEST_USER_ROLE
+ *   KIRBY_USER_EMAIL
+ *   KIRBY_USER_PASSWORD
+ *   KIRBY_USER_NAME
+ *   KIRBY_USER_ROLE
  */
 
 $rootAutoload = __DIR__ . '/../vendor/autoload.php';
@@ -52,40 +52,23 @@ $options = getopt(
     ]
 );
 
-$envEmail = getenv('KIRBY_USER_EMAIL');
-$emailOption = $options['email'] ?? null;
-$passwordOption = $options['password'] ?? null;
-$nameOption = $options['name'] ?? null;
-$roleOption = $options['role'] ?? null;
+$value = static function (mixed $option, string $environment, string $fallback): string {
+    if (is_string($option) && trim($option) !== '') {
+        return trim($option);
+    }
 
-if ($emailOption === false) {
-    $emailOption = null;
-}
+    $env = getenv($environment);
+    if (is_string($env) && trim($env) !== '') {
+        return trim($env);
+    }
 
-if ($passwordOption === false) {
-    $passwordOption = null;
-}
+    return $fallback;
+};
 
-if ($nameOption === false) {
-    $nameOption = null;
-}
-
-if ($roleOption === false) {
-    $roleOption = null;
-}
-
-$email = $emailOption
-    ?? ($envEmail !== false ? $envEmail : null)
-    ?? 'user@kirby-hidden-characters.test';
-$password = $passwordOption
-    ?? getenv('KIRBY_USER_PASSWORD')
-    ?? 'secret';
-$name = $nameOption
-    ?? getenv('KIRBY_TEST_USER_NAME')
-    ?? 'Test User';
-$role = $roleOption
-    ?? getenv('KIRBY_TEST_USER_ROLE')
-    ?? 'admin';
+$email = $value($options['email'] ?? null, 'KIRBY_USER_EMAIL', 'admin@kirby-hidden-characters.test');
+$password = $value($options['password'] ?? null, 'KIRBY_USER_PASSWORD', 'playwright');
+$name = $value($options['name'] ?? null, 'KIRBY_USER_NAME', 'Test Admin');
+$role = $value($options['role'] ?? null, 'KIRBY_USER_ROLE', 'admin');
 $delete = array_key_exists('delete', $options);
 
 $kirby = TestEnvironment::boot();

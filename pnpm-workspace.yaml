@@ -1,6 +1,8 @@
 packages:
   - .
 
-ignoredBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild
+nodeLinker: isolated
+
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true

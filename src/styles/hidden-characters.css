@@ -1,37 +1,26 @@
 /* =============================================================================
    hidden-characters.css
-   Font declarations and overlay styles for the Kirby Hidden Characters plugin.
 
    Rendering strategy:
-   - The "hidden-characters" font is applied to field elements unconditionally
-     so space glyph metrics are always stable (no layout shift on focus).
-     font-palette keeps the glyphs transparent by default and switches to
-     25% opacity on focus. Browsers without font-palette support see the glyphs
-     at their baked-in color — acceptable progressive enhancement.
-   - Soft hyphens (<shy>), line breaks (<break>), tabs (<tab>), and paragraph
-     end markers (p::after) are shown via an absolutely-positioned overlay clone
-     (.gd-hidden-characters) that fades in on focus. The writer and textarea
-     fields both use this overlay; the single-line text input does not (its
-     value can scroll horizontally, making an overlay clone unreliable).
+   - The custom font is always active on real editable fields. Its space glyphs
+     therefore own both layout and visibility, including U+00A0 no-break space.
+   - Writer structural markers are positioned from the real ProseMirror DOM in
+     a marker-only overlay. No writer text is cloned or laid out a second time.
+   - Textareas retain the grid-aligned mirror because native textarea text does
+     not expose DOM ranges for marker placement.
    ============================================================================= */
-
-/* --- Font Declaration --- */
 
 @font-face {
   font-display: swap;
   font-family: "hidden-characters";
   font-style: normal;
   font-weight: normal;
-  src: url("/media/plugins/grommasdietz/hidden-characters/fonts/hidden-characters.woff2")
+  src: url("data:font/woff2;base64,d09GMgABAAAAAAlMABAAAAAAGmQAAAjuAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIoJCIxYaMAZgP1NUQVREAHYvLgqREIxgMIp4ATYCJAOCBguBBgAEIAWFEgeHVhuPFiMR9oOT6pXgrxPoHDqILfInhGMJBTGS2oDOS9I5XrwQxHbWym8q/1uC53nc9M+9L4GghZY528+YmKVMzOjENMysv3wxk/jw53p/RB9kiWvti+JFJPApHPAhwDYZ72lICZ6nne9XXRpIFPhEdpkNxCbSot7x1APcZUQGC+24sY3X2oCoNm1Ez7cLdV/gn6yaiU7uvv1SO/9uJ28LBP+9dT0hkymxrK47WTVBhL3wFtGyIlCpAtbASrWqdaRUhbAkXIU09XWvpgchHQsLHGKBS53Rof/7v39YQG2QBCXaAlBCKWVRRoiyOJQtSoXEqbAk5UhREeVUVIaKqU3F1aUS6lNJWapMIyrFpdJyVLmmVIXmVEZLqpbWVG1Qh6gL6hH1QQMiCxoSjcBJhAsaEznQhGgKmhHNQQuiJWhFtAZtiLagHdEedCA6gk5EZ9CF6Aq6Ed1BD6In6EX0Bn2IvqAf0R8MIDygEgFKKEjC9/1AIAADAACgnIA4AbUJgccEEAKs+n1Oxub0ztbz4Jz04vpbULJEy/pgJvzVJr8fHz/ca4XP/19IjmvVBwRgPfYlgAuEcCjIUNCUnot/IcDSL6iJICwpApQCMIRGARAACgzIMARkWOYBKSkGuC50jRtzO7hzP7SCoDAFtwF3DT4KQvjQfHA/uEkd4sH++W0hhqVchYy0WgSkKJEhouYtBJtLQA4WXz8EIA/APiAPusCcTgMYpSsJu6PUYDidNwtyZMcNCQkH75YzBe0wHpr1UBYWPvoKOPLLKaG4cUxSZi3mnylsvnlj6htviBRffz165NVJmai84UaOHX3tNfAnPfnijXDLe+t1KR5uiv9qdHuMd+6w+jZmxmZHZ0yLfnA7d3Ka1DdHa/u229n2T//FMdT2fsEv+AUOhnefaXprHvG39tqGN+eUzY9Ojc2kk2LTElNik6ITozPjoZvDTt7YgCu7pc222Jarbmp6edtj02fGZkU3zfsXMe/fz8EDcN+W90aPh21vkqrRELUiYfPzfnvrUfNytqekwop+ems1K7G9jPjWZK7e5uiR11+XPYmJbZX404OweK1bJCbFg/X9Mg3nz5MqCvNGvyYjWmM3Tus0sm2/iQO0Q/r2prfuM2tVwZ7IxWJmTKu+YsKmFVeOmnVgkt5w86JVtx1r0+XSIc0eHOx17UpTe/QcBMZn9mRQRxHh6oMjRnTrRu/BZETYWevRW4b7p31PTuh/eI/Q8c3lzh3glbxl0yXpwwsScjdAiZ6w+80zPB4elDawpgaUZVIz+JQZPXp4TnnsyZm7Lszx2aH8WF13cjOxbvC8QbvQdcdajrjtm2zN10N2/ZK4/Dx4S2nIlrFD+RTyZz7kj0kIJv4/7CAcZF8ytNbwA1OPBzx7oF7yvAc/SO1Gp4znkh630lMdf0qj7hkhe9BHuuAtwx9tu/Yke7onFBIt7nBLj+9yue8a597LxRD1yuXT2ZXmed/7f/jU+vpmvIYI6cGDfoi+PPET9v300lUlKF13nWz05EK7/v2eIfJuLJ/E06/0rD0WVux6fsnmOzfols0PvLBi182Edl9YcYD6pfGMk95rROmbBtXfDV/+Z/bEn2P3nYhhOFTX/KvBib9HLLfm5NgTStVwHT6+dGJIbvjy4enMG2drzEcvB75GyYCqCdxGckpTfrjR77Ohhgv8JvXoP0oAQYCzyQNwLuCQoi4uLelITzyGMY5pFFjCGrbgc5BqTud8LuM67uQhnuYVvucvMRKXutJY2khX8WS0TJMqWSEbxZfDcqqcJ1fKTXKvPCYvydvyufwgf6vRuGa0oTbXDtpDK3WETtAZulBXefiCQwjwPWla3MtvhEmvg5fw3wGRHboW4bnvYQS5A8lnutTgXaqpc9ihnLXBUCPyWXVowRr6ip/qgFGaJPKUKEnTPTZKVLAqJ/gwtDhAYqtDJj3fqjRpaHfaTJBDxH+Twk8frERaXrc7/6LzQHjY3q2thCxZ4vHSnnEuL/ESRL/YMqgmuDD/X6f/l/770t4K5sP/xaDqQjqX/L8vDuEvb+K5vkiw9wQpt8QTT4tztajFAZRDnOG35YeyhxDuGC7JWgk9PzqBF7R+5plouitb5ieHsFv8zM/yGU+w13aqTjyeGCg5HEAHG2CenVYx0bLssCdxAFMD5tkNoIVwW94glFDHSX9IYe0v6V9TiVRyr9ToalvVSI0bSVs7dqzar6rql9mBrC0XXeQFM89kaLE6LSyOBd2SvrocJ///EpL070vQflDg5wkK87+dPX5uWd/fHOMA8HmLnlUAn+97LxP4z3fOCJ8PhFEABMLX/l9O0iHw/yvOGQi4hpXmOpAHqbTYxyFN0HHwkyTYpzup3zbQYyAet8h6EEwDaw3Y1bx0yDHXUaCKNVAepCB1igyeVvRbCwqKdboDhQM6p0PqOEaSfp4G6cTYp4N9UqgtL/VbhmL26DEKuSYnXnm6J69L60GGYk8xXkAxr1trKCh2yK6mkBRqJvtRHLTonM4bAXk8A0BEjytzN4a0CDALOFvkzLJV0i7bGOI71JLatry/HdIxGTuifgbZcZ0zZ2hKY2i6z9J63JzcUKA8N+JtIZ6HP6wSzfOuwtVZR5115Rpq1Gk0AhNqkEJidkpeJHTHcVWq1ah1CpncbLqFJqmVfIhVIsYZphCLJVrUQLnAKBCZ5amTO8ozi1pQLmmvI/mYPiZzfPgUtd5HE4vIdzmt0PXX1dsPVTv0cuOhXQShXalrJ66Wuuh6RnXXqnNfd89vj5iovYmsw/4WV8xgLUjjzBf0z0K4tzr26ZO+/LCEZRaoFSJ3LUZ+ixFtN+higV9LHhiZRElWVE03TMt2XJ8fJyhUGp3BZLE5XB5fIBSJJVKZXKFUqTVaHakHBqPJbLHa7A6ny+3x+vwq28b3wErnLYAwEEg0JhY2Dl5c8cbqOzN8+vkDgUS195Hv+/e5/0/KIB8f+lMxYPQhMbK+AEeAAlYdAAImgoAJEDBBAiZMwEQSMFEETDQBE0PAxCVgYgmYeATRWH2CCBNpIsN8DGJweoAAQYKECBFGAw==")
     format("woff2");
   unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000-E004;
 }
 
-/* --- Apply hidden-characters font unconditionally ---
-   Stable space metrics require the font to be active at all times.
-   unicode-range limits substitution to space codepoints + PUA glyphs;
-   all other characters still use var(--font-sans). */
-
+/* The font stays active continuously so focus never changes advance widths. */
 .k-writer-input .ProseMirror,
 .k-textarea-input-native,
 .k-string-input.k-text-input {
@@ -43,11 +32,6 @@
   font-family: "hidden-characters", var(--font-mono) !important;
   font-variation-settings: "MONO" 1;
 }
-
-/* --- Font palette: hide glyphs by default, reveal on focus ---
-   font-palette is unprefixed in Chrome 101+, Firefox 107+, Safari 15.4+.
-   No PostCSS/autoprefixer prefixes exist or are needed.
-   Fallback (no @supports match): glyphs render at their baked-in color. */
 
 @supports (font-palette: normal) {
   @font-palette-values --gd-hc-hidden-light {
@@ -70,105 +54,142 @@
     override-colors: 0 rgba(255, 255, 255, 0.4), 1 #fff;
   }
 
-  /* Writer real element: spaces always invisible; the overlay handles
-     rendering them at 25% so there is no double-rendering on focus. */
-  .k-writer-input .ProseMirror:not(.gd-hidden-characters) {
+  .k-writer-input .ProseMirror,
+  .k-textarea-input-native,
+  .k-string-input.k-text-input,
+  .gd-hidden-characters[data-tag="textarea"] {
     font-palette: --gd-hc-hidden-light;
   }
 
   :where([data-theme="dark"])
-    .k-writer-input
-    .ProseMirror:not(.gd-hidden-characters) {
+    :is(
+      .k-writer-input .ProseMirror,
+      .k-textarea-input-native,
+      .k-string-input.k-text-input,
+      .gd-hidden-characters[data-tag="textarea"]
+    ) {
     font-palette: --gd-hc-hidden-dark;
   }
 
-  /* Writer overlay: show palette entry 0 at 25% — opacity: 0→1 on focus
-     controls visibility, so no focus selector is needed here.
-     PUA glyphs (break/shy/para markers) share entry 0 and therefore also
-     appear at 25% — consistent with the marker colour variable. */
-  .gd-hidden-characters {
-    font-palette: --gd-hc-light;
-  }
-
-  :where([data-theme="dark"]) .gd-hidden-characters {
-    font-palette: --gd-hc-dark;
-  }
-
-  /* Textarea: overlay handles visibility; keep spaces always hidden on the
-     native element so they don't double-render. */
-  .k-textarea-input-native {
-    font-palette: --gd-hc-hidden-light;
-  }
-
-  :where([data-theme="dark"]) .k-textarea-input-native {
-    font-palette: --gd-hc-hidden-dark;
-  }
-
-  /* Text field: no overlay (single-line values can scroll); toggle on focus */
-  .k-string-input.k-text-input {
-    font-palette: --gd-hc-hidden-light;
-  }
-
-  :where([data-theme="dark"]) .k-string-input.k-text-input {
-    font-palette: --gd-hc-hidden-dark;
-  }
-
+  .k-writer-input .ProseMirror:focus,
+  .k-textarea-input-native:focus,
   .k-string-input.k-text-input:focus-within {
     font-palette: --gd-hc-light;
   }
 
-  :where([data-theme="dark"]) .k-string-input.k-text-input:focus-within {
+  :where([data-theme="dark"])
+    :is(
+      .k-writer-input .ProseMirror:focus,
+      .k-textarea-input-native:focus,
+      .k-string-input.k-text-input:focus-within
+    ) {
+    font-palette: --gd-hc-dark;
+  }
+
+  .gd-hidden-character-marker::before,
+  .gd-hidden-characters[data-tag="textarea"] break::before,
+  .gd-hidden-characters[data-tag="textarea"] shy::before,
+  .gd-hidden-characters[data-tag="textarea"] tab::before {
+    font-palette: --gd-hc-light;
+  }
+
+  :where([data-theme="dark"]) .gd-hidden-character-marker::before,
+  :where([data-theme="dark"])
+    .gd-hidden-characters[data-tag="textarea"]
+    break::before,
+  :where([data-theme="dark"])
+    .gd-hidden-characters[data-tag="textarea"]
+    shy::before,
+  :where([data-theme="dark"])
+    .gd-hidden-characters[data-tag="textarea"]
+    tab::before {
     font-palette: --gd-hc-dark;
   }
 }
 
-/* --- Paragraph end markers (overlay only) ---
-   p::after lives in the overlay clone so it fades in together with
-   break/shy on focus. Explicit color needed: p inherits color:transparent
-   from the overlay, so without it the glyph would stay invisible.        */
-
-.ProseMirror.gd-hidden-characters p::after {
-  color: var(--gd-hc-marker-color);
-  content: "\e000";
-  display: inline-block;
-  font-family: "hidden-characters", var(--font-sans) !important;
-  font-weight: normal;
-  height: 0;
-  position: relative;
-  width: 0;
+/* Both overlay variants are inserted directly after the focusable field. */
+:focus + .gd-hidden-characters {
+  opacity: 1;
 }
 
-.ProseMirror.gd-hidden-characters p:last-child::after {
-  content: "\e001";
+.gd-hidden-characters {
+  --gd-hc-marker-color: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.ProseMirror.gd-hidden-characters p:has(.ProseMirror-trailingBreak)::after {
-  margin-top: -1.5em;
-  position: absolute;
+:where([data-theme="dark"]) .gd-hidden-characters {
+  --gd-hc-marker-color: rgba(255, 255, 255, 0.25);
 }
 
-.ProseMirror.gd-hidden-characters
-  p:first-child:last-child:has(.ProseMirror-trailingBreak)::after {
-  content: "";
-}
-
-/* Prevent caption writer from overflowing its block figure container */
-.k-block-figure-caption .k-writer {
-  width: 100%;
-}
-
-/* --- Positioning context for overlay inside writer --- */
+/* --------------------------------------------------------------------------
+   Writer marker layer
+   -------------------------------------------------------------------------- */
 
 .k-writer-input {
   position: relative;
 }
 
-/* --- Textarea toolbar grid fix ---
-   The overlay is inserted after .k-textarea-input-native, inside
-   .k-textarea-input-wrapper. When a Kirby toolbar sits above the textarea,
-   a simple absolute-positioned overlay would cover the toolbar buttons.
-   Converting the wrapper to a CSS grid places both the native textarea and
-   the overlay into the same second row, leaving the toolbar in row 1. */
+.gd-hidden-characters--writer-markers {
+  inset: 0;
+  overflow: hidden;
+  position: absolute;
+}
+
+.gd-hidden-character-marker {
+  display: block;
+  position: absolute;
+}
+
+.gd-hidden-character-marker::before {
+  color: var(--gd-hc-marker-color);
+  display: inline-block;
+  font-family: "hidden-characters", var(--font-sans) !important;
+  font-weight: normal;
+  position: absolute;
+  white-space: pre;
+  width: max-content;
+}
+
+.gd-hidden-character-marker[data-character="paragraph"]::before {
+  content: "\e000";
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.gd-hidden-character-marker[data-character="paragraph-last"]::before {
+  content: "\e001";
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.gd-hidden-character-marker[data-character="break"]::before {
+  content: "\e002";
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.gd-hidden-character-marker[data-character="shy"]::before {
+  content: "\e003";
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gd-hidden-character-marker[data-character="tab"]::before {
+  content: "\e004";
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* --------------------------------------------------------------------------
+   Textarea grid mirror
+   -------------------------------------------------------------------------- */
 
 .k-textarea-input .k-textarea-input-wrapper:has(.gd-hidden-characters) {
   display: grid;
@@ -205,103 +226,75 @@
   width: 100%;
 }
 
-/* =============================================================================
-   Overlay (.gd-hidden-characters)
-   A non-interactive clone of the field element positioned on top of it.
-/* Only <break>::before, <shy>::before, <tab>::before, and p::after are made visible; all
-   other content inherits the parent's transparent colour.
-   ============================================================================= */
-
-.gd-hidden-characters {
+.gd-hidden-characters[data-tag="textarea"] {
   border-color: transparent !important;
   color: transparent;
-  contain: content;
   font-variation-settings: "MONO" 0;
-  height: 100%;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
+  overflow: hidden;
   text-decoration-color: transparent !important;
-  width: 100%;
-  z-index: 1;
 }
 
-/* Show overlay when the preceding sibling field is focused */
-:focus-visible + .gd-hidden-characters {
-  opacity: 1;
-}
-
-/* Ensure all descendant elements stay transparent */
-.gd-hidden-characters * {
+.gd-hidden-characters[data-tag="textarea"] * {
   background-color: transparent !important;
   border-color: transparent !important;
   color: transparent;
   text-decoration-color: transparent !important;
 }
 
-/* --- Visible marker pseudo-elements --- */
-/* <break>, <shy>, and p::after are all rendered exclusively via the overlay. */
-
-/* 25% color matches the font-palette used on direct field elements */
-.gd-hidden-characters {
-  --gd-hc-marker-color: rgba(0, 0, 0, 0.25);
-}
-
-:where([data-theme="dark"]) .gd-hidden-characters {
-  --gd-hc-marker-color: rgba(255, 255, 255, 0.25);
-}
-
-.gd-hidden-characters break::before,
-.gd-hidden-characters shy::before,
-.gd-hidden-characters tab::before {
-  color: var(--gd-hc-marker-color);
-  font-family: "hidden-characters", var(--font-sans) !important;
-  font-weight: normal;
-  width: max-content;
-}
-
-/* Caption blocks: use background colour to work around mix-blend-mode */
-.k-block-figure-caption .k-writer .gd-hidden-characters break::before,
-.k-block-figure-caption .k-writer .gd-hidden-characters shy::before,
-.k-block-figure-caption .k-writer .gd-hidden-characters tab::before {
-  color: var(--color-background) !important;
-}
-
-/* --- <break>, <shy>, and <tab> positioning context --- */
-
-.gd-hidden-characters break,
-.gd-hidden-characters shy,
-.gd-hidden-characters tab {
+.gd-hidden-characters[data-tag="textarea"] break,
+.gd-hidden-characters[data-tag="textarea"] shy,
+.gd-hidden-characters[data-tag="textarea"] tab {
   display: inline;
   position: relative;
   vertical-align: bottom;
 }
 
-.gd-hidden-characters break::before,
-.gd-hidden-characters shy::before,
-.gd-hidden-characters tab::before {
+.gd-hidden-characters[data-tag="textarea"] break::before,
+.gd-hidden-characters[data-tag="textarea"] shy::before,
+.gd-hidden-characters[data-tag="textarea"] tab::before {
+  color: var(--gd-hc-marker-color);
   display: inline-block;
+  font-family: "hidden-characters", var(--font-sans) !important;
+  font-weight: normal;
   position: absolute;
+  width: max-content;
 }
 
-/* PUA glyph assignments */
-.gd-hidden-characters break::before {
+.gd-hidden-characters[data-tag="textarea"] break::before {
   content: "\e002";
   top: 50%;
   transform: translateY(-50%);
 }
 
-.gd-hidden-characters shy::before {
+.gd-hidden-characters[data-tag="textarea"] shy::before {
   content: "\e003";
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
 
-.gd-hidden-characters tab::before {
+.gd-hidden-characters[data-tag="textarea"] tab::before {
   content: "\e004";
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Kirby caption blocks use mix-blend-mode; background color keeps markers legible. */
+.k-block-figure-caption
+  .k-writer
+  .gd-hidden-character-marker::before,
+.k-block-figure-caption
+  .k-writer
+  .gd-hidden-characters[data-tag="textarea"]
+  break::before,
+.k-block-figure-caption
+  .k-writer
+  .gd-hidden-characters[data-tag="textarea"]
+  shy::before,
+.k-block-figure-caption
+  .k-writer
+  .gd-hidden-characters[data-tag="textarea"]
+  tab::before {
+  color: var(--color-background) !important;
 }

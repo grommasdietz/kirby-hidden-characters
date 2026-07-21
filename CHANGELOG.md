@@ -13,6 +13,9 @@
 
 * **svg:** add gd-hc-tabulator SVG for dark and light themes ([ea3e962](https://github.com/grommasdietz/kirby-hidden-characters/commit/ea3e9621aaad48974bb75e9b993e6f69f27a18ed))
 
+> [!NOTE]
+> Releases 2.0.0 through 2.0.12 were published before the release workflow reliably persisted generated changelog updates. Their release notes remain available on GitHub.
+
 # [1.3.0](https://github.com/grommasdietz/kirby-hidden-characters/compare/v1.2.0...v1.3.0) (2026-03-11)
 
 
@@ -49,8 +52,3 @@
 * **docs:** add script to check for "Next" links in markdown ([c116d47](https://github.com/grommasdietz/kirby-hidden-characters/commit/c116d4755c36ca53ee265b42ab20ca91fec9c2ee))
 * **licensing:** add license switching functionality and documentation ([25b8b65](https://github.com/grommasdietz/kirby-hidden-characters/commit/25b8b655ca9e6ff14e2226fcab352f1f0ce30d63))
 * **mcp:** add initial MCP command definitions and configuration ([701a28e](https://github.com/grommasdietz/kirby-hidden-characters/commit/701a28e3c031dac67f7c760a5ec6257ff11f0307))
-
-# Changelog
-
-> [!NOTE]
-> This file is maintained automatically by semantic-release.

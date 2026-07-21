@@ -6,19 +6,21 @@ Kirby Hidden Characters consists of a JavaScript entry point (`src/index.js`) an
 
 ## Rendering strategy
 
-Hidden characters are visualized through two complementary mechanisms:
+Hidden characters are visualized through three complementary mechanisms:
 
-1. **Custom icon font** — A WOFF2 font is applied unconditionally to all supported field elements. Its `unicode-range` covers space codepoints (`U+0020`, `U+00A0`, `U+2000–200A`, `U+202F`, `U+205F`) and private-use area (PUA) glyphs used by the overlay. `font-palette` keeps glyphs transparent by default and reveals them at 25% opacity on focus. Browsers without `font-palette` support see the glyphs at their baked-in color as progressive enhancement.
+1. **Custom color font on the real fields** — A WOFF2 font is applied continuously to supported fields. Its `unicode-range` covers space codepoints (`U+0020`, `U+00A0`, `U+2000–200A`, `U+202F`, `U+205F`) and the private-use glyphs used for structural markers. `font-palette` keeps spaces transparent by default and reveals them on focus. Because the font never changes on focus, whitespace advance widths remain stable.
 
-2. **Overlay clone** — An absolutely-positioned `div.gd-hidden-characters` is injected next to the real input. It mirrors the field's content with inline custom elements (`<break>`, `<shy>`, `<tab>`) replacing line breaks, soft hyphens, and tabs respectively. CSS `::before` pseudo-elements on those custom elements render PUA glyphs from the icon font. The overlay fades in via `:focus-visible + .gd-hidden-characters` and is otherwise transparent and pointer-events-free.
+2. **Marker-only writer layer** — ProseMirror text is laid out only by Kirby's real `.ProseMirror` element. A sibling `div.gd-hidden-characters--writer-markers` contains absolutely positioned marker spans only; it never clones paragraph text. Marker coordinates are derived from DOM `Range` rectangles in the real editor for paragraph ends, hard breaks, soft hyphens and tabs. Consequently an NBSP cannot wrap differently in a second formatting context.
 
-Single-line `text` fields use only the font mechanism; a scrollable overlay clone is unreliable for horizontally-scrolling inputs.
+3. **Grid-aligned textarea mirror** — Native textareas do not expose text-node ranges. They retain a transparent mirror in the same CSS grid cell, with the toolbar in the row above it. Newline, tab and soft-hyphen helpers are rendered only in this textarea mirror.
+
+Single-line `text` fields use only the font mechanism because horizontally scrolling input values cannot be mirrored reliably.
 
 ---
 
 ## Vue mixin
 
-`hiddenCharactersMixin` is registered as a global Vue mixin via `Vue.mixin()`. Its `mounted()` hook compares `this.$options.name` against the list of target components. Non-matching components exit immediately with no overhead.
+`hiddenCharactersMixin` is registered as a global Vue mixin via `Vue.mixin()`. Its `mounted()` hook compares `this.$options.name` against the list of target components. Non-matching components exit immediately.
 
 Default target components:
 
@@ -29,17 +31,40 @@ Default target components:
 
 ## Writer branch
 
-For `k-writer-input`, the mixin locates the `.ProseMirror` element and:
+For `k-writer-input`, the mixin locates the real `.ProseMirror` element and:
 
-1. Creates an overlay `div` that copies attributes from `.ProseMirror`, excluding a fixed set of non-visual attributes such as `contenteditable`, `id`, `aria-hidden`, and `spellcheck`.
-2. Inserts it immediately after the ProseMirror element so `:focus-visible + .gd-hidden-characters` activates on focus.
-3. Starts a `MutationObserver` on the ProseMirror element (`childList`, `subtree`, `characterData`) to detect DOM changes. The overlay HTML is regenerated on each mutation.
+1. Inserts an empty marker layer directly after it.
+2. Reads marker positions from the real DOM rather than serializing and re-parsing `innerHTML`.
+3. Uses a `MutationObserver`, `ResizeObserver`, focus/scroll/input listeners, window resize and font-loading events to schedule marker-coordinate refreshes.
+4. Skips geometry work while the writer is blurred and performs a complete refresh when focus returns.
+5. Keeps the layer pointer-events-free and hidden from accessibility APIs.
 
-`renderHiddenCharacters(innerHTML)` parses the ProseMirror HTML and:
+The marker layer contains only spans such as:
 
-- Replaces `<br>` elements with `<break>` elements, skipping ProseMirror's trailing-break `<br>` (a cursor placeholder, not actual content)
-- Wraps soft hyphens (`U+00AD`) in `<shy>` elements
-- Wraps tab characters (`U+0009`) in `<tab>` elements
+```html
+<span
+  class="gd-hidden-character-marker"
+  data-character="shy"
+  style="left: …; top: …; width: …; height: …"
+></span>
+```
+
+No custom helper element is inserted into ProseMirror's editable DOM, and no generated paragraph marker participates in ProseMirror line breaking.
+
+### Update lifecycle and performance
+
+The writer branch deliberately has no persistent coordinate matrix. ProseMirror and the browser remain the source of truth for layout. A writer refresh:
+
+1. Collects paragraphs and hard-break elements.
+2. Walks text nodes to find actual soft hyphens and tabs.
+3. Reads `Range` rectangles only for paragraph ends and characters that need structural markers.
+4. Replaces the marker spans in one batch.
+
+Text mutations, input events, resizes and font events can all request a refresh. Requests within the same rendering frame are coalesced through one `requestAnimationFrame`. While the writer is blurred, refreshes are skipped because CSS hides the marker layer; focusing the writer triggers a full refresh.
+
+A focused edit currently performs a complete scan rather than incrementally mapping cached positions. Its time complexity is linear in the writer's text and block count, plus the number of markers. This keeps the implementation independent from Kirby's internal ProseMirror instance and avoids stale coordinates after wrapping, font, width or block-height changes. It is appropriate for ordinary Panel fields, but exceptionally large long-form documents can make the geometry pass noticeable. Kirby's internal writer supports extension objects that can return ProseMirror plugins, but the public Panel plugin API currently exposes writer marks and nodes rather than a generic global writer-extension registry. A transaction-aware decoration implementation would therefore require a custom or replaced writer component, or a future public Kirby hook. This plugin intentionally avoids that integration dependency.
+
+Ordinary spaces and NBSPs are not part of this geometry pass. The custom font renders them directly in the real field, so they update immediately and cannot diverge through a second text layout.
 
 ---
 
@@ -47,64 +72,42 @@ For `k-writer-input`, the mixin locates the `.ProseMirror` element and:
 
 For `k-textarea-input`, the mixin locates `.k-textarea-input-native` and:
 
-1. Creates an overlay `div` that copies computed typography and spacing styles (`font-family`, `font-size`, `line-height`, `padding-*`, `border-*-width`, `tab-size`, and others) so overlay text reflows identically to the textarea.
-2. Inserts it after the native element inside `.k-textarea-input-wrapper`. When a toolbar is present, the wrapper is converted to a CSS grid so the overlay occupies the same row as the textarea without covering the toolbar.
-3. Listens to the native `input` event and re-renders the overlay from `inputEl.value` on each keystroke.
+1. Creates a transparent mirror that copies the textarea's computed typography and spacing properties.
+2. Inserts it after the native element inside `.k-textarea-input-wrapper`.
+3. Uses a CSS grid so a toolbar remains in the first row while the textarea and mirror share the second row.
+4. Re-renders the mirror on native `input` events and synchronizes scroll offsets.
 
-`renderTextareaContent(value)` processes the raw text value and:
-
-- Converts `\n` to `<break></break>\n` (keeping the newline for `pre-wrap` layout)
-- Converts `\t` to `<tab>\t</tab>` (keeping the tab for tab-stop rendering)
-- Wraps soft hyphens in `<shy>\u00AD</shy>`
-- HTML-escapes all other characters
+`renderTextareaContent(value)` keeps newlines and tabs in the mirrored text while adding marker helpers. All ordinary spaces and NBSP glyphs remain owned by the real textarea.
 
 ---
 
 ## Extension API
 
-Third-party plugins can extend the overlay behavior by calling `window.gdHiddenCharacters.registerExtension()`. The namespace is exposed on `window` by this plugin's script; use `??=` to guard against load order:
+Third-party plugins can extend the behavior through `window.gdHiddenCharacters.registerExtension()`:
 
 ```js
 window.gdHiddenCharacters ??= {};
 window.gdHiddenCharacters.registerExtension({
   components: ["k-my-block-writer"],
   cloneTransform(overlayEl, inputEl) {
-    // mutate overlayEl before it is inserted into the DOM
+    if (inputEl.closest(".k-my-block-writer")) {
+      overlayEl.classList.add("my-block-overlay");
+    }
   },
 });
 ```
 
 ### Options
 
-| Option           | Type                                                     | Description                                                                                                                                      |
-| :--------------- | :------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `components`     | `string[]`                                               | Additional Vue component names to target. Appended to the default list of `k-writer-input` and `k-textarea-input`.                               |
-| `cloneTransform` | `(overlayEl: HTMLElement, inputEl: HTMLElement) => void` | Called after the overlay element is created but before it is inserted into the DOM. Use it to set attributes, modify styles, or add class names. |
+| Option           | Type                                                     | Description                                                                                                   |
+| :--------------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------ |
+| `components`     | `string[]`                                               | Additional writer-like Vue component names that contain a `.ProseMirror` descendant.                          |
+| `cloneTransform` | `(overlayEl: HTMLElement, inputEl: HTMLElement) => void` | Called before each helper layer is inserted. Inspect `overlayEl.dataset.tag` or `inputEl` to scope changes.   |
 
-### Example: targeting a custom block component
+The historical `cloneTransform` name and callback timing are retained for API compatibility. The callback is global and is intended for attributes, classes, and styles; writer layers no longer expose cloned paragraph content.
 
-A Kirby blocks plugin that includes a writer in its preview component can opt into hidden-characters rendering:
-
-```js
-window.panel.plugin("yourvendor/your-plugin", {
-  // ...
-});
-
-// Register after your own plugin is set up
-window.gdHiddenCharacters ??= {};
-window.gdHiddenCharacters.registerExtension({
-  components: ["k-my-block-writer"],
-  cloneTransform(overlayEl, inputEl) {
-    // Scope custom overlay styles to this component
-    overlayEl.classList.add("my-block-overlay");
-  },
-});
-```
-
-> [!NOTE]
-> The `??=` guard lets your plugin register extensions regardless of whether Kirby Hidden Characters loads before or after your plugin.
-
-> [!IMPORTANT] > `registerExtension` must be called before the relevant component's `mounted` lifecycle hook runs — typically at the top level of your Panel plugin script.
+> [!IMPORTANT]
+> `registerExtension` must run before the relevant component's `mounted` hook.
 
 ---
 

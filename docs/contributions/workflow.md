@@ -6,7 +6,7 @@ This page covers the core developer workflow for Panel assets and tooling.
 
 ## Panel assets
 
-Panel source lives in `src/index.js` and `src/components`.
+Panel source lives in `src/index.js` and `src/styles/hidden-characters.css`. The editable font source lives in `src/fonts/hidden-characters.glyphs`; its compiled WOFF2 is committed under `assets/fonts/`.
 
 Build production assets:
 
@@ -24,25 +24,6 @@ pnpm dev
 ```
 
 PostCSS is configured in `postcss.config.cjs` (autoprefixer by default).
-
----
-
-## kirbyuse
-
-`kirbyuse` is installed for Panel helper composables and type-friendly access to `window.panel`.
-
-Import composables where needed:
-
-```js
-import { usePanel } from "kirbyuse";
-
-export default {
-  mounted() {
-    const panel = usePanel();
-    panel.notification.success("kirbyuse is ready.");
-  },
-};
-```
 
 ---
 
