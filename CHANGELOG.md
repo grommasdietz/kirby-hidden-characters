@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.0...v2.1.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* **writer:** align hidden-character markers with ProseMirror layout ([d8ccfd6](https://github.com/grommasdietz/kirby-hidden-characters/commit/d8ccfd611681445555aabff61df7cb8c61786cbf))
+
 # [2.1.0](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.0.12...v2.1.0) (2026-05-12)
 
 
