@@ -385,16 +385,16 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "5.5.2",
+            "version": "5.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getkirby/kirby.git",
-                "reference": "81689c7f1471beb1fa9fb9c686f6f071f8671c3c"
+                "reference": "46daf74851b8ad5438112f365d1dbaf74504ef88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/kirby/zipball/81689c7f1471beb1fa9fb9c686f6f071f8671c3c",
-                "reference": "81689c7f1471beb1fa9fb9c686f6f071f8671c3c",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/46daf74851b8ad5438112f365d1dbaf74504ef88",
+                "reference": "46daf74851b8ad5438112f365d1dbaf74504ef88",
                 "shasum": ""
             },
             "require": {
@@ -483,7 +483,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-07-15T07:57:44+00:00"
+            "time": "2026-07-28T09:07:49+00:00"
         },
         {
             "name": "getkirby/composer-installer",
@@ -534,11 +534,11 @@
         },
         {
             "name": "grommasdietz/kirby-hidden-characters",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "2f3bcf492341af51e0217ac8e0e0dab7d7a7d83a"
+                "reference": "8b3fd46953d26901bd253639e00583749edd6e54"
             },
             "require": {
                 "getkirby/composer-installer": "^1.2",
@@ -546,52 +546,58 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.93",
+                "getkirby/cms": "^5.2",
                 "phpunit/phpunit": "^12.5",
                 "vimeo/psalm": "^6.15"
             },
             "type": "kirby-plugin",
-            "autoload": {
-                "psr-4": {
-                    "GrommasDietz\\HiddenCharacters\\": "lib/"
-                }
-            },
             "scripts": {
+                "setup": [
+                    "composer install -d playground",
+                    "composer install"
+                ],
                 "test": [
                     "@test:unit",
-                    "@test:integration"
+                    "@test:integration",
+                    "@test:smoke"
                 ],
                 "test:unit": [
-                    "phpunit --testsuite Unit"
+                    "./vendor/bin/phpunit --testsuite Unit"
                 ],
                 "test:integration": [
-                    "phpunit --testsuite Integration"
+                    "./vendor/bin/phpunit --testsuite Integration"
+                ],
+                "test:smoke": [
+                    "php tests/run.php"
                 ],
                 "test:coverage": [
-                    "phpunit --coverage-text"
+                    "./vendor/bin/phpunit --coverage-text"
                 ],
                 "psalm": [
                     "./vendor/bin/psalm --no-cache --show-info=true"
                 ],
                 "lint": [
-                    "php-cs-fixer fix --dry-run"
+                    "./vendor/bin/php-cs-fixer fix --dry-run --diff"
                 ],
                 "lint:fix": [
-                    "php-cs-fixer fix"
+                    "./vendor/bin/php-cs-fixer fix"
                 ],
                 "format": [
                     "@lint:fix"
                 ],
-                "setup": [
-                    "composer install",
-                    "composer install -d playground"
+                "playground:reset": [
+                    "php tools/reset-playground.php --plugins"
+                ],
+                "playground:seed": [
+                    "php tools/seed-playground.php"
+                ],
+                "release:check": [
+                    "php tools/release-readiness.php"
                 ],
                 "verify": [
                     "@lint",
                     "@psalm",
                     "@test"
-                ],
-                "package:clean": [
-                    "rm -rf dist && mkdir -p dist && git archive --format=zip --worktree-attributes HEAD -o dist/kirby-hidden-characters.zip"
                 ],
                 "notices:generate": [
                     "php tools/generate-third-party-notices.php"
@@ -617,11 +623,13 @@
                 "kirby",
                 "kirby-cms",
                 "kirby-plugin",
+                "kirby5",
                 "panel"
             ],
             "support": {
                 "issues": "https://github.com/grommasdietz/kirby-hidden-characters/issues",
-                "source": "https://github.com/grommasdietz/kirby-hidden-characters"
+                "source": "https://github.com/grommasdietz/kirby-hidden-characters",
+                "docs": "https://github.com/grommasdietz/kirby-hidden-characters/blob/main/README.md"
             },
             "transport-options": {
                 "relative": true
