@@ -1976,16 +1976,16 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "5.5.2",
+            "version": "5.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getkirby/kirby.git",
-                "reference": "81689c7f1471beb1fa9fb9c686f6f071f8671c3c"
+                "reference": "46daf74851b8ad5438112f365d1dbaf74504ef88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/kirby/zipball/81689c7f1471beb1fa9fb9c686f6f071f8671c3c",
-                "reference": "81689c7f1471beb1fa9fb9c686f6f071f8671c3c",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/46daf74851b8ad5438112f365d1dbaf74504ef88",
+                "reference": "46daf74851b8ad5438112f365d1dbaf74504ef88",
                 "shasum": ""
             },
             "require": {
@@ -2074,7 +2074,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-07-15T07:57:44+00:00"
+            "time": "2026-07-28T09:07:49+00:00"
         },
         {
             "name": "kelunik/certificate",
