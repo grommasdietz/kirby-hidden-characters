@@ -43,7 +43,7 @@
     "@typescript-eslint/parser": "^8.66.0",
     "autoprefixer": "^10.5.4",
     "eslint": "^9.39.4",
-    "globals": "^17.7.0",
+    "globals": "^17.9.0",
     "husky": "^9.1.7",
     "kirbyup": "^3.4.1",
     "license-checker": "^25.0.1",
