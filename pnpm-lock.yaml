@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@commitlint/cli':
         specifier: ^21.2.0
-        version: 21.2.0(@types/node@22.19.7)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
+        version: 21.2.0(@types/node@26.1.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
       '@commitlint/config-conventional':
         specifier: ^21.2.0
         version: 21.2.0
@@ -39,8 +39,8 @@ importers:
         specifier: ^14.1.1
         version: 14.1.1(semantic-release@25.0.5(typescript@5.9.3))
       '@types/node':
-        specifier: ^22.19.7
-        version: 22.19.7
+        specifier: ^26.1.2
+        version: 26.1.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.66.0
         version: 8.66.0(@typescript-eslint/parser@8.66.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
@@ -61,7 +61,7 @@ importers:
         version: 9.1.7
       kirbyup:
         specifier: ^3.4.1
-        version: 3.4.1(@types/node@22.19.7)(jiti@2.7.0)(rollup@4.62.2)
+        version: 3.4.1(@types/node@26.1.2)(jiti@2.7.0)(rollup@4.62.2)
       license-checker:
         specifier: ^25.0.1
         version: 25.0.1
@@ -933,8 +933,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@22.19.7':
-    resolution: {integrity: sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw==}
+  '@types/node@26.1.2':
+    resolution: {integrity: sha512-Vu4a5UFA9rIIFJ7rB/Vaafh9lrCQszopTCx6KjFboXTGQbPNasehVR5TEiithSDGyd1DEiUByggTZsg8jukeIg==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -2933,8 +2933,8 @@ packages:
     engines: {node: '>=0.8.0'}
     hasBin: true
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+  undici-types@8.3.0:
+    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
   undici@6.27.0:
     resolution: {integrity: sha512-YmfV3YnEDzXRC5lZ2jWtWWHKGUm1zIt8AhesR1tens+HTNv+YZlN/dp6G727LOvMJ8xjP9Be7Y2Sdr96LDm+pg==}
@@ -3294,12 +3294,12 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@commitlint/cli@21.2.0(@types/node@22.19.7)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)':
+  '@commitlint/cli@21.2.0(@types/node@26.1.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-conventional': 21.2.0
       '@commitlint/format': 21.2.0
       '@commitlint/lint': 21.2.0
-      '@commitlint/load': 21.2.0(@types/node@22.19.7)(typescript@5.9.3)
+      '@commitlint/load': 21.2.0(@types/node@26.1.2)(typescript@5.9.3)
       '@commitlint/read': 21.2.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)
       '@commitlint/types': 21.2.0
       tinyexec: 1.2.4
@@ -3344,14 +3344,14 @@ snapshots:
       '@commitlint/rules': 21.2.0
       '@commitlint/types': 21.2.0
 
-  '@commitlint/load@21.2.0(@types/node@22.19.7)(typescript@5.9.3)':
+  '@commitlint/load@21.2.0(@types/node@26.1.2)(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-validator': 21.2.0
       '@commitlint/execute-rule': 21.0.1
       '@commitlint/resolve-extends': 21.2.0
       '@commitlint/types': 21.2.0
       cosmiconfig: 9.0.2(typescript@5.9.3)
-      cosmiconfig-typescript-loader: 6.3.0(@types/node@22.19.7)(cosmiconfig@9.0.2(typescript@5.9.3))(typescript@5.9.3)
+      cosmiconfig-typescript-loader: 6.3.0(@types/node@26.1.2)(cosmiconfig@9.0.2(typescript@5.9.3))(typescript@5.9.3)
       es-toolkit: 1.49.0
       is-plain-obj: 4.1.0
       picocolors: 1.1.1
@@ -3936,9 +3936,9 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@22.19.7':
+  '@types/node@26.1.2':
     dependencies:
-      undici-types: 6.21.0
+      undici-types: 8.3.0
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -4035,22 +4035,22 @@ snapshots:
       '@typescript-eslint/types': 8.66.0
       eslint-visitor-keys: 5.0.1
 
-  '@vitejs/plugin-vue2-jsx@1.1.0(rollup@4.62.2)(vite@6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)':
+  '@vitejs/plugin-vue2-jsx@1.1.0(rollup@4.62.2)(vite@6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.29.7)
       '@babel/plugin-transform-typescript': 7.29.7(@babel/core@7.29.7)
       '@rollup/pluginutils': 5.4.0(rollup@4.62.2)
       '@vue/babel-preset-jsx': 1.4.0(@babel/core@7.29.7)(vue@2.7.16)
-      vite: 6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0)
+      vite: 6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0)
       vue: 2.7.16
     transitivePeerDependencies:
       - rollup
       - supports-color
 
-  '@vitejs/plugin-vue2@2.2.0(vite@6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)':
+  '@vitejs/plugin-vue2@2.2.0(vite@6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)':
     dependencies:
-      vite: 6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0)
+      vite: 6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0)
       vue: 2.7.16
 
   '@vue/babel-helper-vue-jsx-merge-props@1.4.0': {}
@@ -4399,9 +4399,9 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig-typescript-loader@6.3.0(@types/node@22.19.7)(cosmiconfig@9.0.2(typescript@5.9.3))(typescript@5.9.3):
+  cosmiconfig-typescript-loader@6.3.0(@types/node@26.1.2)(cosmiconfig@9.0.2(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
-      '@types/node': 22.19.7
+      '@types/node': 26.1.2
       cosmiconfig: 9.0.2(typescript@5.9.3)
       jiti: 2.6.1
       typescript: 5.9.3
@@ -5002,10 +5002,10 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  kirbyup@3.4.1(@types/node@22.19.7)(jiti@2.7.0)(rollup@4.62.2):
+  kirbyup@3.4.1(@types/node@26.1.2)(jiti@2.7.0)(rollup@4.62.2):
     dependencies:
-      '@vitejs/plugin-vue2': 2.2.0(vite@6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)
-      '@vitejs/plugin-vue2-jsx': 1.1.0(rollup@4.62.2)(vite@6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)
+      '@vitejs/plugin-vue2': 2.2.0(vite@6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)
+      '@vitejs/plugin-vue2-jsx': 1.1.0(rollup@4.62.2)(vite@6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0))(vue@2.7.16)
       '@vue/compiler-sfc': 2.7.16
       c12: 3.2.0
       cac: 6.7.14
@@ -5019,7 +5019,7 @@ snapshots:
       postcss-load-config: 6.0.1(jiti@2.7.0)(postcss@8.5.16)
       rollup-plugin-external-globals: 0.13.0(rollup@4.62.2)
       sass: 1.101.0
-      vite: 6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0)
+      vite: 6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0)
       vite-plugin-full-reload: 1.2.0
       vue: 2.7.16
     transitivePeerDependencies:
@@ -6045,7 +6045,7 @@ snapshots:
   uglify-js@3.19.3:
     optional: true
 
-  undici-types@6.21.0: {}
+  undici-types@8.3.0: {}
 
   undici@6.27.0: {}
 
@@ -6093,7 +6093,7 @@ snapshots:
       picocolors: 1.1.1
       picomatch: 2.3.2
 
-  vite@6.4.3(@types/node@22.19.7)(jiti@2.7.0)(sass@1.101.0):
+  vite@6.4.3(@types/node@26.1.2)(jiti@2.7.0)(sass@1.101.0):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.5)
@@ -6102,7 +6102,7 @@ snapshots:
       rollup: 4.62.2
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 22.19.7
+      '@types/node': 26.1.2
       fsevents: 2.3.3
       jiti: 2.7.0
       sass: 1.101.0
