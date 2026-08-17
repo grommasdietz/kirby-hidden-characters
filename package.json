@@ -48,7 +48,7 @@
     "kirbyup": "^3.4.1",
     "license-checker": "^25.0.1",
     "markdownlint-cli": "^0.49.1",
-    "semantic-release": "^25.0.5",
+    "semantic-release": "^25.0.9",
     "typescript": "^6.0.3"
   },
   "private": true,
