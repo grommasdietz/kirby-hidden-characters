@@ -1,6 +1,9 @@
 packages:
   - .
 
+minimumReleaseAge: 1440
+minimumReleaseAgeStrict: true
+
 nodeLinker: isolated
 
 allowBuilds:
