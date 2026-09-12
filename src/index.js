@@ -72,6 +72,27 @@ function renderTextareaContent(value) {
 // Writer marker geometry
 // ---------------------------------------------------------------------------
 
+const writerCharacterMarkers = new Map([
+  ["\u0020", { character: "space", glyph: "\u0020" }],
+  ["\u00a0", { character: "no-break-space", glyph: "\u00a0" }],
+  ["\u2000", { character: "en-quad", glyph: "\u2000" }],
+  ["\u2001", { character: "em-quad", glyph: "\u2001" }],
+  ["\u2002", { character: "en-space", glyph: "\u2002" }],
+  ["\u2003", { character: "em-space", glyph: "\u2003" }],
+  ["\u2004", { character: "three-per-em-space", glyph: "\u2004" }],
+  ["\u2005", { character: "four-per-em-space", glyph: "\u2005" }],
+  ["\u2006", { character: "six-per-em-space", glyph: "\u2006" }],
+  ["\u2007", { character: "figure-space", glyph: "\u2007" }],
+  ["\u2008", { character: "punctuation-space", glyph: "\u2008" }],
+  ["\u2009", { character: "thin-space", glyph: "\u2009" }],
+  ["\u200a", { character: "hair-space", glyph: "\u200a" }],
+  ["\u200b", { character: "zero-width-space", glyph: "\u200b" }],
+  ["\u202f", { character: "narrow-no-break-space", glyph: "\u202f" }],
+  ["\u205f", { character: "medium-mathematical-space", glyph: "\u205f" }],
+  ["\u00ad", { character: "shy", glyph: "\ue003" }],
+  ["\u0009", { character: "tab", glyph: "\ue004" }],
+]);
+
 /**
  * @param {Range} range
  * @param {boolean} [preferLast=false]
@@ -81,9 +102,15 @@ function rangeRect(range, preferLast = false) {
   const rects = Array.from(range.getClientRects()).filter(
     (rect) => rect.width > 0 || rect.height > 0
   );
+  // WebKit can prepend/append a zero-width fragment from the neighbouring
+  // text run, notably at NBSP and mark boundaries or after wrapping. Prefer
+  // the character's advance box; retain caret boxes for genuinely zero-width
+  // characters and collapsed ranges. A bounding union can span two lines.
+  const advanceRects = rects.filter((rect) => rect.width > 0);
+  const candidates = advanceRects.length > 0 ? advanceRects : rects;
 
-  if (rects.length > 0) {
-    return preferLast ? rects.at(-1) ?? null : rects[0] ?? null;
+  if (candidates.length > 0) {
+    return preferLast ? candidates.at(-1) ?? null : candidates[0] ?? null;
   }
 
   const rect = range.getBoundingClientRect();
@@ -194,23 +221,40 @@ function paragraphEndRect(paragraph) {
 }
 
 /**
- * @param {HTMLElement} overlay
+ * @param {{ fragment: DocumentFragment, overlayRect: DOMRect, scaleX: number, scaleY: number, typography: WeakMap<Element, { fontSize: string, monospace: boolean }> }} context
  * @param {string} type
  * @param {{ left: number, top: number, width: number, height: number }} rect
+ * @param {string} glyph
+ * @param {Element | null} sourceElement
  */
-function appendMarker(overlay, type, rect) {
-  const overlayRect = overlay.getBoundingClientRect();
-  const scaleX = overlay.offsetWidth > 0 ? overlayRect.width / overlay.offsetWidth : 1;
-  const scaleY = overlay.offsetHeight > 0 ? overlayRect.height / overlay.offsetHeight : 1;
+function appendMarker(context, type, rect, glyph, sourceElement = null) {
   const marker = document.createElement("span");
 
   marker.className = "gd-hidden-character-marker";
   marker.dataset.character = type;
-  marker.style.left = `${(rect.left - overlayRect.left) / scaleX}px`;
-  marker.style.top = `${(rect.top - overlayRect.top) / scaleY}px`;
-  marker.style.width = `${rect.width / scaleX}px`;
-  marker.style.height = `${rect.height / scaleY}px`;
-  overlay.appendChild(marker);
+  marker.dataset.glyph = glyph;
+  marker.style.left = `${(rect.left - context.overlayRect.left) / context.scaleX}px`;
+  marker.style.top = `${(rect.top - context.overlayRect.top) / context.scaleY}px`;
+  marker.style.width = `${rect.width / context.scaleX}px`;
+  marker.style.height = `${rect.height / context.scaleY}px`;
+
+  if (sourceElement) {
+    marker.dataset.sourceTag = sourceElement.localName;
+    let typography = context.typography.get(sourceElement);
+
+    if (!typography) {
+      typography = {
+        fontSize: window.getComputedStyle(sourceElement).fontSize,
+        monospace: Boolean(sourceElement.closest("code")),
+      };
+      context.typography.set(sourceElement, typography);
+    }
+
+    marker.style.setProperty("--gd-hc-font-size", typography.fontSize);
+    if (typography.monospace) marker.dataset.font = "monospace";
+  }
+
+  context.fragment.appendChild(marker);
 }
 
 /**
@@ -222,7 +266,16 @@ function appendMarker(overlay, type, rect) {
  * @param {HTMLElement} overlay
  */
 function renderWriterMarkers(inputEl, overlay) {
-  overlay.replaceChildren();
+  const overlayRect = overlay.getBoundingClientRect();
+  const context = {
+    fragment: document.createDocumentFragment(),
+    overlayRect,
+    scaleX:
+      overlay.offsetWidth > 0 ? overlayRect.width / overlay.offsetWidth : 1,
+    scaleY:
+      overlay.offsetHeight > 0 ? overlayRect.height / overlay.offsetHeight : 1,
+    typography: new WeakMap(),
+  };
 
   const paragraphs = Array.from(
     inputEl.querySelectorAll("p")
@@ -244,9 +297,11 @@ function renderWriterMarkers(inputEl, overlay) {
 
       if (rect) {
         appendMarker(
-          overlay,
+          context,
           index === paragraphs.length - 1 ? "paragraph-last" : "paragraph",
-          rect
+          rect,
+          index === paragraphs.length - 1 ? "\ue001" : "\ue000",
+          paragraph
         );
       }
     }
@@ -261,7 +316,7 @@ function renderWriterMarkers(inputEl, overlay) {
     const rect = rangeRect(range, true) ?? breakEl.getBoundingClientRect();
 
     if (rect.width > 0 || rect.height > 0) {
-      appendMarker(overlay, "break", rect);
+      appendMarker(context, "break", rect, "\ue002", breakEl.parentElement);
     }
   }
 
@@ -274,8 +329,8 @@ function renderWriterMarkers(inputEl, overlay) {
     const value = textNode.nodeValue ?? "";
 
     for (let index = 0; index < value.length; index += 1) {
-      const char = value[index];
-      if (char !== "\u00AD" && char !== "\u0009") continue;
+      const markerDefinition = writerCharacterMarkers.get(value[index]);
+      if (!markerDefinition) continue;
 
       const range = document.createRange();
       range.setStart(textNode, index);
@@ -283,12 +338,20 @@ function renderWriterMarkers(inputEl, overlay) {
       const rect = rangeRect(range, false);
 
       if (rect) {
-        appendMarker(overlay, char === "\u00AD" ? "shy" : "tab", rect);
+        appendMarker(
+          context,
+          markerDefinition.character,
+          rect,
+          markerDefinition.glyph,
+          textNode.parentElement
+        );
       }
     }
 
     node = walker.nextNode();
   }
+
+  overlay.replaceChildren(context.fragment);
 }
 
 // ---------------------------------------------------------------------------
@@ -371,6 +434,7 @@ const hiddenCharactersMixin = {
         };
 
         inputEl.after(overlay);
+        overlay.parentElement.setAttribute("data-hidden-characters", "");
         updateOverlay();
 
         inputEl.addEventListener("input", updateOverlay, { passive: true });
@@ -408,13 +472,17 @@ const hiddenCharactersMixin = {
         animationFrame = 0;
         renderWriterMarkers(inputEl, overlay);
       };
+      const isWriterFocused = () =>
+        document.activeElement === inputEl ||
+        inputEl.matches(":focus") ||
+        inputEl.classList.contains("ProseMirror-focused");
       const scheduleMarkers = () => {
         // The layer is only visible while the editor is focused. Defer all
         // geometry work while blurred and perform one complete refresh when
         // focus returns. Multiple triggers in the same frame are coalesced.
         if (
           !overlay.isConnected ||
-          !inputEl.matches(":focus") ||
+          !isWriterFocused() ||
           animationFrame !== 0
         ) {
           return;
@@ -437,9 +505,18 @@ const hiddenCharactersMixin = {
       resizeObserver.observe(inputEl);
       resizeObserver.observe(this.$el);
 
-      inputEl.addEventListener("focus", scheduleMarkers, { passive: true });
-      inputEl.addEventListener("input", scheduleMarkers, { passive: true });
-      inputEl.addEventListener("scroll", scheduleMarkers, { passive: true });
+      const writerRefreshEvents = [
+        "focus",
+        "input",
+        "scroll",
+        "pointerover",
+        "pointerout",
+        "transitionrun",
+        "transitionend",
+      ];
+      for (const event of writerRefreshEvents) {
+        inputEl.addEventListener(event, scheduleMarkers, { passive: true });
+      }
       window.addEventListener("resize", scheduleMarkers, { passive: true });
 
       const fontLoadingDone = () => scheduleMarkers();
@@ -449,6 +526,7 @@ const hiddenCharactersMixin = {
       this.$gdOverlay = overlay;
       this.$gdInputEl = inputEl;
       this.$gdScheduleMarkers = scheduleMarkers;
+      this.$gdWriterRefreshEvents = writerRefreshEvents;
       this.$gdResizeObserver = resizeObserver;
       this.$gdWindowResize = scheduleMarkers;
       this.$gdFontLoadingDone = fontLoadingDone;
@@ -469,9 +547,9 @@ const hiddenCharactersMixin = {
     }
 
     if (this.$gdInputEl && this.$gdScheduleMarkers) {
-      this.$gdInputEl.removeEventListener("focus", this.$gdScheduleMarkers);
-      this.$gdInputEl.removeEventListener("input", this.$gdScheduleMarkers);
-      this.$gdInputEl.removeEventListener("scroll", this.$gdScheduleMarkers);
+      for (const event of this.$gdWriterRefreshEvents ?? []) {
+        this.$gdInputEl.removeEventListener(event, this.$gdScheduleMarkers);
+      }
     }
 
     if (this.$gdWindowResize) {
@@ -490,6 +568,9 @@ const hiddenCharactersMixin = {
       window.cancelAnimationFrame(animationFrame);
     }
 
+    if (this.$gdOverlay?.dataset.tag === "textarea") {
+      this.$gdOverlay.parentElement?.removeAttribute("data-hidden-characters");
+    }
     this.$gdOverlay?.remove();
   },
 

@@ -2,10 +2,10 @@
    hidden-characters.css
 
    Rendering strategy:
-   - The custom font is always active on real editable fields. Its space glyphs
-     therefore own both layout and visibility, including U+00A0 no-break space.
-   - Writer structural markers are positioned from the real ProseMirror DOM in
-     a marker-only overlay. No writer text is cloned or laid out a second time.
+   - Kirby owns all real ProseMirror text and mark styling. Writer markers are
+     positioned from the real DOM in a marker-only overlay.
+   - The custom font remains active on native textarea and text fields, which do
+     not expose DOM ranges for marker placement.
    - Textareas retain the grid-aligned mirror because native textarea text does
      not expose DOM ranges for marker placement.
    ============================================================================= */
@@ -15,13 +15,12 @@
   font-family: "hidden-characters";
   font-style: normal;
   font-weight: normal;
-  src: url("data:font/woff2;base64,d09GMgABAAAAAAlMABAAAAAAGmQAAAjuAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIoJCIxYaMAZgP1NUQVREAHYvLgqREIxgMIp4ATYCJAOCBguBBgAEIAWFEgeHVhuPFiMR9oOT6pXgrxPoHDqILfInhGMJBTGS2oDOS9I5XrwQxHbWym8q/1uC53nc9M+9L4GghZY528+YmKVMzOjENMysv3wxk/jw53p/RB9kiWvti+JFJPApHPAhwDYZ72lICZ6nne9XXRpIFPhEdpkNxCbSot7x1APcZUQGC+24sY3X2oCoNm1Ez7cLdV/gn6yaiU7uvv1SO/9uJ28LBP+9dT0hkymxrK47WTVBhL3wFtGyIlCpAtbASrWqdaRUhbAkXIU09XWvpgchHQsLHGKBS53Rof/7v39YQG2QBCXaAlBCKWVRRoiyOJQtSoXEqbAk5UhREeVUVIaKqU3F1aUS6lNJWapMIyrFpdJyVLmmVIXmVEZLqpbWVG1Qh6gL6hH1QQMiCxoSjcBJhAsaEznQhGgKmhHNQQuiJWhFtAZtiLagHdEedCA6gk5EZ9CF6Aq6Ed1BD6In6EX0Bn2IvqAf0R8MIDygEgFKKEjC9/1AIAADAACgnIA4AbUJgccEEAKs+n1Oxub0ztbz4Jz04vpbULJEy/pgJvzVJr8fHz/ca4XP/19IjmvVBwRgPfYlgAuEcCjIUNCUnot/IcDSL6iJICwpApQCMIRGARAACgzIMARkWOYBKSkGuC50jRtzO7hzP7SCoDAFtwF3DT4KQvjQfHA/uEkd4sH++W0hhqVchYy0WgSkKJEhouYtBJtLQA4WXz8EIA/APiAPusCcTgMYpSsJu6PUYDidNwtyZMcNCQkH75YzBe0wHpr1UBYWPvoKOPLLKaG4cUxSZi3mnylsvnlj6htviBRffz165NVJmai84UaOHX3tNfAnPfnijXDLe+t1KR5uiv9qdHuMd+6w+jZmxmZHZ0yLfnA7d3Ka1DdHa/u229n2T//FMdT2fsEv+AUOhnefaXprHvG39tqGN+eUzY9Ojc2kk2LTElNik6ITozPjoZvDTt7YgCu7pc222Jarbmp6edtj02fGZkU3zfsXMe/fz8EDcN+W90aPh21vkqrRELUiYfPzfnvrUfNytqekwop+ems1K7G9jPjWZK7e5uiR11+XPYmJbZX404OweK1bJCbFg/X9Mg3nz5MqCvNGvyYjWmM3Tus0sm2/iQO0Q/r2prfuM2tVwZ7IxWJmTKu+YsKmFVeOmnVgkt5w86JVtx1r0+XSIc0eHOx17UpTe/QcBMZn9mRQRxHh6oMjRnTrRu/BZETYWevRW4b7p31PTuh/eI/Q8c3lzh3glbxl0yXpwwsScjdAiZ6w+80zPB4elDawpgaUZVIz+JQZPXp4TnnsyZm7Lszx2aH8WF13cjOxbvC8QbvQdcdajrjtm2zN10N2/ZK4/Dx4S2nIlrFD+RTyZz7kj0kIJv4/7CAcZF8ytNbwA1OPBzx7oF7yvAc/SO1Gp4znkh630lMdf0qj7hkhe9BHuuAtwx9tu/Yke7onFBIt7nBLj+9yue8a597LxRD1yuXT2ZXmed/7f/jU+vpmvIYI6cGDfoi+PPET9v300lUlKF13nWz05EK7/v2eIfJuLJ/E06/0rD0WVux6fsnmOzfols0PvLBi182Edl9YcYD6pfGMk95rROmbBtXfDV/+Z/bEn2P3nYhhOFTX/KvBib9HLLfm5NgTStVwHT6+dGJIbvjy4enMG2drzEcvB75GyYCqCdxGckpTfrjR77Ohhgv8JvXoP0oAQYCzyQNwLuCQoi4uLelITzyGMY5pFFjCGrbgc5BqTud8LuM67uQhnuYVvucvMRKXutJY2khX8WS0TJMqWSEbxZfDcqqcJ1fKTXKvPCYvydvyufwgf6vRuGa0oTbXDtpDK3WETtAZulBXefiCQwjwPWla3MtvhEmvg5fw3wGRHboW4bnvYQS5A8lnutTgXaqpc9ihnLXBUCPyWXVowRr6ip/qgFGaJPKUKEnTPTZKVLAqJ/gwtDhAYqtDJj3fqjRpaHfaTJBDxH+Twk8frERaXrc7/6LzQHjY3q2thCxZ4vHSnnEuL/ESRL/YMqgmuDD/X6f/l/770t4K5sP/xaDqQjqX/L8vDuEvb+K5vkiw9wQpt8QTT4tztajFAZRDnOG35YeyhxDuGC7JWgk9PzqBF7R+5plouitb5ieHsFv8zM/yGU+w13aqTjyeGCg5HEAHG2CenVYx0bLssCdxAFMD5tkNoIVwW94glFDHSX9IYe0v6V9TiVRyr9ToalvVSI0bSVs7dqzar6rql9mBrC0XXeQFM89kaLE6LSyOBd2SvrocJ///EpL070vQflDg5wkK87+dPX5uWd/fHOMA8HmLnlUAn+97LxP4z3fOCJ8PhFEABMLX/l9O0iHw/yvOGQi4hpXmOpAHqbTYxyFN0HHwkyTYpzup3zbQYyAet8h6EEwDaw3Y1bx0yDHXUaCKNVAepCB1igyeVvRbCwqKdboDhQM6p0PqOEaSfp4G6cTYp4N9UqgtL/VbhmL26DEKuSYnXnm6J69L60GGYk8xXkAxr1trKCh2yK6mkBRqJvtRHLTonM4bAXk8A0BEjytzN4a0CDALOFvkzLJV0i7bGOI71JLatry/HdIxGTuifgbZcZ0zZ2hKY2i6z9J63JzcUKA8N+JtIZ6HP6wSzfOuwtVZR5115Rpq1Gk0AhNqkEJidkpeJHTHcVWq1ah1CpncbLqFJqmVfIhVIsYZphCLJVrUQLnAKBCZ5amTO8ozi1pQLmmvI/mYPiZzfPgUtd5HE4vIdzmt0PXX1dsPVTv0cuOhXQShXalrJ66Wuuh6RnXXqnNfd89vj5iovYmsw/4WV8xgLUjjzBf0z0K4tzr26ZO+/LCEZRaoFSJ3LUZ+ixFtN+higV9LHhiZRElWVE03TMt2XJ8fJyhUGp3BZLE5XB5fIBSJJVKZXKFUqTVaHakHBqPJbLHa7A6ny+3x+vwq28b3wErnLYAwEEg0JhY2Dl5c8cbqOzN8+vkDgUS195Hv+/e5/0/KIB8f+lMxYPQhMbK+AEeAAlYdAAImgoAJEDBBAiZMwEQSMFEETDQBE0PAxCVgYgmYeATRWH2CCBNpIsN8DGJweoAAQYKECBFGAw==")
+  src: url("data:font/woff2;base64,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")
     format("woff2");
-  unicode-range: U+0020, U+00A0, U+2000-200A, U+202F, U+205F, U+E000-E004;
+  unicode-range: U+0020, U+00A0, U+2000-200B, U+202F, U+205F, U+E000-E004;
 }
 
-/* The font stays active continuously so focus never changes advance widths. */
-.k-writer-input .ProseMirror,
+/* The font stays active on native fields so focus never changes advance widths. */
 .k-textarea-input-native,
 .k-string-input.k-text-input {
   font-family: "hidden-characters", var(--font-sans) !important;
@@ -36,25 +35,24 @@
 @supports (font-palette: normal) {
   @font-palette-values --gd-hc-hidden-light {
     font-family: "hidden-characters";
-    override-colors: 0 transparent, 1 #000;
+    override-colors: 0 transparent;
   }
 
   @font-palette-values --gd-hc-hidden-dark {
     font-family: "hidden-characters";
-    override-colors: 0 transparent, 1 #fff;
+    override-colors: 0 transparent;
   }
 
   @font-palette-values --gd-hc-light {
     font-family: "hidden-characters";
-    override-colors: 0 rgba(0, 0, 0, 0.4), 1 #000;
+    override-colors: 0 rgba(0, 0, 0, 0.4);
   }
 
   @font-palette-values --gd-hc-dark {
     font-family: "hidden-characters";
-    override-colors: 0 rgba(255, 255, 255, 0.4), 1 #fff;
+    override-colors: 0 rgba(255, 255, 255, 0.4);
   }
 
-  .k-writer-input .ProseMirror,
   .k-textarea-input-native,
   .k-string-input.k-text-input,
   .gd-hidden-characters[data-tag="textarea"] {
@@ -63,7 +61,6 @@
 
   :where([data-theme="dark"])
     :is(
-      .k-writer-input .ProseMirror,
       .k-textarea-input-native,
       .k-string-input.k-text-input,
       .gd-hidden-characters[data-tag="textarea"]
@@ -71,7 +68,6 @@
     font-palette: --gd-hc-hidden-dark;
   }
 
-  .k-writer-input .ProseMirror:focus,
   .k-textarea-input-native:focus,
   .k-string-input.k-text-input:focus-within {
     font-palette: --gd-hc-light;
@@ -79,7 +75,6 @@
 
   :where([data-theme="dark"])
     :is(
-      .k-writer-input .ProseMirror:focus,
       .k-textarea-input-native:focus,
       .k-string-input.k-text-input:focus-within
     ) {
@@ -108,7 +103,8 @@
 }
 
 /* Both overlay variants are inserted directly after the focusable field. */
-:focus + .gd-hidden-characters {
+:focus + .gd-hidden-characters,
+.ProseMirror-focused + .gd-hidden-characters {
   opacity: 1;
 }
 
@@ -144,54 +140,39 @@
 
 .gd-hidden-character-marker::before {
   color: var(--gd-hc-marker-color);
+  content: attr(data-glyph);
   display: inline-block;
   font-family: "hidden-characters", var(--font-sans) !important;
+  font-size: var(--gd-hc-font-size, 1em);
+  font-variation-settings: "MONO" 0;
   font-weight: normal;
+  left: 50%;
+  line-height: 1;
   position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
   white-space: pre;
   width: max-content;
 }
 
-.gd-hidden-character-marker[data-character="paragraph"]::before {
-  content: "\e000";
+.gd-hidden-character-marker[data-font="monospace"]::before {
+  font-variation-settings: "MONO" 1;
+}
+
+.gd-hidden-character-marker:is(
+    [data-character="paragraph"],
+    [data-character="paragraph-last"],
+    [data-character="break"]
+  )::before {
   left: 0;
-  top: 50%;
   transform: translateY(-50%);
-}
-
-.gd-hidden-character-marker[data-character="paragraph-last"]::before {
-  content: "\e001";
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.gd-hidden-character-marker[data-character="break"]::before {
-  content: "\e002";
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.gd-hidden-character-marker[data-character="shy"]::before {
-  content: "\e003";
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.gd-hidden-character-marker[data-character="tab"]::before {
-  content: "\e004";
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
 
 /* --------------------------------------------------------------------------
    Textarea grid mirror
    -------------------------------------------------------------------------- */
 
-.k-textarea-input .k-textarea-input-wrapper:has(.gd-hidden-characters) {
+.k-textarea-input .k-textarea-input-wrapper[data-hidden-characters] {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
@@ -199,7 +180,7 @@
 }
 
 .k-textarea-input
-  .k-textarea-input-wrapper:has(.gd-hidden-characters)
+  .k-textarea-input-wrapper[data-hidden-characters]
   > .k-toolbar {
   grid-column: 1;
   grid-row: 1;
@@ -207,14 +188,14 @@
 }
 
 .k-textarea-input
-  .k-textarea-input-wrapper:has(.gd-hidden-characters)
+  .k-textarea-input-wrapper[data-hidden-characters]
   > .k-textarea-input-native {
   grid-column: 1;
   grid-row: 2;
 }
 
 .k-textarea-input
-  .k-textarea-input-wrapper:has(.gd-hidden-characters)
+  .k-textarea-input-wrapper[data-hidden-characters]
   > .gd-hidden-characters[data-tag="textarea"] {
   grid-column: 1;
   grid-row: 2;

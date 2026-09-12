@@ -40,8 +40,7 @@ customParameters = (
 name = "Color Palettes";
 value = (
 (
-(109,255),
-(0,255)
+(109,255)
 )
 );
 }
@@ -154,7 +153,7 @@ width = 448;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "8EBDDC04-F1AC-4035-BCC9-C185FF9B0AA2";
 name = "Color 0 10. Mai 26, 23:19";
@@ -205,7 +204,7 @@ width = 1233;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "B2F920E6-DAB0-4B6F-8EFC-6480383E26D9";
 name = "Color 0 10. Mai 26, 23:19";
@@ -275,7 +274,7 @@ width = 448;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "FFBD0F04-C741-4BAE-A35C-3DBA7CA38C15";
 name = "Regular 10. Mai 26, 21:00";
@@ -338,7 +337,7 @@ width = 1233;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "73DD8ADC-4F2A-4FD4-BD2D-C5EDC26BC49E";
 name = "Regular 10. Mai 26, 21:00";
@@ -446,7 +445,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "B22DD16D-854A-4D16-9D2E-BFFF56209141";
 name = "11. Mai 26, 09:48";
@@ -465,7 +464,7 @@ width = 1024;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "36B287C8-5760-4200-AF21-D038A2FB5C4A";
 name = "Color 0 11. Mai 26, 09:57";
@@ -573,7 +572,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "8C7F29BA-89A8-4292-BE81-E2DEB02EAA96";
 name = "11. Mai 26, 09:49";
@@ -592,7 +591,7 @@ width = 2048;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "3A9DE72B-91CB-4D72-9993-572A01B6C7AD";
 name = "11. Mai 26, 10:44";
@@ -700,7 +699,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "4C1DDDF0-5209-4981-8F22-7BF6CAB6ED75";
 name = "11. Mai 26, 09:49";
@@ -719,7 +718,7 @@ width = 1024;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "F8DFC4A6-DB5B-4E15-AAAD-ED9E21112049";
 name = "Color 0 11. Mai 26, 10:45";
@@ -827,7 +826,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "B4D30CE0-9F96-4EBA-8D49-4CAC2B2F144A";
 name = "11. Mai 26, 09:49";
@@ -846,7 +845,7 @@ width = 2048;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "45086C30-7769-46F7-9DD3-1499AABFD427";
 name = "11. Mai 26, 10:47";
@@ -970,7 +969,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "6596CB7C-FC9C-4C27-9CC9-3A776271AB18";
 name = "11. Mai 26, 09:50";
@@ -989,7 +988,7 @@ width = 592;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "A047E1F1-4AE4-45E3-BCF6-5036F6A4166C";
 name = "11. Mai 26, 10:46";
@@ -1113,7 +1112,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "A6FECA73-C7A9-4A1A-A8A0-FD9B777F2DE1";
 name = "11. Mai 26, 09:50";
@@ -1132,7 +1131,7 @@ width = 592;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "1ACD392A-3179-4409-B27D-C713AE88C0D8";
 name = "11. Mai 26, 10:47";
@@ -1256,7 +1255,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "514CE57E-EB92-4A21-9600-B4F95741F040";
 name = "Color 0 11. Mai 26, 09:50";
@@ -1275,7 +1274,7 @@ width = 448;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "9AB132A7-762D-4981-9FD8-C93E27FC600D";
 name = "Color 0 11. Mai 26, 11:06";
@@ -1449,7 +1448,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "EFAD5FED-A906-43E5-9A62-0F01772941F9";
 name = "11. Mai 26, 09:51";
@@ -1468,7 +1467,7 @@ width = 1430;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "A88EC2B4-EF91-49DB-A253-B18347B85B5C";
 name = "Color 0 11. Mai 26, 11:07";
@@ -1610,7 +1609,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "ACB5FD4E-2AAB-4940-B963-6FD999293D1C";
 name = "11. Mai 26, 09:51";
@@ -1629,7 +1628,7 @@ width = 448;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "C74A10F4-7D85-4B2E-BA20-CC71A696DE5D";
 name = "11. Mai 26, 11:08";
@@ -1755,7 +1754,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "E50613EC-FF22-40FC-9BE8-438821C5A736";
 name = "11. Mai 26, 09:52";
@@ -1774,7 +1773,7 @@ width = 748;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "FE3BD230-6C54-4D95-82E7-04E588CCDB62";
 name = "11. Mai 26, 11:08";
@@ -1932,7 +1931,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "69DF36FD-0E6E-4771-9872-A50B2F18CC8F";
 name = "11. Mai 26, 09:52";
@@ -1951,7 +1950,7 @@ width = 652;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "9FA55547-4A73-4652-B91D-0E94C552081B";
 name = "11. Mai 26, 11:09";
@@ -2061,7 +2060,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "9811C985-7416-4B99-A4DD-9F828B30066A";
 name = "11. Mai 26, 09:53";
@@ -2080,7 +2079,7 @@ width = 320;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "93759BF3-1F20-4B02-911E-24C069E7A498";
 name = "11. Mai 26, 11:10";
@@ -2206,7 +2205,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "76D5BD66-E517-4D62-AFC5-393BAB322BC6";
 name = "11. Mai 26, 09:53";
@@ -2225,7 +2224,7 @@ width = 748;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "DB0CBEE0-00ED-4C6E-8D63-A7F358D4056E";
 name = "11. Mai 26, 11:11";
@@ -2337,7 +2336,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "16B61472-E8B5-4978-83FC-48C74D3DC5A0";
 name = "11. Mai 26, 09:54";
@@ -2356,7 +2355,7 @@ width = 1216;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "FC025EDC-A6B3-4608-9173-21BA9BAD79A4";
 name = "11. Mai 26, 11:12";
@@ -2520,7 +2519,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "583DEC46-A247-4F00-9E11-1895363BC856";
 name = "11. Mai 26, 09:54";
@@ -2539,7 +2538,7 @@ width = 941;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "84D12002-0F88-452C-BBDF-E7B9F6FEA001";
 name = "11. Mai 26, 11:12";
@@ -2621,7 +2620,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "496ED41C-A310-4751-9FA1-7C35283EDDDB";
 name = "11. Mai 26, 09:55";
@@ -2640,7 +2639,7 @@ width = 832;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "6F00C4A6-C9EB-4469-8446-134062309A1F";
 name = "11. Mai 26, 11:15";
@@ -2749,7 +2748,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "EEC05D84-2E4E-44D3-943F-84822A4A243A";
 name = "11. Mai 26, 09:55";
@@ -2768,7 +2767,7 @@ width = 1136;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "1362E4B6-68E2-49F4-B884-BB416826F25F";
 name = "Color 0 11. Mai 26, 11:15";
@@ -2908,7 +2907,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "06821401-6E71-4928-8999-A2BE000A7347";
 name = "11. Mai 26, 09:55";
@@ -2927,7 +2926,7 @@ width = 1423;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "7C8C006B-6ED7-4709-9F53-029CA4F9888A";
 name = "11. Mai 26, 11:16";
@@ -3006,7 +3005,7 @@ width = 1233;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "897D2B1F-E15F-4FEE-A0AA-0C56203A39CC";
 name = "11. Mai 26, 09:56";
@@ -3025,7 +3024,7 @@ width = 1216;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "0439891A-FE79-4877-9872-3C44C4576957";
 name = "11. Mai 26, 11:16";
@@ -3101,7 +3100,7 @@ width = 2048;
 {
 associatedMasterId = m003;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "3A612A6A-85E6-4FDB-B625-D363F9099E6A";
 name = "Color 0 11. Mai 26, 09:54";
@@ -3162,7 +3161,7 @@ width = 1233;
 {
 associatedMasterId = m002;
 attr = {
-colorPalette = 1;
+colorPalette = 65535;
 };
 layerId = "5C7DCCC0-ED1E-4BB7-8177-810B4A8CF6F5";
 name = "Color 0 11. Mai 26, 11:13";
