@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": ["node", "@playwright/test"]
+  },
+  "include": ["playwright.config.ts", "tests/browser/**/*.ts"],
+  "exclude": ["node_modules", "vendor", "playground"]
+}

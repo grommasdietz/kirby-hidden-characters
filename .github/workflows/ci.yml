@@ -79,6 +79,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Lint JavaScript
         run: pnpm lint
+      - name: Typecheck browser tests
+        run: pnpm exec tsc --noEmit
       - name: Verify generated assets
         run: pnpm build:check
       - name: Verify Panel bundle
@@ -115,8 +117,10 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:check
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright install --with-deps chromium webkit firefox
       - name: Run browser tests
+        env:
+          PLAYWRIGHT_CROSS_BROWSER: "1"
         run: pnpm test:browser
       - name: Upload Playwright artifacts
         if: failure()

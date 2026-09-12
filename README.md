@@ -76,7 +76,7 @@ See [SECURITY.md](SECURITY.md) for security policies and reporting vulnerabilit
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations. The [testing guide](docs/contributions/tests.md) includes the optional Chromium, WebKit and Firefox regression suite.
 
 ---
 
