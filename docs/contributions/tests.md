@@ -54,7 +54,7 @@ pnpm run test:browser
 
 Playwright creates a temporary `admin@kirby-hidden-characters.test` user with password `playwright`. Override it with `KIRBY_USER_EMAIL` and `KIRBY_USER_PASSWORD` when needed. Runtime accounts, sessions, cache and media are removed after the suite while Composer-installed plugin links and tracked content are preserved.
 
-The default automated suite uses Chromium. Run the same suite in Chromium, WebKit and Firefox with:
+The default local suite uses Chromium. GitHub Actions runs Chromium, WebKit and Firefox. Run that same suite locally with:
 
 ```bash
 pnpm exec playwright install webkit firefox
