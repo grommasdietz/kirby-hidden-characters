@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.1...v2.1.2) (2026-09-12)
+
+
+### Bug Fixes
+
+* **writer:** keep hidden markers aligned and preserve Safari text colors ([2194762](https://github.com/grommasdietz/kirby-hidden-characters/commit/21947628adc07174bab9dc2dd7f94f144bde5a57))
+
 ## [2.1.1](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.0...v2.1.1) (2026-07-21)
 
 
