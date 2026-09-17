@@ -1,6 +1,6 @@
 {
   "name": "kirby-hidden-characters",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Kirby CMS plugin for visualising hidden characters in the Panel",
   "license": "MIT",
   "packageManager": "pnpm@11.22.0",

@@ -1,3 +1,12 @@
+## [2.1.3](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.2...v2.1.3) (2026-09-17)
+
+
+### Bug Fixes
+
+* **writer:** align end markers and match source text colors ([483edd7](https://github.com/grommasdietz/kirby-hidden-characters/commit/483edd7425438165f5b70447041ffb2d18ca9141))
+* **writer:** match marker colors and align hard-break endings ([#54](https://github.com/grommasdietz/kirby-hidden-characters/issues/54)) ([be4a7ad](https://github.com/grommasdietz/kirby-hidden-characters/commit/be4a7ade54661fecb52e88401ff5e50a81fe5737))
+* **writer:** retain code break markers in Firefox ([f7ce4d2](https://github.com/grommasdietz/kirby-hidden-characters/commit/f7ce4d27e663714270561dd74552e20e22b72983))
+
 ## [2.1.2](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.1...v2.1.2) (2026-09-12)
 
 
