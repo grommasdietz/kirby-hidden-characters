@@ -17,6 +17,7 @@ const requiredEntries = [
   "LICENSE.md",
   "THIRD_PARTY_NOTICES.md",
   "assets/fonts/hidden-characters.woff2",
+  "assets/fonts/hidden-characters-writer.woff2",
 ];
 const forbiddenPrefixes = [
   ".github/",

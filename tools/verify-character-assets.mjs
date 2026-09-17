@@ -49,6 +49,20 @@ if (fs.existsSync(runtime)) {
   }
 }
 
+const writerRuntime = "assets/fonts/hidden-characters-writer.woff2";
+if (!fs.existsSync(writerRuntime)) {
+  errors.push(`${writerRuntime} is missing`);
+} else {
+  const writerFont = fs.readFileSync(writerRuntime);
+  for (const stylesheet of ["src/styles/writer-font.css", "index.css"]) {
+    const css = fs.existsSync(stylesheet) ? fs.readFileSync(stylesheet, "utf8") : "";
+    const embeddedFonts = [...css.matchAll(/data:font\/woff2;base64,([a-zA-Z0-9+/=]+)/g)];
+    if (!embeddedFonts.some((match) => Buffer.from(match[1], "base64").equals(writerFont))) {
+      errors.push(`${stylesheet} does not contain the committed Writer font byte-for-byte`);
+    }
+  }
+}
+
 const characterRoot = path.join(".github", "assets", "characters");
 const variants = ["dark", "light"];
 const names = new Map();
