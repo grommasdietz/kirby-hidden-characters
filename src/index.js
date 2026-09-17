@@ -1,4 +1,5 @@
 import "./styles/hidden-characters.css";
+import "./styles/writer-font.css";
 
 // ---------------------------------------------------------------------------
 // Extension registry
@@ -178,8 +179,9 @@ function lastCharacterRange(element, stopBefore = null) {
 }
 
 /**
- * Returns the visual caret position at the end of a paragraph without letting
- * ProseMirror's trailing `<br>` move the marker onto an artificial next line.
+ * Returns the visual caret position at the end of a paragraph. ProseMirror's
+ * trailing `<br>` occupies the empty line after a hard break (or an empty
+ * paragraph), so its own rectangle is more reliable than a collapsed range.
  *
  * @param {HTMLParagraphElement} paragraph
  * @returns {{ left: number, right: number, top: number, bottom: number, width: number, height: number } | DOMRect | null}
@@ -188,6 +190,11 @@ function paragraphEndRect(paragraph) {
   const trailingBreak = paragraph.querySelector(
     ":scope > br.ProseMirror-trailingBreak:last-child"
   );
+  if (trailingBreak) {
+    const rect = trailingBreak.getBoundingClientRect();
+    if (rect.height > 0) return rect;
+  }
+
   const range = document.createRange();
   range.selectNodeContents(paragraph);
 
@@ -221,7 +228,7 @@ function paragraphEndRect(paragraph) {
 }
 
 /**
- * @param {{ fragment: DocumentFragment, overlayRect: DOMRect, scaleX: number, scaleY: number, typography: WeakMap<Element, { fontSize: string, monospace: boolean }> }} context
+ * @param {{ fragment: DocumentFragment, overlayRect: DOMRect, scaleX: number, scaleY: number, typography: WeakMap<Element, { fontSize: string, color: string, monospace: boolean }> }} context
  * @param {string} type
  * @param {{ left: number, top: number, width: number, height: number }} rect
  * @param {string} glyph
@@ -243,14 +250,17 @@ function appendMarker(context, type, rect, glyph, sourceElement = null) {
     let typography = context.typography.get(sourceElement);
 
     if (!typography) {
+      const style = window.getComputedStyle(sourceElement);
       typography = {
-        fontSize: window.getComputedStyle(sourceElement).fontSize,
+        fontSize: style.fontSize,
+        color: style.color,
         monospace: Boolean(sourceElement.closest("code")),
       };
       context.typography.set(sourceElement, typography);
     }
 
     marker.style.setProperty("--gd-hc-font-size", typography.fontSize);
+    marker.style.setProperty("--gd-hc-source-color", typography.color);
     if (typography.monospace) marker.dataset.font = "monospace";
   }
 
@@ -288,7 +298,7 @@ function renderWriterMarkers(inputEl, overlay) {
     const isSingleEmptyParagraph =
       paragraphs.length === 1 &&
       Boolean(trailingBreak) &&
-      (paragraph.textContent ?? "") === "";
+      paragraph.childNodes.length === 1;
 
     if (!isSingleEmptyParagraph) {
       const rect = paragraphEndRect(
@@ -501,6 +511,22 @@ const hiddenCharactersMixin = {
         characterData: true,
       });
 
+      // Theme and inherited color overrides live outside the editable DOM.
+      // Observe only ancestor attributes, never the marker layer we replace.
+      for (
+        let ancestor = inputEl.parentElement;
+        ancestor;
+        ancestor = ancestor.parentElement
+      ) {
+        this.$gdObserver.observe(ancestor, {
+          attributes: true,
+          attributeFilter: ["class", "style", "data-theme"],
+        });
+      }
+
+      const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      colorScheme.addEventListener("change", scheduleMarkers);
+
       const resizeObserver = new ResizeObserver(scheduleMarkers);
       resizeObserver.observe(inputEl);
       resizeObserver.observe(this.$el);
@@ -513,6 +539,7 @@ const hiddenCharactersMixin = {
         "pointerout",
         "transitionrun",
         "transitionend",
+        "transitioncancel",
       ];
       for (const event of writerRefreshEvents) {
         inputEl.addEventListener(event, scheduleMarkers, { passive: true });
@@ -530,6 +557,7 @@ const hiddenCharactersMixin = {
       this.$gdResizeObserver = resizeObserver;
       this.$gdWindowResize = scheduleMarkers;
       this.$gdFontLoadingDone = fontLoadingDone;
+      this.$gdColorScheme = colorScheme;
       this.$gdAnimationFrame = () => animationFrame;
     });
   },
@@ -537,6 +565,7 @@ const hiddenCharactersMixin = {
   beforeDestroy() {
     this.$gdObserver?.disconnect();
     this.$gdResizeObserver?.disconnect();
+    this.$gdColorScheme?.removeEventListener("change", this.$gdScheduleMarkers);
 
     if (this.$gdInputEl && this.$gdSyncScroll) {
       this.$gdInputEl.removeEventListener("scroll", this.$gdSyncScroll);

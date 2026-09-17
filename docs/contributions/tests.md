@@ -50,7 +50,7 @@ pnpm run test:hygiene
 pnpm run test:browser
 ```
 
-`test:assets` verifies the hidden-character icon map, the foreground-color guard layers in the Glyphs source and that both embedded WOFF2 payloads are byte-identical to the committed runtime font. `build:check` rebuilds the compiled Panel output and fails when committed files are stale.
+`test:assets` verifies the hidden-character icon map, the foreground-color guard layers in the Glyphs source, deterministic Writer-font generation, and that both fonts' embedded WOFF2 payloads match their committed runtime files. Keep the [font-tooling environment](./setup.md#font-tooling) active for this check. `build:check` rebuilds the compiled Panel output and fails when committed files are stale.
 
 Playwright creates a temporary `admin@kirby-hidden-characters.test` user with password `playwright`. Override it with `KIRBY_USER_EMAIL` and `KIRBY_USER_PASSWORD` when needed. Runtime accounts, sessions, cache and media are removed after the suite while Composer-installed plugin links and tracked content are preserved.
 
@@ -62,6 +62,10 @@ PLAYWRIGHT_CROSS_BROWSER=1 pnpm run test:browser
 ```
 
 The alignment regressions cover plain, bold, italic, code, nested and custom marks; leading, consecutive and trailing NBSPs; and narrow viewports. They exercise both native ranges and injected empty boundary fragments to reproduce Safari's failure in every engine. Selection and editable-DOM checks run in all three engines; clipboard readback uses Chromium's supported permission API.
+
+Keyboard regressions cover consecutive `Shift+Enter` breaks, initially empty Writers, paragraph and story-end placement, and typing or deleting text on the final empty line. Textarea checks cover the same newline input with and without a toolbar; textareas display line-break markers without paragraph or story-end markers.
+
+Color regressions sample actual screenshot pixels for code on light backgrounds, colored links and nested marks. They cover light/dark themes, hover and hover exit, inherited color overrides, configurable marker opacity and system color-scheme changes while focused. Structural markers are checked against their parent/paragraph color. Computed CSS alone does not prove that a color font painted the expected color.
 
 Before a release, also check a focused Writer in Safari with default, hovered and runtime-overridden link colors; code, nested and custom marks; light and dark themes; and the blurred state. Confirm visually that markers sit inside their whitespace, including bold, italic and code text, and that text on both sides of an NBSP keeps its color through focus, hover and theme changes. A real pointer check is required for `:hover`; WebDriver pointer actions do not consistently establish Safari's visual hover state.
 

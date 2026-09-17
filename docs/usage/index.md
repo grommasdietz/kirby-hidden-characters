@@ -6,6 +6,20 @@ Writer fields keep Kirby's native typography for all real text. On focus, a non-
 
 Single-line `text` fields use only the font mechanism because a horizontally scrolling helper layer cannot be synchronized reliably.
 
+## Writer marker opacity
+
+Writer markers use their source element's text color: whitespace follows its surrounding mark, line breaks follow their parent element, and paragraph/story endings follow their paragraph. CSS dims the markers to 40% opacity, so dark code text on a light background keeps dark markers even in dark mode. Links and custom marks keep their own marker colors.
+
+Override the opacity globally or on an individual Writer wrapper in your Panel CSS:
+
+```css
+.k-writer-input {
+  --gd-hc-writer-marker-opacity: 0.5;
+}
+```
+
+Use a value from `0` to `1`. Native textarea and single-line fields retain their existing light/dark palettes.
+
 ---
 
 ## Supported fields
