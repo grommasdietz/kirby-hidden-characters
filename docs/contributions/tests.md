@@ -63,9 +63,11 @@ PLAYWRIGHT_CROSS_BROWSER=1 pnpm run test:browser
 
 The alignment regressions cover plain, bold, italic, code, nested and custom marks; leading, consecutive and trailing NBSPs; and narrow viewports. They exercise both native ranges and injected empty boundary fragments to reproduce Safari's failure in every engine. Selection and editable-DOM checks run in all three engines; clipboard readback uses Chromium's supported permission API.
 
-Keyboard regressions cover consecutive `Shift+Enter` breaks, initially empty Writers, paragraph and story-end placement, and typing or deleting text on the final empty line. Textarea checks cover the same newline input with and without a toolbar; textareas display line-break markers without paragraph or story-end markers.
+Keyboard regressions cover consecutive `Shift+Enter` breaks, initially empty Writers, paragraph and story-end placement, and typing or deleting text on the final empty line. Bold, italic and code cases cover break insertion and deletion, including Firefox's empty break rectangles inside code. Kirby's native inline-flex code layout may keep a trailing break on the same line; markers follow that layout. Textarea checks cover the same newline input with and without a toolbar; textareas display line-break markers without paragraph or story-end markers.
 
 Color regressions sample actual screenshot pixels for code on light backgrounds, colored links and nested marks. They cover light/dark themes, hover and hover exit, inherited color overrides, configurable marker opacity and system color-scheme changes while focused. Structural markers are checked against their parent/paragraph color. Computed CSS alone does not prove that a color font painted the expected color.
+
+Lifecycle regressions switch between Writers, change inherited colors while blurred, and refocus to verify a fresh render. Navigating away and back checks that media-query listeners are removed and each Writer receives exactly one overlay.
 
 Before a release, also check a focused Writer in Safari with default, hovered and runtime-overridden link colors; code, nested and custom marks; light and dark themes; and the blurred state. Confirm visually that markers sit inside their whitespace, including bold, italic and code text, and that text on both sides of an NBSP keeps its color through focus, hover and theme changes. A real pointer check is required for `:hover`; WebDriver pointer actions do not consistently establish Safari's visual hover state.
 

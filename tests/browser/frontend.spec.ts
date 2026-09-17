@@ -484,6 +484,146 @@ test.describe("Panel: hidden-characters rendering", () => {
     await expect(overlay).toHaveCSS("opacity", "0");
   });
 
+  test("writer refreshes inherited colors on refocus without updating blurred fields", async ({ page }) => {
+    await page.goto("/panel/pages/home");
+    await page.addStyleTag({ content: `
+      .k-field-name-writer .ProseMirror {
+        color: var(--test-source-color, rgb(40, 80, 120));
+      }
+    ` });
+    const writer = page.locator(".k-field-name-writer .ProseMirror");
+    const other = page.locator(".k-field-name-blocks .ProseMirror");
+    const overlay = writer.locator("+ .gd-hidden-characters");
+    const marker = overlay.locator('[data-character="space"]');
+    await writer.fill("One two");
+    await expect.poll(() => marker.evaluate((element) =>
+      getComputedStyle(element, "::before").color
+    )).toBe("rgb(40, 80, 120)");
+    await other.click();
+    await expect(overlay).toHaveCSS("opacity", "0");
+    const blurredHTML = await overlay.innerHTML();
+    await page.locator(".k-panel").evaluate((element: HTMLElement) => {
+      element.style.setProperty("--test-source-color", "rgb(180, 50, 100)");
+      element.setAttribute("data-theme", "dark");
+    });
+    await page.evaluate(() => new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+    ));
+    expect(await overlay.innerHTML()).toBe(blurredHTML);
+    await writer.focus();
+    await expect(overlay).toHaveCSS("opacity", "1");
+    await expect.poll(() => marker.evaluate((element) =>
+      getComputedStyle(element, "::before").color
+    )).toBe("rgb(180, 50, 100)");
+    await expect(other.locator("+ .gd-hidden-characters")).toHaveCSS("opacity", "0");
+    await expect(writer.locator(".gd-hidden-character-marker")).toHaveCount(0);
+  });
+
+  test("writer removes theme listeners on navigation and remounts one overlay", async ({ page }) => {
+    await page.addInitScript(() => {
+      const audit = { added: 0, removed: 0 };
+      Object.defineProperty(window, "__hcThemeListeners", { value: audit });
+      const matchMedia = window.matchMedia.bind(window);
+      window.matchMedia = (query) => {
+        const result = matchMedia(query);
+        if (query === "(prefers-color-scheme: dark)") {
+          const target: EventTarget = result;
+          const add = target.addEventListener.bind(target);
+          const remove = target.removeEventListener.bind(target);
+          target.addEventListener = (type, listener, options) => {
+            if (type === "change") audit.added++;
+            add(type, listener, options);
+          };
+          target.removeEventListener = (type, listener, options) => {
+            if (type === "change") audit.removed++;
+            remove(type, listener, options);
+          };
+        }
+        return result;
+      };
+    });
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto("/panel/pages/home");
+    const writers = page.locator(".ProseMirror");
+    const writer = page.locator(".k-field-name-writer .ProseMirror");
+    await writer.click();
+    const count = await writers.count();
+    const listeners = () => page.evaluate(() => {
+      const audit = (window as typeof window & {
+        __hcThemeListeners: { added: number; removed: number };
+      }).__hcThemeListeners;
+      return audit.added - audit.removed;
+    });
+    const before = await listeners();
+    await page.getByRole("link", { name: "Playground", exact: true }).click();
+    await expect(page).toHaveURL(/\/panel\/site$/);
+    await expect(writers).toHaveCount(0);
+    await expect.poll(listeners).toBe(before - count);
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.goBack();
+    await expect(writer).toBeVisible();
+    await writer.click();
+    await expect(page.locator('.gd-hidden-characters[data-tag="writer-markers"]')).toHaveCount(count);
+    await expect.poll(listeners).toBe(before);
+    await expect(writer.locator("+ .gd-hidden-characters")).toHaveCSS("opacity", "1");
+    expect(errors).toEqual([]);
+  });
+
+  for (const tag of ["strong", "em", "code"]) {
+    test(`writer keeps ${tag} break markers and restores endings after deletion`, async ({ page }) => {
+      await page.goto("/panel/pages/home");
+      const writer = page.locator(".k-field-name-writer .ProseMirror");
+      const overlay = writer.locator("+ .gd-hidden-characters");
+      await writer.click();
+      await writer.evaluate((element, tag) => {
+        element.innerHTML = `<p><${tag}>${tag} line</${tag}></p>`;
+      }, tag);
+      await expect(writer.locator(tag)).toHaveText(`${tag} line`);
+      await writer.evaluate((element) => {
+        const text = element.querySelector("p")!.firstChild!.firstChild!;
+        const selection = window.getSelection()!;
+        selection.collapse(text, text.textContent!.length);
+      });
+      await writer.press("Shift+Enter");
+      await expect(overlay.locator('[data-character="break"]')).toHaveCount(1);
+      const end = overlay.locator('[data-character="paragraph-last"]');
+      if (tag === "code") {
+        // Kirby styles code as inline-flex. Its trailing hard break may not
+        // create a new outer line; follow the native placeholder, not an
+        // invented line below it.
+        await expect.poll(async () => {
+          const marker = await end.boundingBox();
+          const placeholder = await writer.locator(".ProseMirror-trailingBreak").evaluate(
+            (element) => element.getBoundingClientRect().toJSON()
+          );
+          return Boolean(marker && placeholder &&
+            Math.abs(marker.x - placeholder.x) < 1 &&
+            Math.abs(marker.y - placeholder.y) < 1);
+        }).toBe(true);
+      } else {
+        await expect.poll(async () => {
+          const marker = await end.boundingBox();
+          const lineBreak = await overlay.locator('[data-character="break"]').boundingBox();
+          return marker && lineBreak ? marker.y - lineBreak.y : 0;
+        }).toBeGreaterThan(10);
+      }
+      await writer.press("Backspace");
+      await expect(overlay.locator('[data-character="break"]')).toHaveCount(0);
+      await expect.poll(async () => {
+        const marker = await end.boundingBox();
+        const text = await writer.locator(tag).evaluate((element) => {
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          return range.getBoundingClientRect().toJSON();
+        });
+        return Boolean(marker &&
+          Math.abs(marker.y - text.y) < 4 &&
+          marker.x >= text.right - 1 && marker.x <= text.right + 5);
+      }).toBe(true);
+    });
+  }
+
   for (const extraFragments of [false, true]) {
     test(`writer aligns marked whitespace${extraFragments ? " with extra WebKit boundary fragments" : " in native ranges"}`, async ({ page }) => {
       await page.goto("/panel/pages/home");

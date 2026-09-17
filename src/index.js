@@ -140,7 +140,7 @@ function rangeEndRect(range) {
 
 /**
  * Finds the last text character inside an element, optionally stopping before
- * a ProseMirror trailing-break placeholder.
+ * a break or ProseMirror trailing-break placeholder.
  *
  * @param {Element} element
  * @param {Node | null} stopBefore
@@ -323,7 +323,15 @@ function renderWriterMarkers(inputEl, overlay) {
     const range = document.createRange();
     range.setStartBefore(breakEl);
     range.collapse(true);
-    const rect = rangeRect(range, true) ?? breakEl.getBoundingClientRect();
+    let rect = rangeRect(range, true) ?? breakEl.getBoundingClientRect();
+
+    // Firefox exposes no caret or element rectangle for a trailing break in
+    // Kirby's inline-flex code mark. Anchor it after the preceding character
+    // without changing the editor's layout or inventing an extra line.
+    if (rect.width === 0 && rect.height === 0 && breakEl.parentElement) {
+      const characterRange = lastCharacterRange(breakEl.parentElement, breakEl);
+      if (characterRange) rect = rangeEndRect(characterRange) ?? rect;
+    }
 
     if (rect.width > 0 || rect.height > 0) {
       appendMarker(context, "break", rect, "\ue002", breakEl.parentElement);

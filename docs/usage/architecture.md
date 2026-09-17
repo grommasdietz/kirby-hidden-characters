@@ -60,6 +60,8 @@ The existing observer also watches `class`, `style` and `data-theme` attributes 
 
 After a trailing hard break (`Shift+Enter`), ProseMirror's trailing-break placeholder occupies the empty next line. Its rectangle anchors the paragraph or story-end marker on that line, separate from the hard-break marker. Only a truly empty Writer hides its story-end marker; a Writer containing hard breaks still shows it.
 
+Markers follow the editor's actual line layout. Kirby's inline-flex code marks may keep a trailing hard break on the same line. When Firefox returns no rectangle for that break, its marker uses the preceding character's end position; the plugin does not change the editable layout to create another line.
+
 ### Range fragments and Safari
 
 A single character can produce several range rectangles in WebKit. At an NBSP or text-run boundary, an empty caret rectangle can precede the rectangle that contains the actual whitespace advance. Choosing the first rectangle moves the marker onto the preceding letter; a bounding union can also include a fragment on another line.
