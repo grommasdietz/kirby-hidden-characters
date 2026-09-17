@@ -87,7 +87,11 @@ jobs:
         run: pnpm test:bundle
 
       - name: Verify character assets
-        run: pnpm test:assets
+        run: |
+          python3 -m venv "$RUNNER_TEMP/hc-fonts"
+          . "$RUNNER_TEMP/hc-fonts/bin/activate"
+          python -m pip install -r tools/requirements-fonts.txt
+          pnpm test:assets
       - name: Verify source archive
         run: pnpm test:archive
       - name: Verify documentation

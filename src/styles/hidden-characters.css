@@ -81,14 +81,12 @@
     font-palette: --gd-hc-dark;
   }
 
-  .gd-hidden-character-marker::before,
   .gd-hidden-characters[data-tag="textarea"] break::before,
   .gd-hidden-characters[data-tag="textarea"] shy::before,
   .gd-hidden-characters[data-tag="textarea"] tab::before {
     font-palette: --gd-hc-light;
   }
 
-  :where([data-theme="dark"]) .gd-hidden-character-marker::before,
   :where([data-theme="dark"])
     .gd-hidden-characters[data-tag="textarea"]
     break::before,
@@ -139,15 +137,16 @@
 }
 
 .gd-hidden-character-marker::before {
-  color: var(--gd-hc-marker-color);
+  color: var(--gd-hc-source-color, currentColor);
   content: attr(data-glyph);
   display: inline-block;
-  font-family: "hidden-characters", var(--font-sans) !important;
+  font-family: "hidden-characters-writer", var(--font-sans) !important;
   font-size: var(--gd-hc-font-size, 1em);
   font-variation-settings: "MONO" 0;
   font-weight: normal;
   left: 50%;
   line-height: 1;
+  opacity: var(--gd-hc-writer-marker-opacity, 0.4);
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -261,10 +260,7 @@
   transform: translate(-50%, -50%);
 }
 
-/* Kirby caption blocks use mix-blend-mode; background color keeps markers legible. */
-.k-block-figure-caption
-  .k-writer
-  .gd-hidden-character-marker::before,
+/* Keep the native textarea caption treatment separate from Writer colors. */
 .k-block-figure-caption
   .k-writer
   .gd-hidden-characters[data-tag="textarea"]
