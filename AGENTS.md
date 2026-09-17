@@ -16,6 +16,7 @@ This is the canonical workflow guide for working on the Kirby Hidden Characters 
 
 - Plugin entry: `index.php` registers the compiled Panel assets; the plugin has no PHP runtime layer.
 - Panel source: `src/index.js`, `src/styles/hidden-characters.css`, and `src/fonts/hidden-characters.glyphs` are built with `kirbyup` into `index.js`/`index.css`. The compiled WOFF2 lives in `assets/fonts/`. Rebuild with `pnpm build` after Panel changes and commit the outputs.
+- Writer font: `pnpm fonts:build` derives the foreground-only font and `src/styles/writer-font.css` from the native-field WOFF2. Do not edit these generated outputs by hand. Asset checks require the [font-tooling environment](docs/contributions/setup.md#font-tooling).
 - Playground: `playground/` is the self-contained Kirby site for integration and browser tests.
 - Conventions: use Conventional Commit messages, keep diffs small, keep docs aligned with behavior, and never wrap imports in `try/catch`.
 - Static analysis coverage: if PHP source files are added beyond `index.php`, include their directories in `psalm.xml.dist`; add suppressions only for concrete framework patterns that require them.
