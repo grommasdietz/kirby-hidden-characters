@@ -54,6 +54,14 @@ The marker layer contains only spans such as:
 
 No custom helper element is inserted into ProseMirror's editable DOM, and no generated paragraph marker participates in ProseMirror line breaking.
 
+Each refresh caches the source element's computed color alongside its font size. The marker receives that color through `--gd-hc-source-color`; CSS applies `--gd-hc-writer-marker-opacity` (default `0.4`) only to its glyph. The separate Writer font derives from the native-field font without changing outlines, metrics or the `MONO` axis. Its visible COLR layers use the text foreground index (`0xFFFF`), and its guard-layer references are removed. Writer markers therefore need no per-color or theme-specific palettes.
+
+The existing observer also watches `class`, `style` and `data-theme` attributes on the Writer's ancestors, without watching their other descendants. System color-scheme changes trigger the same scheduled refresh. Hover and transition completion/cancellation refresh source colors; there is no continuous polling. All observers and media-query listeners are disconnected when the component is destroyed.
+
+After a trailing hard break (`Shift+Enter`), ProseMirror's trailing-break placeholder occupies the empty next line. Its rectangle anchors the paragraph or story-end marker on that line, separate from the hard-break marker. Only a truly empty Writer hides its story-end marker; a Writer containing hard breaks still shows it.
+
+Markers follow the editor's actual line layout. Kirby's inline-flex code marks may keep a trailing hard break on the same line. When Firefox returns no rectangle for that break, its marker uses the preceding character's end position; the plugin does not change the editable layout to create another line.
+
 ### Range fragments and Safari
 
 A single character can produce several range rectangles in WebKit. At an NBSP or text-run boundary, an empty caret rectangle can precede the rectangle that contains the actual whitespace advance. Choosing the first rectangle moves the marker onto the preceding letter; a bounding union can also include a fragment on another line.

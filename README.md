@@ -50,6 +50,8 @@ composer require grommasdietz/kirby-hidden-characters
 
 This plugin works out of the box with no configuration required.
 
+Writer markers follow the surrounding text color at 40% opacity, including links and code in either theme. Adjust `--gd-hc-writer-marker-opacity` in your Panel CSS as shown in the [usage guide](docs/usage/index.md#writer-marker-opacity).
+
 ### Documentation
 
 Full reference for [usage](docs/usage/index.md), [contributions](docs/contributions/index.md) and [maintenance](docs/maintenance/index.md) lives in [documentation](docs/index.md).
