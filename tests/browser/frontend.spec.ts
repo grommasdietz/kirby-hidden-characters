@@ -496,6 +496,8 @@ test.describe("Panel: hidden-characters rendering", () => {
     const overlay = writer.locator("+ .gd-hidden-characters");
     const marker = overlay.locator('[data-character="space"]');
     await writer.fill("One two");
+    // The previous content's markers remain until the scheduled frame runs.
+    await expect(marker).toHaveCount(1);
     await expect.poll(() => marker.evaluate((element) =>
       getComputedStyle(element, "::before").color
     )).toBe("rgb(40, 80, 120)");
