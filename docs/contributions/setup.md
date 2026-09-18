@@ -68,3 +68,20 @@ crash without pinning Psalm or changing executable Kirby code. The preparation i
 idempotent and leaves annotations already fixed upstream unchanged. Remove
 `tools/prepare-psalm.php` and its Composer script entry when both Kirby collection
 classes ship compatible annotations.
+
+### Removal checklist
+
+1. Update Kirby and Psalm in an isolated checkout and record the versions tested.
+2. Reinstall the affected Kirby package to restore its original source, then run
+   the analyzer directly with the repository's existing options, bypassing the
+   preparation helper. Reusing prepared dependencies gives a false positive.
+3. Remove the helper and its Composer script hook only after unmodified dependency
+   source passes analysis. Remove the compatibility fixture where present and
+   this temporary guidance, then run the normal PHP verification and hosted CI.
+
+The helper changes installed dependency files on disk. It only matches the known
+annotations, leaves upstream corrections alone, and may need adjustment if Kirby
+changes the relevant files. Do not broaden suppressions or reduce project coverage
+to make an incompatible analyzer pass. Shared Composer plugins should be checked
+in their own repositories; consumers still load their declarations when checking
+project code.
