@@ -59,3 +59,12 @@ pnpm dev
 ---
 
 Next: Continue with [Structure](./structure.md)
+
+## Psalm and Kirby compatibility
+
+`composer psalm` prepares two installed Kirby collection docblocks with equivalent
+nested conditional return types before analysis. This avoids the Psalm 6.17 parser
+crash without pinning Psalm or changing executable Kirby code. The preparation is
+idempotent and leaves annotations already fixed upstream unchanged. Remove
+`tools/prepare-psalm.php` and its Composer script entry when both Kirby collection
+classes ship compatible annotations.

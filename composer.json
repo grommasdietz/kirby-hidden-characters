@@ -58,7 +58,10 @@
     "test:integration": "./vendor/bin/phpunit --testsuite Integration",
     "test:smoke": "php tests/run.php",
     "test:coverage": "./vendor/bin/phpunit --coverage-text",
-    "psalm": "./vendor/bin/psalm --no-cache --show-info=true",
+    "psalm": [
+      "@php tools/prepare-psalm.php",
+      "./vendor/bin/psalm --no-cache --show-info=true"
+    ],
     "lint": "./vendor/bin/php-cs-fixer fix --dry-run --diff",
     "lint:fix": "./vendor/bin/php-cs-fixer fix",
     "format": "@lint:fix",
