@@ -1976,16 +1976,16 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "5.5.3",
+            "version": "5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getkirby/kirby.git",
-                "reference": "46daf74851b8ad5438112f365d1dbaf74504ef88"
+                "reference": "3647b786bfd14b99c64a3fcee8644baf88476533"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/kirby/zipball/46daf74851b8ad5438112f365d1dbaf74504ef88",
-                "reference": "46daf74851b8ad5438112f365d1dbaf74504ef88",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/3647b786bfd14b99c64a3fcee8644baf88476533",
+                "reference": "3647b786bfd14b99c64a3fcee8644baf88476533",
                 "shasum": ""
             },
             "require": {
@@ -2011,9 +2011,9 @@
                 "michelf/php-smartypants": "1.8.1",
                 "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "phpmailer/phpmailer": "7.1.1",
-                "symfony/polyfill-intl-idn": "1.38.1",
+                "symfony/polyfill-intl-idn": "1.42.0",
                 "symfony/polyfill-mbstring": "1.38.2",
-                "symfony/yaml": "7.4.14"
+                "symfony/yaml": "7.4.18"
             },
             "replace": {
                 "symfony/polyfill-php72": "*"
@@ -2074,7 +2074,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-07-28T09:07:49+00:00"
+            "time": "2026-09-16T10:39:26+00:00"
         },
         {
             "name": "kelunik/certificate",
@@ -6128,16 +6128,16 @@
         },
         {
             "name": "symfony/polyfill-intl-idn",
-            "version": "v1.38.1",
+            "version": "v1.42.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-idn.git",
-                "reference": "dc21118016c039a66235cf93d96b435ffb282412"
+                "reference": "51b5ff5ba85452b31ec6f55490b08148612339d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/dc21118016c039a66235cf93d96b435ffb282412",
-                "reference": "dc21118016c039a66235cf93d96b435ffb282412",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/51b5ff5ba85452b31ec6f55490b08148612339d9",
+                "reference": "51b5ff5ba85452b31ec6f55490b08148612339d9",
                 "shasum": ""
             },
             "require": {
@@ -6191,7 +6191,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.42.0"
             },
             "funding": [
                 {
@@ -6211,7 +6211,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-25T15:22:23+00:00"
+            "time": "2026-08-24T10:51:20+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
@@ -6938,16 +6938,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v7.4.14",
+            "version": "v7.4.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "f8f328665ace2370d1e10645b807ba1646dc7dcc"
+                "reference": "4cef939e55b8a21c5780418de0d98ab00d0736e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/f8f328665ace2370d1e10645b807ba1646dc7dcc",
-                "reference": "f8f328665ace2370d1e10645b807ba1646dc7dcc",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/4cef939e55b8a21c5780418de0d98ab00d0736e1",
+                "reference": "4cef939e55b8a21c5780418de0d98ab00d0736e1",
                 "shasum": ""
             },
             "require": {
@@ -6990,7 +6990,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v7.4.14"
+                "source": "https://github.com/symfony/yaml/tree/v7.4.18"
             },
             "funding": [
                 {
@@ -7010,7 +7010,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-08T20:24:16+00:00"
+            "time": "2026-08-30T00:47:26+00:00"
         },
         {
             "name": "theseer/tokenizer",
