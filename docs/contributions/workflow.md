@@ -44,6 +44,30 @@ pnpm run update:dev
 
 ---
 
+## Dependency updates and CI
+
+Use `composer run update:dev` for root PHP development dependencies,
+`composer run playground:update` for the runtime fixture, and `pnpm run update:dev`
+for Node tooling. Review and commit the resulting lockfiles.
+
+Dependabot groups version updates into one PR per ecosystem and lockfile, including
+related TypeScript, ESLint, PostCSS and build tools. Each update entry allows one
+open version PR. Root and playground Composer locks remain separate. Weekly runs
+are staggered across plugins; GitHub Actions updates run monthly.
+
+Version updates wait three days after publication. pnpm also enforces a strict
+24-hour minimum release age for installation and local updates. Dependabot security
+updates use separate groups and bypass its version-update cooldown; pnpm's install
+age still applies. Patch updates may auto-merge after required checks pass; minor
+and major updates need review. Refresh the remaining grouped PR after each merge
+to keep its lockfile based on current `main`. Grouping reduces overlapping lockfile
+changes but cannot prevent conflicts with manual dependency edits.
+
+CI runs PHP quality, Node, generated-asset, documentation and browser checks with
+one shared PHP 8.3 setup where practical. Separate PHP and Kirby compatibility
+jobs preserve each plugin's supported-runtime coverage. Stale runs are cancelled,
+jobs have time limits, and failed browser artifacts are retained for three days.
+
 Next: Continue with [Tests](./tests.md)
 
 ## Shared maintenance commands

@@ -538,7 +538,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "c2413261b5228559ffd220ab934abfeb13e6996c"
+                "reference": "28ab8a17da9282d6dd918baab6daaa8cd1e9a7cd"
             },
             "require": {
                 "getkirby/composer-installer": "^1.2",
@@ -548,7 +548,7 @@
                 "friendsofphp/php-cs-fixer": "^3.93",
                 "getkirby/cms": "^5.2",
                 "phpunit/phpunit": "^12.5",
-                "vimeo/psalm": "^6.15"
+                "vimeo/psalm": "^6.19.1"
             },
             "type": "kirby-plugin",
             "scripts": {
@@ -574,7 +574,6 @@
                     "./vendor/bin/phpunit --coverage-text"
                 ],
                 "psalm": [
-                    "@php tools/prepare-psalm.php",
                     "./vendor/bin/psalm --no-cache --show-info=true"
                 ],
                 "lint": [
@@ -605,6 +604,12 @@
                 ],
                 "post-update-cmd": [
                     "@notices:generate"
+                ],
+                "update:dev": [
+                    "@composer update phpunit/phpunit vimeo/psalm friendsofphp/php-cs-fixer getkirby/cms --with-all-dependencies"
+                ],
+                "playground:update": [
+                    "@composer --working-dir=playground update --with-all-dependencies"
                 ]
             },
             "license": [

@@ -1,34 +1,35 @@
 name: Commitlint
-
-on:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-
 permissions:
   contents: read
-
 jobs:
   lint:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: .node-version
-
-      - uses: pnpm/action-setup@v6
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
-
-      - name: Lint pull request commits
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+    - name: Checkout
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version-file: .node-version
+    - uses: pnpm/action-setup@v6
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile --ignore-scripts
+    - name: Lint pull request commits
+      env:
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+    timeout-minutes: 15
+'on':
+  pull_request:
+    types:
+    - opened
+    - synchronize
+    - reopened
+    - ready_for_review
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true

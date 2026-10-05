@@ -1,38 +1,90 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      typescript-eslint:
-        patterns:
-          - "@typescript-eslint/*"
-    commit-message:
-      prefix: "chore"
-      prefix-development: "chore"
-      include: "scope"
-
-  - package-ecosystem: "composer"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-
-  - package-ecosystem: "composer"
-    directory: "/playground"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-    commit-message:
-      prefix: "ci"
-      include: "scope"
+- package-ecosystem: npm
+  directory: /
+  schedule:
+    interval: weekly
+    time: 05:00
+    timezone: Europe/Berlin
+    day: monday
+  groups:
+    node-toolchain:
+      applies-to: version-updates
+      patterns:
+      - '*'
+    node-toolchain-security:
+      applies-to: security-updates
+      patterns:
+      - '*'
+  commit-message:
+    prefix: chore
+    prefix-development: chore
+    include: scope
+  cooldown:
+    default-days: 3
+  open-pull-requests-limit: 1
+- package-ecosystem: composer
+  directory: /
+  schedule:
+    interval: weekly
+    time: 05:00
+    timezone: Europe/Berlin
+    day: monday
+  commit-message:
+    prefix: chore
+    include: scope
+  cooldown:
+    default-days: 3
+  open-pull-requests-limit: 1
+  groups:
+    php-dependencies:
+      applies-to: version-updates
+      patterns:
+      - '*'
+    php-dependencies-security:
+      applies-to: security-updates
+      patterns:
+      - '*'
+- package-ecosystem: composer
+  directory: /playground
+  schedule:
+    interval: weekly
+    time: 05:00
+    timezone: Europe/Berlin
+    day: monday
+  commit-message:
+    prefix: chore
+    include: scope
+  cooldown:
+    default-days: 3
+  open-pull-requests-limit: 1
+  groups:
+    php-dependencies:
+      applies-to: version-updates
+      patterns:
+      - '*'
+    php-dependencies-security:
+      applies-to: security-updates
+      patterns:
+      - '*'
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: monthly
+    time: 05:00
+    timezone: Europe/Berlin
+  commit-message:
+    prefix: ci
+    include: scope
+  cooldown:
+    default-days: 3
+  open-pull-requests-limit: 1
+  groups:
+    actions:
+      applies-to: version-updates
+      patterns:
+      - '*'
+    actions-security:
+      applies-to: security-updates
+      patterns:
+      - '*'
