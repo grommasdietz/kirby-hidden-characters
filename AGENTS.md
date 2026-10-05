@@ -54,18 +54,8 @@ This is the canonical workflow guide for working on the Kirby Hidden Characters 
 
 - Treat this file as canonical. Per-assistant guides (Copilot) only add tool-specific prompting tips and should point back here.
 
-## Temporary Psalm compatibility workaround
+## Psalm and Kirby compatibility
 
-`composer psalm` runs `tools/prepare-psalm.php` before analysis. It rewrites only
-two installed Kirby collection PHPDoc return annotations to avoid the Psalm 6.17
-parser crash; it does not change executable Kirby code or pin Psalm.
-
-When updating Kirby or Psalm, follow the [removal checklist](docs/contributions/setup.md#psalm-and-kirby-compatibility).
-Verify the new dependency versions without the helper on a fresh installation
-before removing the helper, Composer hook and compatibility fixture. An already
-patched dependency directory cannot prove that the workaround is obsolete.
-
-Keep Psalm focused on this repository's own code. Dependencies still need to be
-loaded for type information, so excluding `vendor` from analysis does not avoid
-this parser crash. Check reusable plugins in their owning repositories and keep
-project-specific `custom-*` code in the consuming project's analysis scope.
+Psalm 6.19.1 or newer analyzes the installed Kirby annotations directly.
+The former dependency-source patch was removed after verification against
+fresh, unmodified Kirby 5.6.0 installations.

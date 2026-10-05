@@ -31,7 +31,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^12.5",
-    "vimeo/psalm": "^6.15",
+    "vimeo/psalm": "^6.19.1",
     "friendsofphp/php-cs-fixer": "^3.93",
     "getkirby/cms": "^5.2"
   },
@@ -58,10 +58,7 @@
     "test:integration": "./vendor/bin/phpunit --testsuite Integration",
     "test:smoke": "php tests/run.php",
     "test:coverage": "./vendor/bin/phpunit --coverage-text",
-    "psalm": [
-      "@php tools/prepare-psalm.php",
-      "./vendor/bin/psalm --no-cache --show-info=true"
-    ],
+    "psalm": "./vendor/bin/psalm --no-cache --show-info=true",
     "lint": "./vendor/bin/php-cs-fixer fix --dry-run --diff",
     "lint:fix": "./vendor/bin/php-cs-fixer fix",
     "format": "@lint:fix",
@@ -74,6 +71,8 @@
       "@test"
     ],
     "notices:generate": "php tools/generate-third-party-notices.php",
-    "post-update-cmd": "@notices:generate"
+    "post-update-cmd": "@notices:generate",
+    "update:dev": "@composer update phpunit/phpunit vimeo/psalm friendsofphp/php-cs-fixer getkirby/cms --with-all-dependencies",
+    "playground:update": "@composer --working-dir=playground update --with-all-dependencies"
   }
 }

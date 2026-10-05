@@ -45,3 +45,34 @@ pnpm run update:dev
 ---
 
 Next: Continue with [Tests](./tests.md)
+
+## Shared maintenance commands
+
+Use the same entry points across the plugin workspace:
+
+```sh
+composer run setup
+pnpm run setup
+composer run update:dev
+pnpm run update:dev
+composer run playground:update
+composer run verify
+pnpm run verify
+pnpm run verify:all
+```
+
+The update commands respect declared version ranges. The PHP command updates
+the explicitly listed development dependencies and their required dependencies;
+the Node command updates development dependencies. Playground updates are
+separate. Review and commit changed manifests and lockfiles, rebuild generated
+assets with `pnpm run build`, then run `pnpm run verify:all`.
+
+`composer run verify` owns PHP checks; `pnpm run verify` owns Node, assets,
+documentation and deterministic browser checks. `pnpm run verify:all` combines
+both with Composer validation and platform checks. Plugin-specific checks stay
+in their respective scripts. External acceptance profiles remain opt-in.
+
+Keep reusable build, test and playground helpers in `tools/`. Express simple
+command sequences in the manifests instead of custom runners. Store one-off
+diagnostics outside the repository; occasional use alone does not make a
+release, fixture or acceptance tool disposable.
