@@ -4,24 +4,39 @@ permissions:
   pull-requests: write
 jobs:
   automerge:
-    name: Enable automerge for patch updates
+    name: Enable automerge for protected patch updates
     if: |
       github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false && github.repository == 'grommasdietz/kirby-hidden-characters'
     runs-on: ubuntu-latest
     steps:
+    - name: Check required CI protection
+      id: protection
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPOSITORY: ${{ github.repository }}
+        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      run: |
+        if gh api "repos/$REPOSITORY/rules/branches/$DEFAULT_BRANCH" > "$RUNNER_TEMP/branch-rules.json" 2> "$RUNNER_TEMP/branch-rules.err" &&
+          jq -e 'any(.[]; .type == "required_status_checks" and (.parameters.required_status_checks | length > 0))' "$RUNNER_TEMP/branch-rules.json" > /dev/null; then
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "enabled=false" >> "$GITHUB_OUTPUT"
+          echo "Automatic patch merging requires active CI protection. Review this PR after CI passes."
+        fi
     - name: Fetch Dependabot metadata
       id: metadata
       uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+      if: steps.protection.outputs.enabled == 'true'
     - name: Enable automerge
-      if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+      if: steps.protection.outputs.enabled == 'true' && (steps.metadata.outputs.update-type == 'version-update:semver-patch')
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PR_URL: ${{ github.event.pull_request.html_url }}
       run: gh pr merge --auto --squash --delete-branch "$PR_URL"
     - name: Keep non-patch updates manual
-      if: steps.metadata.outputs.update-type != 'version-update:semver-patch'
+      if: steps.protection.outputs.enabled == 'true' && (steps.metadata.outputs.update-type != 'version-update:semver-patch')
       env:
         UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
       run: |
