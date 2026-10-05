@@ -32,6 +32,7 @@ psalm.xml.dist export-ignore
 composer.lock export-ignore
 node_modules/ export-ignore
 package.json export-ignore
+.pnpmfile.cjs export-ignore
 pnpm-lock.yaml export-ignore
 pnpm-workspace.yaml export-ignore
 test-results/ export-ignore

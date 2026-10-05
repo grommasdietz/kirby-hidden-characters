@@ -62,8 +62,8 @@ jobs:
       run: composer test:unit && composer test:integration
     - name: Lint JavaScript
       run: pnpm lint
-    - name: Typecheck browser tests
-      run: pnpm exec tsc --noEmit
+    - name: Check TypeScript
+      run: pnpm run check:types
     - name: Verify generated assets
       run: pnpm build:check
     - name: Verify Panel bundle

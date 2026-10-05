@@ -55,10 +55,16 @@ related TypeScript, ESLint, PostCSS and build tools. Each update entry allows on
 open version PR. Root and playground Composer locks remain separate. Weekly runs
 are staggered across plugins; GitHub Actions updates run monthly.
 
-Plugins using `typescript-eslint` keep TypeScript 6 while its parser depends on
-the compiler API removed in TypeScript 7. Dependabot defers TypeScript 7 version
-updates in those repositories. Remove that exception after the parser supports
-the new API and the full verification suite passes.
+All plugins use TypeScript 7 for compilation and `pnpm run check:types`.
+That command is part of local verification and the main CI job.
+
+Repositories using `typescript-eslint` also install `@typescript/typescript6`.
+The scoped `.pnpmfile.cjs` hook gives TypeScript ESLint 8 that compiler API
+while `tsc` remains TypeScript 7. Both packages have normal manifest entries
+so Dependabot can update them. Remove the bridge after the linter supports
+the native API and verification passes. See the
+[TypeScript migration guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-60)
+and [pnpm install hooks](https://pnpm.io/pnpmfile).
 
 Version updates wait three days after publication. pnpm also enforces a strict
 24-hour minimum release age for installation and local updates. Dependabot security

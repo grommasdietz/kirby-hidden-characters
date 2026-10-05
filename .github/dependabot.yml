@@ -7,12 +7,6 @@ updates:
     time: "05:00"
     timezone: Europe/Berlin
     day: monday
-  # typescript-eslint still requires the TypeScript 6 compiler API.
-  # Remove this exception once it supports the TypeScript 7 API.
-  ignore:
-  - dependency-name: typescript
-    versions:
-    - "7.x"
   groups:
     node-toolchain:
       applies-to: version-updates
