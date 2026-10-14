@@ -4,6 +4,8 @@
 
 ![Cover image showing an example of the plugin in use](/.github/assets/hero-image.png)
 
+The playground disables `panel.vue.compiler` to exercise the plugin with Kirby’s runtime-only Vue build.
+
 ## Legend
 
 The plugin visualizes the following characters using a custom icon font:
