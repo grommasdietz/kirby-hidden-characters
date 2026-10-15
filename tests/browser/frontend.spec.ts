@@ -1033,6 +1033,7 @@ test.describe("Panel: hidden-characters rendering", () => {
     for (const field of ["textarea_monospace", "textarea_notoolbar"]) {
       const textarea = page.locator(`.k-field-name-${field} textarea`);
       const overlay = textarea.locator("+ .gd-hidden-characters");
+      const wrapper = textarea.locator("..");
       const value = "Ordinary letters stay native. A\u00a0non-breaking space.\nNext\tline.";
       await textarea.fill(value);
       await expect(overlay.locator("space")).toHaveCount(6);
@@ -1050,7 +1051,7 @@ test.describe("Panel: hidden-characters rendering", () => {
           element.setAttribute("data-theme", theme);
         }, theme);
         await textarea.focus();
-        await overlay.evaluate((element) => {
+        await wrapper.evaluate((element) => {
           element.scrollIntoView({ block: "center" });
         });
         // Reveal the mirror alone and hide its marker pseudo-elements. Its
@@ -1065,10 +1066,11 @@ test.describe("Panel: hidden-characters rendering", () => {
           .gd-hidden-characters[data-tag="textarea"] ::before {
             visibility: hidden !important;
           }
+          .k-textarea-input-wrapper .k-toolbar { visibility: hidden; }
         ` });
-        const box = await overlay.boundingBox();
-        expect(box).not.toBeNull();
-        const png = await page.screenshot({ clip: box!, scale: "css" });
+        // A visible wrapper gives Playwright a stable screenshot target even
+        // when WebKit excludes the hidden mirror from scrollIntoView.
+        const png = await wrapper.screenshot({ scale: "css" });
         const paintedPixels = await page.evaluate(async (args) => {
           const { png, background } = args;
           const image = new Image();
