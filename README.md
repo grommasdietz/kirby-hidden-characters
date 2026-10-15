@@ -2,6 +2,8 @@
 
 [Kirby CMS](https://getkirby.com) plugin to visually show hidden characters like spaces, soft hyphens, tabs, line breaks, or paragraph endings in focused [writer](https://getkirby.com/docs/reference/panel/fields/writer), [textarea](https://getkirby.com/docs/reference/panel/fields/textarea), and [text fields](https://getkirby.com/docs/reference/panel/fields/text). The dimmed visual feedback is inspired by Adobe InDesign's hidden-characters mode, providing a familiar experience for content editors.
 
+Textarea markers render in a helper layer while native text uses a color-free spacing font. This preserves wrapping and avoids black text fragments in Safari's dark mode.
+
 ![Cover image showing an example of the plugin in use](/.github/assets/hero-image.png)
 
 The playground disables `panel.vue.compiler` to exercise the plugin with Kirby’s runtime-only Vue build.

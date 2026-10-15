@@ -190,7 +190,7 @@ test.describe("Panel: hidden-characters rendering", () => {
     expect(writerFontFamily.toLowerCase()).not.toContain("hidden-characters");
     expect(writerPalette).toBe("normal");
     expect(codeFontFamily.toLowerCase()).not.toContain("hidden-characters");
-    expect(textareaFontFamily.toLowerCase()).toContain("hidden-characters");
+    expect(textareaFontFamily.toLowerCase()).toContain("hidden-characters-metrics");
     expect(textFontFamily.toLowerCase()).toContain("hidden-characters");
   });
 
@@ -967,6 +967,148 @@ test.describe("Panel: hidden-characters rendering", () => {
         await textarea.press("Backspace");
         await expect(textarea).toHaveValue(text + "\n\n\n");
         await expect(overlay.locator("break")).toHaveCount(3);
+      }
+    }
+  });
+
+  test("wrapped textarea text keeps its foreground in dark mode", async ({ page }) => {
+    await page.goto("/panel/pages/home");
+    await page.addStyleTag({ content: `
+      .k-field-name-textarea_monospace { width: 370px; }
+      .k-field-name-textarea_monospace textarea {
+        background: rgb(48, 48, 48); color: rgb(240, 240, 240);
+        border: 0; outline: 0; border-radius: 0; box-shadow: none; overflow: hidden;
+      }
+    ` });
+    const textarea = page.locator(".k-field-name-textarea_monospace textarea");
+    const overlay = textarea.locator("+ .gd-hidden-characters");
+    await textarea.fill(
+      'This domain complies with user opt-outs from tracking via the “Do Not Track”\n' +
+      'or “DNT” header. This file will always be posted via HTTPS.\n' +
+      'This policy document allows an operator of a\u00a0Fully Qualified Domain Name.'
+    );
+    await page.locator(".k-panel").evaluate((element) => element.setAttribute("data-theme", "dark"));
+    await page.evaluate(() => document.fonts.ready);
+    // Isolate native text paint: computed color alone misses Safari's black
+    // fallback-font runs at the beginning of wrapped continuation lines.
+    await overlay.evaluate((element) => { element.style.visibility = "hidden"; });
+    for (const focused of [true, false]) {
+      if (focused) await textarea.focus();
+      else await textarea.blur();
+      const png = await textarea.screenshot({ caret: "hide", scale: "css" });
+      const darkPixels = await page.evaluate(async (png) => {
+        const image = new Image();
+        image.src = `data:image/png;base64,${png}`;
+        await image.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext("2d")!;
+        context.drawImage(image, 0, 0);
+        const { data } = context.getImageData(0, 0, image.width, image.height);
+        let count = 0;
+        // Locator screenshots round fractional boxes outwards. Exclude the
+        // outer pixels, which can include the wrapper/toolbar border.
+        for (let y = 2; y < image.height - 2; y++) {
+          for (let x = 2; x < image.width - 2; x++) {
+            const i = (y * image.width + x) * 4;
+            if (data[i] < 40 && data[i + 1] < 40 && data[i + 2] < 40) count++;
+          }
+        }
+        return count;
+      }, png.toString("base64"));
+      expect(darkPixels, `native text with focus=${focused}`).toBe(0);
+    }
+  });
+
+  test("textarea mirrors paint only markers in light and dark themes", async ({ page }) => {
+    await page.goto("/panel/pages/home");
+    await page.addStyleTag({ content: `
+      .k-field-name-textarea_monospace,
+      .k-field-name-textarea_notoolbar { width: 370px; }
+    ` });
+    for (const field of ["textarea_monospace", "textarea_notoolbar"]) {
+      const textarea = page.locator(`.k-field-name-${field} textarea`);
+      const overlay = textarea.locator("+ .gd-hidden-characters");
+      const value = "Ordinary letters stay native. A\u00a0non-breaking space.\nNext\tline.";
+      await textarea.fill(value);
+      await expect(overlay.locator("space")).toHaveCount(6);
+      await expect(overlay).toHaveText(value);
+      await expect(overlay).toHaveCSS("font-palette", "normal");
+      const family = await overlay.evaluate((element) =>
+        getComputedStyle(element).fontFamily
+      );
+      expect(family).toContain("hidden-characters-metrics");
+      await page.evaluate(() => document.fonts.ready);
+
+      for (const theme of ["light", "dark"]) {
+        const background = theme === "dark" ? 48 : 255;
+        await page.locator(".k-panel").evaluate((element, theme) => {
+          element.setAttribute("data-theme", theme);
+        }, theme);
+        await textarea.focus();
+        await overlay.evaluate((element) => {
+          element.scrollIntoView({ block: "center" });
+        });
+        // Reveal the mirror alone and hide its marker pseudo-elements. Its
+        // ordinary text must paint no pixels, including wrapped font runs.
+        await textarea.evaluate((element) => { element.style.visibility = "hidden"; });
+        await overlay.evaluate((element, background) => {
+          element.parentElement!.style.background =
+            `rgb(${background} ${background} ${background})`;
+          element.style.opacity = "1";
+        }, background);
+        const hideMarkers = await page.addStyleTag({ content: `
+          .gd-hidden-characters[data-tag="textarea"] ::before {
+            visibility: hidden !important;
+          }
+        ` });
+        const box = await overlay.boundingBox();
+        expect(box).not.toBeNull();
+        const png = await page.screenshot({ clip: box!, scale: "css" });
+        const paintedPixels = await page.evaluate(async (args) => {
+          const { png, background } = args;
+          const image = new Image();
+          image.src = `data:image/png;base64,${png}`;
+          await image.decode();
+          const canvas = document.createElement("canvas");
+          canvas.width = image.width;
+          canvas.height = image.height;
+          const context = canvas.getContext("2d")!;
+          context.drawImage(image, 0, 0);
+          const { data } = context.getImageData(
+            0, 0, image.width, image.height
+          );
+          let count = 0;
+          for (let y = 2; y < image.height - 2; y++) {
+            for (let x = 2; x < image.width - 2; x++) {
+              const i = (y * image.width + x) * 4;
+              if ([0, 1, 2].some((channel) =>
+                Math.abs(data[i + channel] - background) > 2
+              )) count++;
+            }
+          }
+          return count;
+        }, { png: png.toString("base64"), background });
+        expect(paintedPixels, `${field} mirror in ${theme}`).toBe(0);
+        await hideMarkers.evaluate((element) => {
+          element.parentNode?.removeChild(element);
+        });
+        await textarea.evaluate((element) => { element.style.visibility = ""; });
+        await overlay.evaluate((element) => {
+          element.parentElement!.style.background = "";
+          element.style.opacity = "";
+        });
+        await textarea.focus();
+        await expect(overlay).toHaveCSS("opacity", "1");
+        await expect(overlay.locator("space").first()).toHaveCSS(
+          "color", "rgba(0, 0, 0, 0)"
+        );
+        expect(await overlay.locator("space").first().evaluate((element) =>
+          getComputedStyle(element, "::before").color
+        )).toBe(theme === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)");
+        await textarea.blur();
+        await expect(overlay).toHaveCSS("opacity", "0");
       }
     }
   });

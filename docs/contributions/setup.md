@@ -36,7 +36,7 @@ python3 -m venv "${TMPDIR:-/tmp}/kirby-hidden-characters-fonts"
 python -m pip install -r tools/requirements-fonts.txt
 ```
 
-After exporting changes to the native-field font from Glyphs, regenerate its Writer derivative and embedded CSS, then rebuild the Panel assets:
+After exporting changes to the source font from Glyphs, regenerate its Writer and color-free textarea metrics derivatives and embedded CSS, then rebuild the Panel assets:
 
 ```bash
 pnpm fonts:build
@@ -44,7 +44,7 @@ pnpm build
 pnpm test:assets
 ```
 
-`fonts:check` regenerates the expected bytes in memory and checks both committed outputs without writing files. Generation preserves the source timestamp and verifies that all font tables except `COLR` and the `head` checksum remain byte-identical. Installation from Composer or a GitHub tag archive uses the committed assets and requires no Python or build tools.
+`fonts:check` regenerates the expected bytes in memory and checks all committed outputs without writing files. Generation preserves the source timestamp and verifies unchanged font tables. Writer generation replaces `COLR` references; textarea metrics generation removes `COLR` and `CPAL`. Both retain the source advances and variation data. Installation from Composer or a GitHub tag archive uses the committed assets and requires no Python or build tools.
 
 ---
 

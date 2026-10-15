@@ -4,10 +4,8 @@
    Rendering strategy:
    - Kirby owns all real ProseMirror text and mark styling. Writer markers are
      positioned from the real DOM in a marker-only overlay.
-   - The custom font remains active on native textarea and text fields, which do
-     not expose DOM ranges for marker placement.
-   - Textareas retain the grid-aligned mirror because native textarea text does
-     not expose DOM ranges for marker placement.
+   - Textareas use a color-free metrics font and a grid-aligned marker mirror.
+   - Single-line text fields retain the custom color font.
    ============================================================================= */
 
 @font-face {
@@ -20,15 +18,19 @@
   unicode-range: U+0020, U+00A0, U+2000-200B, U+202F, U+205F, U+E000-E004;
 }
 
-/* The font stays active on native fields so focus never changes advance widths. */
-.k-textarea-input-native,
+/* Fonts stay active so focus never changes whitespace advance widths. */
 .k-string-input.k-text-input {
   font-family: "hidden-characters", var(--font-sans) !important;
   font-variation-settings: "MONO" 0;
 }
 
+.k-textarea-input-native {
+  font-family: "hidden-characters-metrics", var(--font-sans) !important;
+  font-variation-settings: "MONO" 0;
+}
+
 .k-textarea-input-native[data-font="monospace"] {
-  font-family: "hidden-characters", var(--font-mono) !important;
+  font-family: "hidden-characters-metrics", var(--font-mono) !important;
   font-variation-settings: "MONO" 1;
 }
 
@@ -53,49 +55,19 @@
     override-colors: 0 rgba(255, 255, 255, 0.4);
   }
 
-  .k-textarea-input-native,
-  .k-string-input.k-text-input,
-  .gd-hidden-characters[data-tag="textarea"] {
+  .k-string-input.k-text-input {
     font-palette: --gd-hc-hidden-light;
   }
 
-  :where([data-theme="dark"])
-    :is(
-      .k-textarea-input-native,
-      .k-string-input.k-text-input,
-      .gd-hidden-characters[data-tag="textarea"]
-    ) {
+  :where([data-theme="dark"]) .k-string-input.k-text-input {
     font-palette: --gd-hc-hidden-dark;
   }
 
-  .k-textarea-input-native:focus,
   .k-string-input.k-text-input:focus-within {
     font-palette: --gd-hc-light;
   }
 
-  :where([data-theme="dark"])
-    :is(
-      .k-textarea-input-native:focus,
-      .k-string-input.k-text-input:focus-within
-    ) {
-    font-palette: --gd-hc-dark;
-  }
-
-  .gd-hidden-characters[data-tag="textarea"] break::before,
-  .gd-hidden-characters[data-tag="textarea"] shy::before,
-  .gd-hidden-characters[data-tag="textarea"] tab::before {
-    font-palette: --gd-hc-light;
-  }
-
-  :where([data-theme="dark"])
-    .gd-hidden-characters[data-tag="textarea"]
-    break::before,
-  :where([data-theme="dark"])
-    .gd-hidden-characters[data-tag="textarea"]
-    shy::before,
-  :where([data-theme="dark"])
-    .gd-hidden-characters[data-tag="textarea"]
-    tab::before {
+  :where([data-theme="dark"]) .k-string-input.k-text-input:focus-within {
     font-palette: --gd-hc-dark;
   }
 }
@@ -107,14 +79,14 @@
 }
 
 .gd-hidden-characters {
-  --gd-hc-marker-color: rgba(0, 0, 0, 0.25);
+  --gd-hc-marker-color: rgba(0, 0, 0, 0.4);
   opacity: 0;
   pointer-events: none;
   z-index: 1;
 }
 
 :where([data-theme="dark"]) .gd-hidden-characters {
-  --gd-hc-marker-color: rgba(255, 255, 255, 0.25);
+  --gd-hc-marker-color: rgba(255, 255, 255, 0.4);
 }
 
 /* --------------------------------------------------------------------------
@@ -212,6 +184,9 @@
   font-variation-settings: "MONO" 0;
   overflow: hidden;
   text-decoration-color: transparent !important;
+  /* Safari can repaint transparent fallback runs after a theme switch. Keep
+     mirror text out of paint entirely; only marker pseudo-elements are visible. */
+  visibility: hidden;
 }
 
 .gd-hidden-characters[data-tag="textarea"] * {
@@ -223,7 +198,8 @@
 
 .gd-hidden-characters[data-tag="textarea"] break,
 .gd-hidden-characters[data-tag="textarea"] shy,
-.gd-hidden-characters[data-tag="textarea"] tab {
+.gd-hidden-characters[data-tag="textarea"] tab,
+.gd-hidden-characters[data-tag="textarea"] space {
   display: inline;
   position: relative;
   vertical-align: bottom;
@@ -231,12 +207,14 @@
 
 .gd-hidden-characters[data-tag="textarea"] break::before,
 .gd-hidden-characters[data-tag="textarea"] shy::before,
-.gd-hidden-characters[data-tag="textarea"] tab::before {
+.gd-hidden-characters[data-tag="textarea"] tab::before,
+.gd-hidden-characters[data-tag="textarea"] space::before {
   color: var(--gd-hc-marker-color);
   display: inline-block;
-  font-family: "hidden-characters", var(--font-sans) !important;
+  font-family: "hidden-characters-writer", var(--font-sans) !important;
   font-weight: normal;
   position: absolute;
+  visibility: visible;
   width: max-content;
 }
 
@@ -255,6 +233,13 @@
 
 .gd-hidden-characters[data-tag="textarea"] tab::before {
   content: "\e004";
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gd-hidden-characters[data-tag="textarea"] space::before {
+  content: attr(data-glyph);
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

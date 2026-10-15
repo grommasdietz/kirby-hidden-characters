@@ -1,5 +1,6 @@
 import "./styles/hidden-characters.css";
 import "./styles/writer-font.css";
+import "./styles/metrics-font.css";
 
 // ---------------------------------------------------------------------------
 // Extension registry
@@ -61,6 +62,8 @@ function renderTextareaContent(value) {
       parts.push("<tab>\t</tab>");
     } else if (char === "\u00AD") {
       parts.push("<shy>\u00AD</shy>");
+    } else if (writerCharacterMarkers.has(char)) {
+      parts.push(`<space data-glyph="${char}">${char}</space>`);
     } else {
       parts.push(escapeHTML(char));
     }

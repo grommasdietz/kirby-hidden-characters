@@ -10,9 +10,9 @@ Hidden characters are visualized through three complementary mechanisms:
 
 1. **Marker-only writer layer** — ProseMirror text is laid out entirely by Kirby's real `.ProseMirror` element. A sibling `div.gd-hidden-characters--writer-markers` contains absolutely positioned marker spans only; it never clones paragraph text or inserts helpers into the editable DOM. Marker coordinates are derived from DOM `Range` rectangles for every supported whitespace character, paragraph end and hard break. Links, code and custom marks therefore keep their computed colors, fonts and other text styling without participating in a mixed color-font run.
 
-2. **Custom color font on native fields** — A WOFF2 font is applied continuously to textareas and single-line text fields. Its `unicode-range` covers space codepoints (`U+0020`, `U+00A0`, `U+2000–200B`, `U+202F`, `U+205F`) and the private-use glyphs used for structural markers. Palette index `0` contains the neutral marker; `font-palette` keeps it transparent by default and reveals it on focus. Each color glyph also has an off-advance guard layer that uses OpenType palette index `0xFFFF`, so it resolves to the field's computed foreground color. Because the font never changes on focus, whitespace advance widths remain stable.
+2. **Stable whitespace metrics on native fields** — A WOFF2 font is applied continuously to whitespace codepoints (`U+0020`, `U+00A0`, `U+2000–200B`, `U+202F`, `U+205F`). Textareas use `hidden-characters-metrics`, derived by removing only the source font's `COLR` and `CPAL` tables. Its mapped base glyphs are empty; all advances and `MONO` variations remain identical. Native textarea text therefore contains no color-font runs, avoiding Safari's black fallback text at wrapped line starts. Single-line text fields retain the source color font and its focus palettes. Fonts never change on focus, keeping whitespace advance widths stable.
 
-3. **Grid-aligned textarea mirror** — Native textareas do not expose text-node ranges. They retain a transparent mirror in the same CSS grid cell, with the toolbar in the row above it. Newline, tab and soft-hyphen helpers are rendered only in this textarea mirror.
+3. **Grid-aligned textarea mirror** — Native textareas do not expose text-node ranges. They retain a transparent mirror in the same CSS grid cell, with the toolbar in the row above it. Both layers use the color-free metrics font. Inline whitespace helpers preserve the original characters and position isolated marker pseudo-elements using the foreground-only Writer font. Newline, tab and soft-hyphen helpers also live in this mirror. Color-font glyphs never share a text run with ordinary letters.
 
 Single-line `text` fields use only the font mechanism because horizontally scrolling input values cannot be mirrored reliably.
 
@@ -82,7 +82,7 @@ The current split remains intentional after reviewing the earlier implementation
 
 The marker layer uses established DOM Range, observer and positioning APIs. It does not rely on a new text-layout API or promise compatibility with browsers outside [Kirby's Panel requirements](https://getkirby.com/docs/reference/system/requirements#browsers-for-the-panel). Current cross-engine tests do not prove every older supported browser version.
 
-Native fields remain the compromise: their characters cannot be addressed with DOM ranges, so the font owns whitespace widths and palettes. The textarea grid uses an explicit wrapper attribute rather than `:has()`, which would otherwise require [Firefox 121](https://www.mozilla.org/en-US/firefox/121.0/releasenotes/) despite Kirby's Firefox 110 minimum. Palette overrides remain literal because [CSS Fonts requires absolute override colors](https://drafts.csswg.org/css-fonts-4/#descdef-font-palette-values-override-colors). Future replacement of the native-field font should be evaluated separately against scrolling, wrapping and text-color behavior.
+Native fields cannot be addressed with DOM ranges, so the font owns whitespace widths. Textareas use isolated foreground markers; single-line inputs retain native color-font rendering. The textarea grid uses an explicit wrapper attribute rather than `:has()`, which would otherwise require [Firefox 121](https://www.mozilla.org/en-US/firefox/121.0/releasenotes/) despite Kirby's Firefox 110 minimum. Single-line palette overrides remain literal because [CSS Fonts requires absolute override colors](https://drafts.csswg.org/css-fonts-4/#descdef-font-palette-values-override-colors).
 
 ### Update lifecycle and performance
 
@@ -112,7 +112,9 @@ For `k-textarea-input`, the mixin locates `.k-textarea-input-native` and:
 3. Uses a CSS grid so a toolbar remains in the first row while the textarea and mirror share the second row.
 4. Re-renders the mirror on native `input` events and synchronizes scroll offsets.
 
-`renderTextareaContent(value)` keeps newlines and tabs in the mirrored text while adding marker helpers. All ordinary spaces and NBSP glyphs remain owned by the real textarea.
+`renderTextareaContent(value)` keeps newlines and tabs in the mirrored text while adding marker helpers. Ordinary spaces and NBSPs use the same advance widths in both layers; only the mirror paints their markers. Its opacity follows the native textarea's focus without changing layout or content.
+
+The mirror uses `visibility: hidden`, with `visibility: visible` only on marker pseudo-elements. Transparent text alone is insufficient in Safari after theme changes: fallback letters can repaint over native text. Hidden visibility suppresses those text runs while preserving their layout.
 
 ---
 
