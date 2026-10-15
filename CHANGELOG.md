@@ -1,3 +1,10 @@
+## [2.1.4](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.3...v2.1.4) (2026-10-15)
+
+
+### Bug Fixes
+
+* **textarea:** preserve text colors in Safari dark mode ([b9399d1](https://github.com/grommasdietz/kirby-hidden-characters/commit/b9399d19db7d7645c5b3ed69567a5495eec72909))
+
 ## [2.1.3](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.2...v2.1.3) (2026-09-17)
 
 
