@@ -991,10 +991,13 @@ test.describe("Panel: hidden-characters rendering", () => {
     await page.evaluate(() => document.fonts.ready);
     // Isolate native text paint: computed color alone misses Safari's black
     // fallback-font runs at the beginning of wrapped continuation lines.
-    await overlay.evaluate((element) => { element.style.visibility = "hidden"; });
+    await overlay.evaluate((element) => { element.style.opacity = "0"; });
     for (const focused of [true, false]) {
       if (focused) await textarea.focus();
       else await textarea.blur();
+      await textarea.evaluate((element) => {
+        element.scrollIntoView({ block: "center" });
+      });
       const png = await textarea.screenshot({ caret: "hide", scale: "css" });
       const darkPixels = await page.evaluate(async (png) => {
         const image = new Image();
