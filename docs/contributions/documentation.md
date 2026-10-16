@@ -1,33 +1,22 @@
 # Documentation
 
-Use this checklist to keep docs consistent with the style guide.
+Keep documentation useful, current and organized by the reader's task. Follow the repository [style guide](../../STYLE_GUIDE.md).
 
-> [!IMPORTANT]
-> Follow the global [Style guide](/STYLE_GUIDE.md) for structure, tone, and typography.
+## Ownership
 
----
+- The [README](../../README.md) explains purpose, requirements, installation and first use, then links to detailed guidance
+- `usage/` explains configuration, public APIs and workflows
+- `contributions/` explains setup, development and tests
+- `maintenance/` explains operations, compatibility, migrations and releases
+- Optional concepts or contracts explain durable architecture and integration boundaries
+- The changelog records shipped changes; a roadmap records unresolved work
 
-## Principles
+Use one canonical page per topic. Fold durable information from work notes into that page rather than adding handovers, completed cycle reports or acceptance diaries. Keep development requirements separate from installation requirements.
 
-- [ ] Prefer short, task-oriented docs
-- [ ] One main topic per file
-- [ ] Put user-facing how-to in [README.md](/README.md)
-- [ ] Keep deeper details in [docs](/docs)
+## Verification
 
----
+```bash
+pnpm run docs:verify
+```
 
-## Structure
-
-- [ ] Each [docs](/docs) filename is written in lower case (e.g. [tests.md](/docs/contributions/tests.md))
-- [ ] Each [index.md](/docs/index.md) is the table of contents per folder level
-  - [ ] It assumes the reader has already read [README.md](/README.md) and parent index files
-  - [ ] It starts with a brief introduction that sets expectations
-- [ ] Create subfolders in [docs](/docs) if a topic needs deeper coverage (e.g. CLI commands)
-- [ ] Each subfolder should start with an [index.md](index.md) file
-  - [ ] Each file ends with a next link (`Next: ...`) that points to the next child or sibling
-  - [ ] Example: `Next: Continue with [Tests](./tests.md)`
-- [ ] Run `pnpm run docs:verify` to lint docs and validate local links, navigation and documented commands
-
----
-
-Next: Continue with [Maintenance](../maintenance/index.md)
+Check Markdown style where configured, local links and anchors, navigation reachability and documented package scripts. Verify options, APIs and examples against source and tests as well; automated checks do not establish their accuracy.

@@ -27,87 +27,18 @@ PostCSS is configured in `postcss.config.cjs` (autoprefixer by default).
 
 ---
 
-## Dependency updates
-
-Update PHP dependencies (repo and playground):
-
-```bash
-composer update
-composer update -d playground
-```
-
-Update JS dev dependencies:
-
-```bash
-pnpm run update:dev
-```
-
----
-
 ## Dependency updates and CI
 
-Use `composer run update:dev` for root PHP development dependencies,
-`composer run playground:update` for the runtime fixture, and `pnpm run update:dev`
-for Node tooling. Review and commit the resulting lockfiles.
+Update the root development dependencies, playground and Node tooling separately:
 
-Dependabot groups version updates into one PR per ecosystem and lockfile, including
-related TypeScript, ESLint, PostCSS and build tools. Each update entry allows one
-open version PR. Root and playground Composer locks remain separate. Weekly runs
-are staggered across plugins; GitHub Actions updates run monthly.
-
-All plugins use TypeScript 7 for compilation and `pnpm run check:types`.
-That command is part of local verification and the main CI job.
-
-Repositories using `typescript-eslint` also install `@typescript/typescript6`.
-The scoped `.pnpmfile.cjs` hook gives TypeScript ESLint 8 that compiler API
-while `tsc` remains TypeScript 7. Both packages have normal manifest entries
-so Dependabot can update them. Remove the bridge after the linter supports
-the native API and verification passes. See the
-[TypeScript migration guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-60)
-and [pnpm install hooks](https://pnpm.io/pnpmfile).
-
-Version updates wait three days after publication. pnpm also enforces a strict
-24-hour minimum release age for installation and local updates. Dependabot security
-updates use separate groups and bypass its version-update cooldown; pnpm's install
-age still applies. Patch updates may auto-merge after required checks pass; minor
-and major updates need review. Refresh the remaining grouped PR after each merge
-to keep its lockfile based on current `main`. Grouping reduces overlapping lockfile
-changes but cannot prevent conflicts with manual dependency edits.
-
-CI runs PHP quality, Node, generated-asset, documentation and browser checks with
-one shared PHP 8.3 setup where practical. Separate PHP and Kirby compatibility
-jobs preserve each plugin's supported-runtime coverage. Stale runs are cancelled,
-jobs have time limits, and failed browser artifacts are retained for three days.
-
-Next: Continue with [Tests](./tests.md)
-
-## Shared maintenance commands
-
-Use the same entry points across the plugin workspace:
-
-```sh
-composer run setup
-pnpm run setup
+```bash
 composer run update:dev
-pnpm run update:dev
 composer run playground:update
-composer run verify
-pnpm run verify
-pnpm run verify:all
+pnpm run update:dev
 ```
 
-The update commands respect declared version ranges. The PHP command updates
-the explicitly listed development dependencies and their required dependencies;
-the Node command updates development dependencies. Playground updates are
-separate. Review and commit changed manifests and lockfiles, rebuild generated
-assets with `pnpm run build`, then run `pnpm run verify:all`.
+Review changed manifests and locks, rebuild affected assets and run the repository verification commands in the [testing guide](tests.md). Dependency automation and compatibility jobs are defined in `.github/`.
 
-`composer run verify` owns PHP checks; `pnpm run verify` owns Node, assets,
-documentation and deterministic browser checks. `pnpm run verify:all` combines
-both with Composer validation and platform checks. Plugin-specific checks stay
-in their respective scripts. External acceptance profiles remain opt-in.
+The `.pnpmfile.cjs` hook supplies the TypeScript 6 API to TypeScript ESLint while `check:types` uses the root compiler. Review this bridge when changing the compiler or linter.
 
-Keep reusable build, test and playground helpers in `tools/`. Express simple
-command sequences in the manifests instead of custom runners. Store one-off
-diagnostics outside the repository; occasional use alone does not make a
-release, fixture or acceptance tool disposable.
+Next: Continue with [Tests](./tests.md)

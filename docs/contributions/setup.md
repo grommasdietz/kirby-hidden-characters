@@ -59,9 +59,3 @@ pnpm dev
 ---
 
 Next: Continue with [Structure](./structure.md)
-
-## Psalm and Kirby compatibility
-
-The development dependency requires Psalm 6.19.1 or newer. Fresh Kirby 5.6.0
-installations pass analysis without patching dependency annotations. Keep
-analysis focused on this repository while loading dependencies for types.
