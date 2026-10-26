@@ -123,8 +123,11 @@ if ($package !== null) {
     if (($package['private'] ?? false) !== true) {
         $errors[] = 'package.json must remain private because it is tooling-only.';
     }
-    if (preg_match('/^pnpm@11\./', (string) ($package['packageManager'] ?? '')) !== 1) {
-        $errors[] = 'packageManager must use the shared pnpm 11 baseline.';
+    if (preg_match('/^pnpm@12\./', (string) ($package['packageManager'] ?? '')) !== 1) {
+        $errors[] = 'packageManager must use the shared pnpm 12 baseline.';
+    }
+    if (($package['engines']['pnpm'] ?? null) !== '>=12 <13') {
+        $errors[] = 'engines.pnpm must select the shared pnpm 12 tooling major (>=12 <13).';
     }
     if (($package['engines']['node'] ?? null) !== '>=22.14 <23') {
         $errors[] = 'package.json must select Node 22.14 or newer within the shared Node 22 tooling major.';
