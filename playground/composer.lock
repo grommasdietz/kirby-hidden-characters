@@ -4,34 +4,34 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecdcdef71c400ded0c50d197d0666a6a",
+    "content-hash": "33da3ba554acd751e97d4b534ea73225",
     "packages": [
         {
             "name": "christian-riesen/base32",
-            "version": "1.6.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristianRiesen/base32.git",
-                "reference": "2e82dab3baa008e24a505649b0d583c31d31e894"
+                "reference": "be07b4a4a2d6056975934d71e111c64e7d8babf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristianRiesen/base32/zipball/2e82dab3baa008e24a505649b0d583c31d31e894",
-                "reference": "2e82dab3baa008e24a505649b0d583c31d31e894",
+                "url": "https://api.github.com/repos/ChristianRiesen/base32/zipball/be07b4a4a2d6056975934d71e111c64e7d8babf9",
+                "reference": "be07b4a4a2d6056975934d71e111c64e7d8babf9",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.17",
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^8.5.13 || ^9.5"
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^10.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -61,9 +61,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ChristianRiesen/base32/issues",
-                "source": "https://github.com/ChristianRiesen/base32/tree/1.6.0"
+                "source": "https://github.com/ChristianRiesen/base32/tree/2.0.1"
             },
-            "time": "2021-02-26T10:19:33+00:00"
+            "time": "2026-07-11T21:00:30+00:00"
         },
         {
             "name": "claviska/simpleimage",
@@ -385,20 +385,20 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "5.6.2",
+            "version": "6.0.0-beta.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getkirby/kirby.git",
-                "reference": "8735b12b7f5dea10149d34a6666b37cb0c9cb0a3"
+                "reference": "e8d0e5d79d6cf40454f61f79cd18f3aed8c2ed26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/kirby/zipball/8735b12b7f5dea10149d34a6666b37cb0c9cb0a3",
-                "reference": "8735b12b7f5dea10149d34a6666b37cb0c9cb0a3",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/e8d0e5d79d6cf40454f61f79cd18f3aed8c2ed26",
+                "reference": "e8d0e5d79d6cf40454f61f79cd18f3aed8c2ed26",
                 "shasum": ""
             },
             "require": {
-                "christian-riesen/base32": "1.6.0",
+                "christian-riesen/base32": "2.0.1",
                 "claviska/simpleimage": "4.4.2",
                 "composer/semver": "3.5.2",
                 "erusev/parsedown": "1.8.0",
@@ -417,15 +417,13 @@
                 "filp/whoops": "2.18.7",
                 "getkirby/composer-installer": "^1.2.1",
                 "laminas/laminas-escaper": "2.18.0",
+                "lbuchs/webauthn": "^2.2",
                 "michelf/php-smartypants": "1.8.1",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
                 "phpmailer/phpmailer": "7.1.1",
                 "symfony/polyfill-intl-idn": "1.43.0",
                 "symfony/polyfill-mbstring": "1.43.0",
                 "symfony/yaml": "7.4.21"
-            },
-            "replace": {
-                "symfony/polyfill-php72": "*"
             },
             "suggest": {
                 "ext-apcu": "Support for the Apcu cache driver",
@@ -483,7 +481,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-10-26T16:28:37+00:00"
+            "time": "2026-10-26T17:01:21+00:00"
         },
         {
             "name": "getkirby/composer-installer",
@@ -538,21 +536,22 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "7b48f10067aec01a5b59d2825697af392247a44f"
+                "reference": "f33fc953cd23d8d6b6c6654d84ee63e2da230fb1"
             },
             "require": {
                 "getkirby/composer-installer": "^1.2",
-                "php": "^8.2"
+                "php": "^8.3"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.93",
-                "getkirby/cms": "^5.2",
+                "getkirby/cms": "^6.0@beta",
                 "phpunit/phpunit": "^12.5",
                 "vimeo/psalm": "^6.19.1"
             },
             "type": "kirby-plugin",
             "scripts": {
                 "setup": [
+                    "@php tools/playground-secrets.php",
                     "composer install -d playground",
                     "composer install"
                 ],
@@ -701,6 +700,51 @@
                 }
             ],
             "time": "2025-10-14T18:31:13+00:00"
+        },
+        {
+            "name": "lbuchs/webauthn",
+            "version": "v2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lbuchs/WebAuthn.git",
+                "reference": "20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lbuchs/WebAuthn/zipball/20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1",
+                "reference": "20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "lbuchs\\WebAuthn\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lukas Buchs",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple PHP WebAuthn (FIDO2) server library",
+            "homepage": "https://github.com/lbuchs/webauthn",
+            "keywords": [
+                "Authentication",
+                "webauthn"
+            ],
+            "support": {
+                "issues": "https://github.com/lbuchs/WebAuthn/issues",
+                "source": "https://github.com/lbuchs/WebAuthn/tree/v2.2.0"
+            },
+            "time": "2024-07-04T07:17:40+00:00"
         },
         {
             "name": "league/color-extractor",
@@ -1441,16 +1485,17 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "getkirby/cms": 10,
         "grommasdietz/kirby-hidden-characters": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.3"
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.2.0"
+        "php": "8.3.0"
     },
     "plugin-api-version": "2.9.0"
 }
