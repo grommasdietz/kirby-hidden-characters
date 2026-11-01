@@ -258,5 +258,5 @@
   .k-writer
   .gd-hidden-characters[data-tag="textarea"]
   tab::before {
-  color: var(--color-background) !important;
+  color: var(--panel-color-back) !important;
 }
