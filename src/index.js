@@ -394,9 +394,30 @@ function resolveTargetComponents() {
   return base;
 }
 
+/**
+ * Vue 3 does not name globally registered components after their registration
+ * name. Compare the instance with the component registered under that name
+ * instead; lazy components such as `k-writer-input` are compared by their
+ * loaded definition.
+ *
+ * @param {import("vue").ComponentPublicInstance} instance
+ * @param {string} name
+ * @returns {boolean}
+ */
+function matchesComponent(instance, name) {
+  const component = instance.$panel.app.component(name);
+  const definition = component?.__asyncLoader
+    ? component.__asyncResolved
+    : component;
+
+  return definition === instance.$.type;
+}
+
 const hiddenCharactersMixin = {
   mounted() {
-    if (!resolveTargetComponents().includes(this.$options.name)) {
+    if (
+      !resolveTargetComponents().some((name) => matchesComponent(this, name))
+    ) {
       return;
     }
 
@@ -404,7 +425,7 @@ const hiddenCharactersMixin = {
       // -----------------------------------------------------------------------
       // Textarea branch
       // -----------------------------------------------------------------------
-      if (this.$options.name === "k-textarea-input") {
+      if (matchesComponent(this, "k-textarea-input")) {
         const inputEl = this.$el.querySelector?.(".k-textarea-input-native");
         if (!inputEl) return;
 
@@ -573,7 +594,7 @@ const hiddenCharactersMixin = {
     });
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.$gdObserver?.disconnect();
     this.$gdResizeObserver?.disconnect();
     this.$gdColorScheme?.removeEventListener("change", this.$gdScheduleMarkers);
