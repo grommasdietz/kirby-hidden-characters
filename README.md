@@ -34,8 +34,10 @@ The plugin visualizes the following characters using a custom icon font:
 
 ## Requirements
 
-- Kirby 5.2+
-- PHP 8.2+
+- Kirby 6.0+
+- PHP 8.3+
+
+For Kirby 5, use version 2.x.
 
 ## Installation
 
