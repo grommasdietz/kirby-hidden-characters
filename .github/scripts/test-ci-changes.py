@@ -99,6 +99,16 @@ class ChangeSelection(unittest.TestCase):
         self.commit({'package.json': '{}\n'}, 'chore(deps): update tooling')
         self.assertFalse(self.result('workflow_dispatch')['release'])
 
+    def test_dispatch_with_null_inputs_verifies_without_publishing_maintenance(self):
+        self.commit({'package.json': '{}\n'}, 'chore(deps): update tooling')
+        result = self.result('workflow_dispatch', {'inputs': None})
+        self.assertTrue(result['full'] and result['deploy'])
+        self.assertFalse(result['release'])
+
+    def test_dispatch_with_null_inputs_keeps_pending_feature_release(self):
+        self.commit({'index.php': '<?php // added\n'}, 'feat: add extension')
+        self.assertTrue(self.result('workflow_dispatch', {'inputs': None})['release'])
+
     def test_explicit_release_retry_can_publish_after_maintenance(self):
         self.commit({'package.json': '{}\n'}, 'chore(deps): update tooling')
         self.assertTrue(self.result('workflow_dispatch', {'inputs': {'force_release': 'true'}})['release'])
