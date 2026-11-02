@@ -41,4 +41,12 @@ Review changed manifests and locks, rebuild affected assets and run the reposito
 
 The `.pnpmfile.cjs` hook supplies the TypeScript 6 API to TypeScript ESLint while `check:types` uses the root compiler. Review this bridge when changing the compiler or linter.
 
+## Verified dependency updates
+
+Dependabot patch updates can merge after successful full CI on the exact PR head and base. The official metadata action verifies the signed bot commit and publishes a one-day JSON receipt. The privileged merge job checks that receipt’s trusted workflow and current PR identity; it never runs PR code. CI or metadata completion triggers the decision without a waiting runner or a paid private-repository auto-merge feature. GitHub’s configured review rules still apply; no automatic approval is added.
+
+Minor updates qualify only for installed direct development dependencies `autoprefixer`, `crittr`, `postcss`, `postcss-lab-function` and `sass`. Every dependency in a group must qualify. Runtime minors, other development-tool minors, majors, maintainer changes, unknown metadata and stale or unsuccessful CI stay manual. Updates requiring rebuilt committed assets must pass the existing build checks before merging.
+
+PR titles must use Conventional Commits. After correcting a title, rerun CI. Squash commits use the title and merged branches are deleted automatically. A token-based merge explicitly dispatches main CI because GitHub suppresses the ordinary push trigger. Main dispatches use the same verification and Semantic Release gates as main pushes. Stale verification jobs may be cancelled; release jobs serialize and finish without cancellation. Plugin version fields remain maintained by the release workflow; Composer validation uses `--no-check-version` instead of removing that metadata.
+
 Next: Continue with [Tests](./tests.md)
