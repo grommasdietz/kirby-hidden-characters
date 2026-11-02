@@ -475,10 +475,16 @@ test.describe("Panel: hidden-characters rendering", () => {
     await page.emulateMedia({ colorScheme: "light" });
     await expectMarkerPaint(page, code, [24, 32, 48], white, 0.65);
 
+    await field.evaluate((element: HTMLElement) => {
+      element.style.setProperty("--gd-hc-marker-opacity", "0.55");
+      element.style.setProperty("--gd-hc-marker-color", "rgb(200, 60, 40)");
+    });
+    await expectMarkerPaint(page, code, [200, 60, 40], white, 0.55);
+
     await field.evaluate((element) => element.classList.add("k-block-figure-caption"));
     await expect.poll(() => code.evaluate((element) =>
       getComputedStyle(element, "::before").color
-    )).toBe("rgb(24, 32, 48)");
+    )).toBe("rgb(200, 60, 40)");
 
     await writer.blur();
     await expect(overlay).toHaveCSS("opacity", "0");
@@ -971,6 +977,94 @@ test.describe("Panel: hidden-characters rendering", () => {
     }
   });
 
+  test("shared marker styles apply to Writer and textarea without recoloring text", async ({ page }) => {
+    await page.goto("/panel/pages/home");
+    await page.addStyleTag({ content: `
+      .k-field-name-writer .ProseMirror,
+      .k-field-name-textarea_notoolbar textarea {
+        background: white; color: rgb(30, 40, 50);
+        font-size: 32px; line-height: 1.5;
+      }
+      /* Textarea typography is copied when mounted, before this test style. */
+      .k-field-name-textarea_notoolbar .gd-hidden-characters {
+        font-size: 32px !important; line-height: 1.5 !important;
+      }
+      .k-panel {
+        --gd-hc-marker-opacity: 0.65;
+        --gd-hc-marker-color: rgb(40, 120, 200);
+      }
+    ` });
+    const writer = page.locator(".k-field-name-writer .ProseMirror");
+    const textarea = page.locator(".k-field-name-textarea_notoolbar textarea");
+    for (const input of [writer, textarea]) {
+      await input.fill("One two");
+      await input.focus();
+      await input.evaluate((element) =>
+        element.scrollIntoView({ block: "center" })
+      );
+      await page.evaluate(() => document.fonts.ready);
+      const overlay = input.locator("+ .gd-hidden-characters");
+      const marker = overlay
+        .locator('space, [data-character="space"]').first();
+      await expectMarkerPaint(page, marker, [40, 120, 200], [255, 255, 255], 0.65);
+      await expect(input).toHaveCSS("color", "rgb(30, 40, 50)");
+      if (input === textarea) await expect(input).toHaveValue("One two");
+      else await expect(input).toHaveText("One two");
+      await input.blur();
+      await expect(overlay).toHaveCSS("opacity", "0");
+    }
+  });
+
+  test("single-line marker palettes preserve text color and hide on blur", async ({ page }) => {
+    await page.goto("/panel/pages/home");
+    await page.addStyleTag({ content: `
+      @font-palette-values --test-hidden-characters {
+        font-family: "hidden-characters";
+        override-colors: 0 rgb(40 120 200 / 65%);
+      }
+      .k-field-name-text .k-text-input {
+        background: white; color: rgb(30, 40, 50); font-size: 32px;
+      }
+      .k-field-name-text .k-text-input:focus-within {
+        font-palette: --test-hidden-characters;
+      }
+    ` });
+    const input = page.locator(".k-field-name-text .k-text-input");
+    const value = "One two three";
+    await input.fill(value);
+    await input.evaluate((element) =>
+      element.scrollIntoView({ block: "center" })
+    );
+    await page.evaluate(() => document.fonts.ready);
+    const countMarkerPixels = async () => {
+      const png = await input.screenshot({ caret: "hide", scale: "css" });
+      return page.evaluate(async (png) => {
+        const image = new Image();
+        image.src = `data:image/png;base64,${png}`;
+        await image.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext("2d")!;
+        context.drawImage(image, 0, 0);
+        const { data } = context.getImageData(0, 0, image.width, image.height);
+        let count = 0;
+        const expected = [115, 167, 219];
+        for (let i = 0; i < data.length; i += 4) {
+          if (expected.every((channel, index) =>
+            Math.abs(data[i + index] - channel) <= 8
+          )) count++;
+        }
+        return count;
+      }, png.toString("base64"));
+    };
+    await expect(input).toHaveCSS("color", "rgb(30, 40, 50)");
+    await expect.poll(countMarkerPixels).toBeGreaterThan(3);
+    await input.blur();
+    await expect.poll(countMarkerPixels).toBe(0);
+    await expect(input).toHaveValue(value);
+  });
+
   test("wrapped textarea text keeps its foreground in dark mode", async ({ page }) => {
     await page.goto("/panel/pages/home");
     await page.addStyleTag({ content: `
@@ -1111,7 +1205,10 @@ test.describe("Panel: hidden-characters rendering", () => {
         );
         expect(await overlay.locator("space").first().evaluate((element) =>
           getComputedStyle(element, "::before").color
-        )).toBe(theme === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)");
+        )).toBe(theme === "dark" ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)");
+        expect(await overlay.locator("space").first().evaluate((element) =>
+          getComputedStyle(element, "::before").opacity
+        )).toBe("0.4");
         await textarea.blur();
         await expect(overlay).toHaveCSS("opacity", "0");
       }

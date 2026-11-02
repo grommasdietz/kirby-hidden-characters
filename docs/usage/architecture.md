@@ -20,7 +20,7 @@ For whitespace spanning several range rectangles, the renderer prefers a positiv
 
 ## Fonts and colors
 
-Writer markers inherit their source element's text color through a foreground-only font. Opacity is controlled by `--gd-hc-writer-marker-opacity`; see [usage](index.md#writer-marker-opacity).
+Writer markers inherit their source element's text color through a foreground-only font. Writer and textarea markers share CSS color and opacity overrides; see [marker styling](index.md#marker-styling). The older Writer-only opacity property remains a fallback.
 
 The textarea metrics font removes the source font's color tables while retaining advance widths and variations. Its mirror exposes marker pseudo-elements while keeping mirror text hidden. Single-line inputs retain the source color font and focus palettes.
 
