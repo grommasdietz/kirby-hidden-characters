@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.4...v2.2.0) (2026-11-02)
+
+
+### Features
+
+* **markers:** share Writer and textarea styling ([449af8a](https://github.com/grommasdietz/kirby-hidden-characters/commit/449af8a22e1d80012179df3e076ca2df2f3f2e97))
+
 ## [2.1.4](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.1.3...v2.1.4) (2026-10-15)
 
 
