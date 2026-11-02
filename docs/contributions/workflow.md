@@ -76,3 +76,22 @@ and GitHub expression quoting follow their own syntax. Do not replace quotes
 with a text substitution or format generated lockfiles.
 
 Next: Continue with [Tests](./tests.md)
+
+## Verification cost and security coverage
+
+Ordinary dependency updates retain their existing schedule. Security updates
+are grouped separately from version updates.
+pnpm 11 is pinned while GitHub cannot scan pnpm 12 multi-document lockfiles.
+Keep the single-document lockfile and revisit this exception when GitHub adds
+support.
+
+CI uses lightweight checks for documentation-only changes, including existing
+documentation checks where available. Runtime, dependency, configuration and
+workflow changes still receive full verification. Download caches and cancellation
+of superseded verification runs are retained.
+
+Automatic publishing waits for successful verification and skips documentation,
+CI and dependency-only maintenance. Publishing is serialized and is not cancelled
+by a newer verification run.
+An explicit CI dispatch with `force_release` enabled can retry publishing after
+a maintenance commit.
