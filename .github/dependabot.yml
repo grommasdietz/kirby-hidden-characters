@@ -1,21 +1,22 @@
+# Group minor/patch version updates; leave majors individually reviewable.
 version: 2
 updates:
 - package-ecosystem: npm
-  directory: /
+  directory: "/"
   schedule:
     interval: weekly
-    time: "05:00"
+    time: '05:00'
     timezone: Europe/Berlin
     day: monday
   groups:
     node-toolchain:
       applies-to: version-updates
       patterns:
-      - '*'
+      - "*"
     node-toolchain-security:
       applies-to: security-updates
       patterns:
-      - '*'
+      - "*"
   commit-message:
     prefix: chore
     prefix-development: chore
@@ -24,10 +25,10 @@ updates:
     default-days: 3
   open-pull-requests-limit: 1
 - package-ecosystem: composer
-  directory: /
+  directory: "/"
   schedule:
     interval: weekly
-    time: "05:00"
+    time: '05:00'
     timezone: Europe/Berlin
     day: monday
   commit-message:
@@ -40,16 +41,16 @@ updates:
     php-dependencies:
       applies-to: version-updates
       patterns:
-      - '*'
+      - "*"
     php-dependencies-security:
       applies-to: security-updates
       patterns:
-      - '*'
+      - "*"
 - package-ecosystem: composer
-  directory: /playground
+  directory: "/playground"
   schedule:
     interval: weekly
-    time: "05:00"
+    time: '05:00'
     timezone: Europe/Berlin
     day: monday
   commit-message:
@@ -62,16 +63,16 @@ updates:
     php-dependencies:
       applies-to: version-updates
       patterns:
-      - '*'
+      - "*"
     php-dependencies-security:
       applies-to: security-updates
       patterns:
-      - '*'
+      - "*"
 - package-ecosystem: github-actions
-  directory: /
+  directory: "/"
   schedule:
     interval: monthly
-    time: "05:00"
+    time: '05:00'
     timezone: Europe/Berlin
   commit-message:
     prefix: ci
@@ -83,8 +84,11 @@ updates:
     actions:
       applies-to: version-updates
       patterns:
-      - '*'
+      - "*"
+      update-types:
+      - minor
+      - patch
     actions-security:
       applies-to: security-updates
       patterns:
-      - '*'
+      - "*"
