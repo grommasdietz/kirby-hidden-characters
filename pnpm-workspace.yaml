@@ -1,3 +1,5 @@
+# pnpm 11 keeps the lockfile readable by GitHub dependency scanning.
+# Revisit the pin when GitHub supports pnpm 12 multi-document lockfiles.
 packages:
   - .
 
