@@ -44,7 +44,7 @@ def classify(event_name, event):
     fallback = {'full': True, 'release': True, 'deploy': True, 'base': '', 'head': '', 'paths': []}
     if event_name == 'workflow_dispatch':
         try:
-            force = event.get('inputs', {}).get('force_release') in {True, 'true'}
+            force = (event.get('inputs') or {}).get('force_release') in {True, 'true'}
             fallback['release'] = force or pending_release()
         except (OSError, subprocess.CalledProcessError, UnicodeError):
             pass
