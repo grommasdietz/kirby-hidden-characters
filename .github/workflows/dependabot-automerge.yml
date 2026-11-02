@@ -21,6 +21,7 @@ jobs:
     concurrency:
       group: dependabot-merge-${{ github.repository }}
       cancel-in-progress: false
+      queue: max
     permissions:
       actions: write
       contents: write

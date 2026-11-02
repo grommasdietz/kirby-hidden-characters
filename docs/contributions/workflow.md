@@ -57,6 +57,10 @@ Token-based merges explicitly dispatch main verification because GitHub
 suppresses their push-triggered workflows. Existing staging and production
 approval gates remain in force.
 
+Merge jobs run serially and retain up to 100 pending runs with GitHub's
+`queue: max` setting, so a burst of completed checks does not replace a
+waiting merge notification.
+
 Dependabot rebases automatically. Conflicts, stale verification and failed
 checks stay open for correction. Major updates remain separate; the grouped
 minor/patch updates share one PR per ecosystem and directory.
