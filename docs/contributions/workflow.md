@@ -49,4 +49,14 @@ Minor updates qualify only for installed direct development dependencies `autopr
 
 PR titles must use Conventional Commits. After correcting a title, rerun CI. Squash commits use the title and merged branches are deleted automatically. A token-based merge explicitly dispatches main CI because GitHub suppresses the ordinary push trigger. Main dispatches use the same verification and Semantic Release gates as main pushes. Stale verification jobs may be cancelled; release jobs serialize and finish without cancellation. Plugin version fields remain maintained by the release workflow; Composer validation uses `--no-check-version` instead of removing that metadata.
 
+## GitHub YAML formatting
+
+Use the repository's locked Prettier version for workflows and Dependabot files.
+Run `pnpm run format:github` after editing or generating GitHub YAML;
+`pnpm run lint:github` checks it during existing verification.
+The scoped `.github/.prettierrc.json` prefers single quotes and two-space
+indentation. Prettier may choose double quotes to avoid escaping; shell, JSON
+and GitHub expression quoting follow their own syntax. Do not replace quotes
+with a text substitution or format generated lockfiles.
+
 Next: Continue with [Tests](./tests.md)

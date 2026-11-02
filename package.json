@@ -12,7 +12,7 @@
     "build:check": "node tools/check-generated-assets.mjs index.js index.css",
     "fonts:build": "python3 tools/build-writer-font.py",
     "fonts:check": "python3 tools/build-writer-font.py --check",
-    "lint": "eslint src tests",
+    "lint": "eslint src tests && pnpm run lint:github",
     "lint:fix": "eslint src tests --fix",
     "format": "pnpm run lint:fix",
     "docs:lint": "markdownlint -c .markdownlint.json 'docs/**/*.md' 'README.md' 'CONTRIBUTING.md' 'SECURITY.md' 'AGENTS.md' 'STYLE_GUIDE.md'",
@@ -28,7 +28,9 @@
     "verify": "pnpm run build:check && pnpm run lint && pnpm run check:types && pnpm run test:bundle && pnpm run test:assets && pnpm run test:archive && pnpm run docs:verify && pnpm run test:hygiene && pnpm run test:browser",
     "verify:all": "composer validate --strict --no-check-version && composer check-platform-reqs && composer run verify && composer run release:check && pnpm run verify && git diff --check",
     "prepare": "husky",
-    "check:types": "tsc --version && tsc -p tsconfig.json --noEmit"
+    "check:types": "tsc --version && tsc -p tsconfig.json --noEmit",
+    "format:github": "prettier --write \".github/**/*.{yml,yaml}\"",
+    "lint:github": "prettier --check \".github/**/*.{yml,yaml}\""
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
@@ -52,6 +54,7 @@
     "kirbyup": "^3.5.0",
     "license-checker": "^25.0.1",
     "markdownlint-cli": "^0.49.1",
+    "prettier": "^3.9.10",
     "semantic-release": "^25.0.9",
     "typescript": "^7.0.2"
   },
