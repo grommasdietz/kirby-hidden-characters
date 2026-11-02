@@ -2,7 +2,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: '/'
+    directory: /
     schedule:
       interval: weekly
       time: '05:00'
@@ -19,14 +19,13 @@ updates:
           - '*'
     commit-message:
       prefix: chore
-      prefix-development: chore
       include: scope
     cooldown:
       default-days: 3
     open-pull-requests-limit: 5
     rebase-strategy: auto
   - package-ecosystem: composer
-    directory: '/'
+    directory: /
     schedule:
       interval: weekly
       time: '05:00'
@@ -49,7 +48,7 @@ updates:
           - '*'
     rebase-strategy: auto
   - package-ecosystem: composer
-    directory: '/playground'
+    directory: /playground
     schedule:
       interval: weekly
       time: '05:00'
@@ -72,7 +71,7 @@ updates:
           - '*'
     rebase-strategy: auto
   - package-ecosystem: github-actions
-    directory: '/'
+    directory: /
     schedule:
       interval: monthly
       time: '05:00'
@@ -96,3 +95,25 @@ updates:
         patterns:
           - '*'
     rebase-strategy: auto
+  - package-ecosystem: pip
+    directory: /tools
+    schedule:
+      interval: monthly
+    rebase-strategy: auto
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      font-tooling-minor-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+      font-tooling-security:
+        applies-to: security-updates
+        patterns:
+          - '*'
