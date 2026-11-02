@@ -1,4 +1,4 @@
-# Group minor/patch version updates; leave majors individually reviewable.
+---
 version: 2
 updates:
   - package-ecosystem: npm
@@ -23,7 +23,8 @@ updates:
       include: scope
     cooldown:
       default-days: 3
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
+    rebase-strategy: auto
   - package-ecosystem: composer
     directory: '/'
     schedule:
@@ -36,7 +37,7 @@ updates:
       include: scope
     cooldown:
       default-days: 3
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     groups:
       php-dependencies:
         applies-to: version-updates
@@ -46,6 +47,7 @@ updates:
         applies-to: security-updates
         patterns:
           - '*'
+    rebase-strategy: auto
   - package-ecosystem: composer
     directory: '/playground'
     schedule:
@@ -58,7 +60,7 @@ updates:
       include: scope
     cooldown:
       default-days: 3
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     groups:
       php-dependencies:
         applies-to: version-updates
@@ -68,6 +70,7 @@ updates:
         applies-to: security-updates
         patterns:
           - '*'
+    rebase-strategy: auto
   - package-ecosystem: github-actions
     directory: '/'
     schedule:
@@ -79,7 +82,7 @@ updates:
       include: scope
     cooldown:
       default-days: 3
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     groups:
       actions:
         applies-to: version-updates
@@ -92,3 +95,4 @@ updates:
         applies-to: security-updates
         patterns:
           - '*'
+    rebase-strategy: auto

@@ -11,9 +11,10 @@ import zipfile
 from pathlib import Path
 
 BOT = 'dependabot[bot]'
-CI_PATH = '.github/workflows/ci.yml'
+CI_PATH = os.environ.get('DEPENDABOT_CI_WORKFLOW', '.github/workflows/ci.yml')
 METADATA_PATH = '.github/workflows/dependabot-metadata.yml'
-MINOR_TOOLS = {'autoprefixer', 'crittr', 'postcss', 'postcss-lab-function', 'sass'}
+ECOSYSTEMS = {'npm_and_yarn', 'composer', 'github_actions'}
+STABLE_VERSION = re.compile(r'^v?([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:\+[0-9A-Za-z.-]+)?$')
 PATCH = 'version-update:semver-patch'
 MINOR = 'version-update:semver-minor'
 TITLE = re.compile(r'^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([^\r\n()]+\))?!?: [^\r\n]+$')
@@ -44,8 +45,16 @@ def eligible(pr, repo, branch, sha):
             and TITLE.fullmatch(pr.get('title', '')) is not None)
 
 
-def allowed(metadata, dev_dependencies):
-    """Every dependency must qualify; a mixed group never bypasses manual review."""
+def stable_minor(dependency):
+    before = STABLE_VERSION.fullmatch(str(dependency.get('prevVersion', '')))
+    after = STABLE_VERSION.fullmatch(str(dependency.get('newVersion', '')))
+    return (before is not None and after is not None
+            and int(before[1]) >= 1 and before[1] == after[1]
+            and int(after[2]) > int(before[2]))
+
+
+def allowed(metadata):
+    """All members must qualify; major, unstable and unknown updates stay manual."""
     if not isinstance(metadata, dict) or metadata.get('maintainer-changes') != 'false':
         return False
     try:
@@ -57,15 +66,18 @@ def allowed(metadata, dev_dependencies):
     if metadata.get('update-type') not in {PATCH, MINOR}:
         return False
     for dependency in dependencies:
-        if not isinstance(dependency, dict) or dependency.get('maintainerChanges') is not False:
+        if (not isinstance(dependency, dict) or dependency.get('maintainerChanges') is not False
+                or dependency.get('packageEcosystem') not in ECOSYSTEMS
+                or not isinstance(dependency.get('dependencyName'), str)
+                or not dependency['dependencyName']):
+            return False
+        if any(re.match(r'^v?\d+\.\d+(?:\.\d+)?-', str(dependency.get(key, '')))
+               for key in ['prevVersion', 'newVersion']):
             return False
         kind = dependency.get('updateType')
         if kind == PATCH:
             continue
-        if (kind != MINOR or dependency.get('packageEcosystem') != 'npm_and_yarn'
-                or dependency.get('directory') != '/'
-                or dependency.get('dependencyType') != 'direct:development'
-                or dependency.get('dependencyName') not in MINOR_TOOLS & set(dev_dependencies)):
+        if kind != MINOR or metadata['update-type'] != MINOR or not stable_minor(dependency):
             return False
     return True
 
@@ -115,7 +127,7 @@ def verified_receipt(repo, number, sha):
 
 def successful_ci(repo, pr, sha):
     query = urllib.parse.urlencode({'head_sha': sha, 'event': 'pull_request', 'per_page': 100})
-    runs = api('repos/' + repo + '/actions/workflows/ci.yml/runs?' + query)['workflow_runs']
+    runs = api('repos/' + repo + '/actions/workflows/' + CI_PATH.rsplit('/', 1)[-1] + '/runs?' + query)['workflow_runs']
     # The newest attempt must pass; an older green run cannot hide a failed rerun.
     runs.sort(key=lambda run: (run['run_number'], run['run_attempt']), reverse=True)
     if not runs:
@@ -135,21 +147,21 @@ def successful_ci(repo, pr, sha):
 def dispatch_main(repo, branch):
     sha = api('repos/' + repo + '/commits/' + urllib.parse.quote(branch, safe=''))['sha']
     query = urllib.parse.urlencode({'head_sha': sha, 'per_page': 100})
-    runs = api('repos/' + repo + '/actions/workflows/ci.yml/runs?' + query)['workflow_runs']
+    runs = api('repos/' + repo + '/actions/workflows/' + CI_PATH.rsplit('/', 1)[-1] + '/runs?' + query)['workflow_runs']
     if any(run.get('head_branch') == branch and run.get('event') in {'push', 'workflow_dispatch'}
            and (run.get('status') != 'completed' or run.get('conclusion') == 'success') for run in runs):
         print('Main CI already exists for ' + sha)
         return
-    api('repos/' + repo + '/actions/workflows/ci.yml/dispatches', 'POST', {'ref': branch})
+    api('repos/' + repo + '/actions/workflows/' + CI_PATH.rsplit('/', 1)[-1] + '/dispatches', 'POST', {'ref': branch})
     print('Dispatched main CI for ' + sha)
 
 
-def merge_one(repo, branch, number, sha, dev_dependencies):
+def merge_one(repo, branch, number, sha):
     pr = api('repos/' + repo + '/pulls/' + str(number))
     if not eligible(pr, repo, branch, sha):
         return
     receipt = verified_receipt(repo, number, sha)
-    if not receipt or not allowed(receipt['metadata'], dev_dependencies):
+    if not receipt or not allowed(receipt['metadata']):
         print('Keeping update manual: no eligible verified metadata for #' + str(number))
         return
     if not successful_ci(repo, pr, sha):
@@ -166,6 +178,9 @@ def merge_one(repo, branch, number, sha, dev_dependencies):
     if not eligible(current, repo, branch, sha) or current.get('state') != 'open':
         return
     if current['base']['sha'] != pr['base']['sha']:
+        return
+    if current.get('mergeable') is False or current.get('mergeable_state') in {'dirty', 'blocked', 'behind'}:
+        print('Waiting for GitHub merge requirements or a clean rebase for #' + str(number))
         return
     merged = api('repos/' + repo + '/pulls/' + str(number) + '/merge', 'PUT', {
         'sha': sha, 'merge_method': 'squash',
@@ -211,9 +226,8 @@ def main():
             if artifact['name'].startswith('dependabot-metadata-'):
                 receipt = read_receipt(repo, artifact)
                 candidates.append((receipt['pr'], receipt['sha']))
-    dev_dependencies = json.loads(Path('package.json').read_text()).get('devDependencies', {})
     for number, sha in candidates:
-        merge_one(repo, branch, number, sha, dev_dependencies)
+        merge_one(repo, branch, number, sha)
 
 
 if __name__ == '__main__':

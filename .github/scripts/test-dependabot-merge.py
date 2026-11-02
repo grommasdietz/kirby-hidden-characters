@@ -28,7 +28,8 @@ def metadata(kind=merge.PATCH, name='postcss', ecosystem='npm_and_yarn', depende
     return {'maintainer-changes': 'false', 'update-type': kind,
             'updated-dependencies-json': json.dumps([{
                 'dependencyName': name, 'dependencyType': dependency_type, 'updateType': kind,
-                'packageEcosystem': ecosystem, 'directory': '/', 'maintainerChanges': False}])}
+                'packageEcosystem': ecosystem, 'directory': '/', 'maintainerChanges': False,
+                'prevVersion': '1.0.0', 'newVersion': '1.1.0' if kind == merge.MINOR else '1.0.1'}])}
 
 
 def run():
@@ -39,40 +40,63 @@ def run():
 
 
 class PolicyTests(unittest.TestCase):
-    def test_runtime_patches_and_selected_development_minors(self):
-        self.assertTrue(merge.allowed(metadata(name='getkirby/cms', ecosystem='composer', dependency_type='direct:production'), {}))
-        self.assertTrue(merge.allowed(metadata(merge.MINOR), {'postcss': '^8'}))
+    def test_patches_and_stable_minors_cover_runtime_development_and_playgrounds(self):
+        for ecosystem in ['npm_and_yarn', 'composer', 'github_actions']:
+            for kind in [merge.PATCH, merge.MINOR]:
+                for dep_type in ['direct:development', 'direct:production', 'indirect']:
+                    with self.subTest(ecosystem=ecosystem, kind=kind, dep_type=dep_type):
+                        data = metadata(kind, 'package', ecosystem, dep_type)
+                        self.assertTrue(merge.allowed(data))
+                        deps = json.loads(data['updated-dependencies-json'])
+                        deps[0]['directory'] = '/playground'
+                        data['updated-dependencies-json'] = json.dumps(deps)
+                        self.assertTrue(merge.allowed(data))
 
-    def test_major_runtime_minor_and_unknown_are_manual(self):
-        for kind, name, dep_type in [
-                ('version-update:semver-major', 'postcss', 'direct:development'),
-                (merge.MINOR, 'vite', 'direct:development'),
-                (merge.MINOR, 'postcss', 'direct:production'),
-                ('', 'postcss', 'direct:development')]:
-            with self.subTest(kind=kind, name=name, dep_type=dep_type):
-                self.assertFalse(merge.allowed(metadata(kind, name, dependency_type=dep_type), {'postcss': '^8', 'vite': '^8'}))
-        self.assertFalse(merge.allowed(metadata(merge.MINOR), {}))
-        self.assertFalse(merge.allowed(metadata(merge.MINOR, ecosystem='composer'), {'postcss': '^8'}))
+    def test_major_unstable_unknown_and_inconsistent_metadata_remain_manual(self):
+        self.assertFalse(merge.allowed(metadata('version-update:semver-major')))
+        self.assertFalse(merge.allowed(metadata('')))
+        self.assertFalse(merge.allowed(metadata(ecosystem='unknown')))
+        for before, after in [('0.2.0', '0.3.0'), ('1.0.0', '2.0.0'),
+                              ('1.0.0', '1.1.0-beta.1'), ('1.0.0-rc.1', '1.1.0'),
+                              ('1.0.0', ''), ('', '1.1.0'), ('dev-main', 'dev-main'),
+                              ('1.1.0', '1.0.0'), ('1.1.0', '1.1.1')]:
+            with self.subTest(before=before, after=after):
+                data = metadata(merge.MINOR)
+                deps = json.loads(data['updated-dependencies-json'])
+                deps[0].update(prevVersion=before, newVersion=after)
+                data['updated-dependencies-json'] = json.dumps(deps)
+                self.assertFalse(merge.allowed(data))
+        data = metadata()
+        deps = json.loads(data['updated-dependencies-json'])
+        deps[0].update(prevVersion='1.0.0-beta.1', newVersion='1.0.0-beta.2')
+        data['updated-dependencies-json'] = json.dumps(deps)
+        self.assertFalse(merge.allowed(data))
+        data = metadata(merge.MINOR)
+        data['update-type'] = merge.PATCH
+        self.assertFalse(merge.allowed(data))
 
     def test_mixed_group_and_maintainer_change_are_manual(self):
         data = metadata(merge.MINOR)
         deps = json.loads(data['updated-dependencies-json'])
-        deps.append(dict(deps[0], dependencyName='vite'))
+        deps.append(dict(deps[0], dependencyName='other', updateType=merge.PATCH))
         data['updated-dependencies-json'] = json.dumps(deps)
-        self.assertFalse(merge.allowed(data, {'postcss': '^8', 'vite': '^8'}))
+        self.assertTrue(merge.allowed(data))
+        deps[-1]['updateType'] = 'version-update:semver-major'
+        data['updated-dependencies-json'] = json.dumps(deps)
+        self.assertFalse(merge.allowed(data))
         data = metadata()
         data['maintainer-changes'] = 'true'
-        self.assertFalse(merge.allowed(data, {}))
+        self.assertFalse(merge.allowed(data))
         data = metadata()
         deps = json.loads(data['updated-dependencies-json'])
         deps[0]['maintainerChanges'] = True
         data['updated-dependencies-json'] = json.dumps(deps)
-        self.assertFalse(merge.allowed(data, {}))
+        self.assertFalse(merge.allowed(data))
 
     def test_malformed_metadata_is_manual(self):
         for data in [None, {}, metadata() | {'updated-dependencies-json': 'oops'},
                      metadata() | {'updated-dependencies-json': '[]'}, metadata() | {'updated-dependencies-json': '[null]'}]:
-            self.assertFalse(merge.allowed(data, {}))
+            self.assertFalse(merge.allowed(data))
 
     def test_identity_requires_bot_same_repository_current_commit_and_title(self):
         self.assertTrue(merge.eligible(pull(), REPO, 'main', SHA))
@@ -107,6 +131,18 @@ class CiTests(unittest.TestCase):
     def assert_ci(self, runs, expected):
         with patch.object(merge, 'api', return_value={'workflow_runs': runs}):
             self.assertEqual(merge.successful_ci(REPO, pull(), SHA), expected)
+
+
+class WorkflowTests(unittest.TestCase):
+    def test_nonstandard_ci_workflow_is_verified_and_dispatched(self):
+        for path in ['.github/workflows/verify.yml', '.github/workflows/commitlint.yml']:
+            with self.subTest(path=path), patch.object(merge, 'CI_PATH', path):
+                with patch.object(merge, 'api', return_value={'workflow_runs': [run()]}) as api:
+                    self.assertTrue(merge.successful_ci(REPO, pull(), SHA))
+                    self.assertIn('/workflows/' + path.rsplit('/', 1)[-1] + '/runs?', api.call_args.args[0])
+                with patch.object(merge, 'api', side_effect=[{'sha': MERGED}, {'workflow_runs': []}, {}]) as api:
+                    merge.dispatch_main(REPO, 'main')
+                    self.assertTrue(api.call_args.args[0].endswith('/workflows/' + path.rsplit('/', 1)[-1] + '/dispatches'))
 
 
 class ReceiptTests(unittest.TestCase):
@@ -146,6 +182,14 @@ class ReceiptTests(unittest.TestCase):
 
 
 class MergeTests(unittest.TestCase):
+    def test_conflicts_and_required_review_do_not_attempt_merge(self):
+        for state in ['dirty', 'blocked', 'behind']:
+            with self.subTest(state=state):
+                pr = pull() | {'mergeable_state': state}
+                with patch.object(merge, 'api', return_value=pr) as api, patch.object(merge, 'verified_receipt', return_value={'metadata': metadata()}), patch.object(merge, 'successful_ci', return_value=True):
+                    merge.merge_one(REPO, 'main', 7, SHA)
+                    self.assertFalse(any(call.args[0].endswith('/merge') for call in api.call_args_list))
+
     def test_exact_sha_merge_then_explicit_dispatch(self):
         calls = []
         def api(path, method='GET', data=None):
@@ -157,7 +201,7 @@ class MergeTests(unittest.TestCase):
             if path.endswith('/dispatches'): return {}
             self.fail(path)
         with patch.object(merge, 'api', side_effect=api), patch.object(merge, 'verified_receipt', return_value={'metadata': metadata()}), patch.object(merge, 'successful_ci', return_value=True):
-            merge.merge_one(REPO, 'main', 7, SHA, {})
+            merge.merge_one(REPO, 'main', 7, SHA)
         self.assertEqual(calls[2][1:], ('PUT', {'sha': SHA, 'merge_method': 'squash',
                                                'commit_title': 'chore(deps): update dependencies (#7)', 'commit_message': ''}))
         self.assertEqual(calls[-1][1:], ('POST', {'ref': 'main'}))
@@ -166,7 +210,7 @@ class MergeTests(unittest.TestCase):
         for receipt, ci in [(None, True), ({'metadata': metadata('version-update:semver-major')}, True),
                             ({'metadata': metadata()}, False)]:
             with patch.object(merge, 'api', return_value=pull()) as api, patch.object(merge, 'verified_receipt', return_value=receipt), patch.object(merge, 'successful_ci', return_value=ci):
-                merge.merge_one(REPO, 'main', 7, SHA, {})
+                merge.merge_one(REPO, 'main', 7, SHA)
                 self.assertEqual(api.call_count, 1)
 
     def test_pr_changed_while_job_started_never_merges(self):
@@ -174,13 +218,13 @@ class MergeTests(unittest.TestCase):
         changed = copy.deepcopy(pr)
         changed['head']['sha'] = BASE
         with patch.object(merge, 'api', side_effect=[pr, changed]) as api, patch.object(merge, 'verified_receipt', return_value={'metadata': metadata()}), patch.object(merge, 'successful_ci', return_value=True):
-            merge.merge_one(REPO, 'main', 7, SHA, {})
+            merge.merge_one(REPO, 'main', 7, SHA)
             self.assertEqual(api.call_count, 2)
 
     def test_failed_dispatch_is_recoverable_after_merge(self):
         pr = pull() | {'merged': True, 'state': 'closed', 'merge_commit_sha': MERGED}
         with patch.object(merge, 'api', side_effect=[pr, {'sha': MERGED}]), patch.object(merge, 'verified_receipt', return_value={'metadata': metadata()}), patch.object(merge, 'successful_ci', return_value=True), patch.object(merge, 'dispatch_main') as dispatch:
-            merge.merge_one(REPO, 'main', 7, SHA, {})
+            merge.merge_one(REPO, 'main', 7, SHA)
             dispatch.assert_called_once_with(REPO, 'main')
 
     def test_retry_does_not_duplicate_main_ci(self):
