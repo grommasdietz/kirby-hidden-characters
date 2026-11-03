@@ -123,6 +123,9 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 3
+      - name: Verify release toolchain
+        if: steps.changes.outputs.full == 'true'
+        run: node --test tools/release-toolchain.test.mjs tools/third-party-notices.test.mjs
     outputs:
       full: ${{ steps.changes.outputs.full }}
       release: ${{ steps.changes.outputs.release }}

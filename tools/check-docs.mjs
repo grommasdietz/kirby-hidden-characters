@@ -104,7 +104,7 @@ for (const file of docs) {
 
 const packageScripts = fs.existsSync(path.join(root, "package.json")) ? JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).scripts ?? {} : {};
 const composerScripts = JSON.parse(fs.readFileSync(path.join(root, "composer.json"), "utf8")).scripts ?? {};
-const pnpmBuiltins = new Set(["install", "update", "add", "remove", "exec", "dlx", "why", "list", "config", "pack", "audit", "outdated"]);
+const pnpmBuiltins = new Set(["install", "update", "add", "remove", "exec", "dlx", "why", "list", "config", "pack", "licenses", "audit", "outdated"]);
 const composerBuiltins = new Set(["install", "update", "require", "remove", "validate", "check-platform-reqs", "show", "dump-autoload", "global", "config", "exec", "audit", "outdated"]);
 
 function documentedCode(content) {

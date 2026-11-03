@@ -95,3 +95,12 @@ CI and dependency-only maintenance. Publishing is serialized and is not cancelle
 by a newer verification run.
 An explicit CI dispatch with `force_release` enabled can retry publishing after
 a maintenance commit.
+
+The release toolchain excludes Semantic Release’s unused npm publishing adapter.
+These plugins publish GitHub/Composer releases, not npm packages. CI loads the
+actual configured plugin pipeline to verify that publishing remains available.
+Re-enable the adapter deliberately if npm publication is introduced.
+
+Third-party notices use `pnpm licenses list --prod --json --long`; the generator
+preserves manual notices and fails without replacing them when license collection
+fails. It does not download a separate license-reporting tool.

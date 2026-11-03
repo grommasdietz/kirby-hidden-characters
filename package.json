@@ -52,7 +52,6 @@
     "globals": "^17.13.0",
     "husky": "^9.1.7",
     "kirbyup": "^3.5.0",
-    "license-checker": "^25.0.1",
     "markdownlint-cli": "^0.50.0",
     "prettier": "^3.9.10",
     "semantic-release": "^25.0.9",
