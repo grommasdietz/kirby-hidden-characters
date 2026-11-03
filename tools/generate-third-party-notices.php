@@ -9,16 +9,6 @@ $outFile = $root . '/THIRD_PARTY_NOTICES.md';
 
 $sections = [];
 
-function packageNameFromLicenseCheckerKey(string $key): string
-{
-    $separator = strrpos($key, '@');
-    if ($separator === false || $separator === 0) {
-        return $key;
-    }
-
-    return substr($key, 0, $separator);
-}
-
 // -----------------------------
 // Composer (PHP)
 // -----------------------------
@@ -48,69 +38,51 @@ if (is_file($composerLock)) {
 // -----------------------------
 // Node (JS)
 // -----------------------------
-// Requires installed node_modules.
-$rootPackageKey = null;
-$hasNodeProductionDependencies = false;
-$packageJsonPath = $root . '/package.json';
-if (is_file($packageJsonPath)) {
-    $decoded = json_decode((string) file_get_contents($packageJsonPath), true);
-    if (is_array($decoded)) {
-        $dependencies = $decoded['dependencies'] ?? [];
-        $optionalDependencies = $decoded['optionalDependencies'] ?? [];
-        $hasNodeProductionDependencies =
-            (is_array($dependencies) && count($dependencies) > 0) ||
-            (is_array($optionalDependencies) && count($optionalDependencies) > 0);
-
-        if (is_string($decoded['name'] ?? null) && is_string($decoded['version'] ?? null)) {
-            $rootPackageKey = $decoded['name'] . '@' . $decoded['version'];
-        }
-    }
-}
-
-$nodeJson = null;
-$nodeCommands = [
-    'pnpm exec license-checker --production --json',
-    'npm exec --yes license-checker --production --json',
-    'npx -y license-checker --production --json',
-];
+// Use the pinned package manager; never download an unlocked license tool.
+$packageJson = json_decode((string) file_get_contents($root . '/package.json'), true, 512, JSON_THROW_ON_ERROR);
+$requiredDependencies = $packageJson['dependencies'] ?? [];
+$optionalDependencies = $packageJson['optionalDependencies'] ?? [];
+$hasNodeProductionDependencies = count($requiredDependencies) > 0 || count($optionalDependencies) > 0;
 
 if ($hasNodeProductionDependencies) {
-    foreach ($nodeCommands as $cmd) {
-        $output = [];
-        $exit = 0;
-        exec($cmd . ' 2>/dev/null', $output, $exit);
-        if ($exit === 0 && count($output) > 0) {
-            $nodeJson = implode("\n", $output);
-            break;
-        }
+    $output = [];
+    $exit = 0;
+    $command = 'pnpm --dir ' . escapeshellarg($root) . ' licenses list --prod --json --long';
+    exec($command . ' 2>/dev/null', $output, $exit);
+    if ($exit !== 0) {
+        throw new RuntimeException('Could not read production dependency licenses. Run pnpm install first.');
     }
-}
 
-if (is_string($nodeJson)) {
-    $decoded = json_decode($nodeJson, true);
-    if (is_array($decoded)) {
-        $items = [];
-        foreach ($decoded as $key => $meta) {
-            if ($rootPackageKey !== null && $key === $rootPackageKey) {
+    $licenses = json_decode(implode("\n", $output), true, 512, JSON_THROW_ON_ERROR);
+    if (!is_array($licenses) || (count($requiredDependencies) > 0 && count($licenses) === 0)) {
+        throw new RuntimeException('The production dependency license report is empty or invalid.');
+    }
+
+    $items = [];
+    foreach ($licenses as $license => $packages) {
+        if (!is_array($packages)) {
+            throw new RuntimeException('The production dependency license report has an invalid package group.');
+        }
+        foreach ($packages as $package) {
+            $name = $package['name'] ?? null;
+            if (!is_string($name)) {
+                throw new RuntimeException('The production dependency license report has an invalid package.');
+            }
+            if ($name === ($packageJson['name'] ?? null)) {
                 continue;
             }
-
-            // key format: name@version
-            $packageName = packageNameFromLicenseCheckerKey((string) $key);
-            $license = $meta['licenses'] ?? 'unknown';
-            $repo = $meta['repository'] ?? ($meta['url'] ?? '');
-
-            $line = "- {$packageName} — {$license}";
-            if (is_string($repo) && $repo !== '') {
-                $line .= " — {$repo}";
+            $line = "- {$name} — {$license}";
+            $homepage = $package['homepage'] ?? '';
+            if (is_string($homepage) && $homepage !== '') {
+                $line .= " — {$homepage}";
             }
             $items[] = $line;
         }
+    }
 
-        sort($items, SORT_STRING);
-        if (count($items)) {
-            $sections[] = "## JS dependencies (Node)\n\n" . implode("\n", $items);
-        }
+    sort($items, SORT_STRING);
+    if (count($items) > 0) {
+        $sections[] = "## JS dependencies (Node)\n\n" . implode("\n", array_unique($items));
     }
 }
 
