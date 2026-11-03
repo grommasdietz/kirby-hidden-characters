@@ -1006,7 +1006,13 @@ test.describe("Panel: hidden-characters rendering", () => {
       const overlay = input.locator("+ .gd-hidden-characters");
       const marker = overlay
         .locator('space, [data-character="space"]').first();
-      await expectMarkerPaint(page, marker, [40, 120, 200], [255, 255, 255], 0.65);
+      await expectMarkerPaint(
+        page,
+        marker,
+        [40, 120, 200],
+        [255, 255, 255],
+        0.65,
+      );
       await expect(input).toHaveCSS("color", "rgb(30, 40, 50)");
       if (input === textarea) await expect(input).toHaveValue("One two");
       else await expect(input).toHaveText("One two");
