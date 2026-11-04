@@ -43,12 +43,13 @@ function minimumCaretVersion(mixed $constraint): ?array
     return [(int) $matches[1], (int) $matches[2]];
 }
 
-function latestSemverTag(string $root): ?string
+function latestSemverTag(string $root, string $version): ?string
 {
+    $pattern = 'v' . explode('.', $version)[0] . '.*';
     $nullDevice = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
 
     exec(
-        'git -C ' . escapeshellarg($root) . ' tag --list ' . escapeshellarg('v[0-9]*') . ' --sort=-v:refname 2>' . $nullDevice,
+        'git -C ' . escapeshellarg($root) . ' tag --list ' . escapeshellarg($pattern) . ' --merged HEAD --sort=-v:refname 2>' . $nullDevice,
         $tags,
         $exitCode,
     );
@@ -198,7 +199,7 @@ if (is_array($initConfig) && array_key_exists('version', $initConfig)) {
 $isTemplate = is_array($initConfig) && ($initConfig['initialized'] ?? null) === false;
 
 if (!$isTemplate && is_string($composerVersion)) {
-    $latestTag = latestSemverTag($root);
+    $latestTag = latestSemverTag($root, $composerVersion);
     if ($latestTag !== null && version_compare($composerVersion, $latestTag, '<')) {
         $errors[] = "Manifest version {$composerVersion} is older than latest Git tag v{$latestTag}.";
     }

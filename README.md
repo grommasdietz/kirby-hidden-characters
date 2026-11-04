@@ -1,5 +1,7 @@
 # Kirby Hidden Characters
 
+> Kirby 6 preview branch. The stable Kirby 5 release remains on `main`.
+
 [Kirby CMS](https://getkirby.com) plugin to visually show hidden characters like spaces, soft hyphens, tabs, line breaks, or paragraph endings in focused [writer](https://getkirby.com/docs/reference/panel/fields/writer), [textarea](https://getkirby.com/docs/reference/panel/fields/textarea), and [text fields](https://getkirby.com/docs/reference/panel/fields/text). The dimmed visual feedback is inspired by Adobe InDesign's hidden-characters mode, providing a familiar experience for content editors.
 
 ![Cover image showing an example of the plugin in use](/.github/assets/hero-image.png)
@@ -14,11 +16,11 @@ For Kirby 5, use version 2.x.
 ## Installation
 
 ```bash
-composer require grommasdietz/kirby-hidden-characters
+composer require grommasdietz/kirby-hidden-characters:dev-kirby-6
 ```
 
 > [!TIP]
-> If you don’t use Composer, you can download this repository and copy it to `site/plugins/kirby-hidden-characters`.
+> If you don’t use Composer, you can download [this preview branch](https://github.com/grommasdietz/kirby-hidden-characters/archive/refs/heads/kirby-6.zip) and copy it to `site/plugins/kirby-hidden-characters`.
 
 ## Quickstart
 
@@ -33,8 +35,6 @@ Full reference for [usage](docs/usage/index.md), [contributions](docs/contribut
 ## Credits
 
 The original mirroring approach was adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
-
-[Ahmet Bora (@afbora)](https://github.com/afbora) contributed the Kirby 6 migration, compatibility review and maintenance suggestions in [#82](https://github.com/grommasdietz/kirby-hidden-characters/pull/82).
 
 ---
 
@@ -52,7 +52,7 @@ See [SECURITY.md](SECURITY.md) for security policies and reporting vulnerabilit
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations. Thanks to [everyone who contributes](https://github.com/grommasdietz/kirby-hidden-characters/graphs/contributors).
 
 ---
 
