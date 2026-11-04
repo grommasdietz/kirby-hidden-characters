@@ -140,7 +140,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: '8.2'
+          - php-version: '8.3'
             full-suite: false
           - php-version: '8.4'
             full-suite: true
@@ -221,6 +221,7 @@ jobs:
   push:
     branches:
       - main
+      - kirby-6
   pull_request:
     types:
       - opened

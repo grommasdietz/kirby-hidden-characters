@@ -131,13 +131,13 @@ if ($package !== null) {
     if (($package['engines']['pnpm'] ?? null) !== '>=11.28.10 <12') {
         $errors[] = 'engines.pnpm must select the shared pnpm 11 tooling major (>=11.28.10 <12).';
     }
-    if (($package['engines']['node'] ?? null) !== '>=22.22.2 <23') {
-        $errors[] = 'package.json must select Node 22.22.2 or newer within the shared Node 22 tooling major.';
+    if (($package['engines']['node'] ?? null) !== '>=24 <25') {
+        $errors[] = 'package.json must select Node 24 for the Kirby 6 build tooling.';
     }
 }
 
-if (trim((string) @file_get_contents($root . '/.node-version')) !== '22') {
-    $errors[] = '.node-version must select Node 22.';
+if (trim((string) @file_get_contents($root . '/.node-version')) !== '24') {
+    $errors[] = '.node-version must select Node 24.';
 }
 
 if ($composer !== null && $playground !== null) {

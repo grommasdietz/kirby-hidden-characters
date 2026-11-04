@@ -6,8 +6,10 @@
 
 ## Requirements
 
-- Kirby 5.2+
-- PHP 8.2+
+- Kirby 6.0+
+- PHP 8.3+
+
+For Kirby 5, use version 2.x.
 
 ## Installation
 
@@ -32,7 +34,7 @@ Full reference for [usage](docs/usage/index.md), [contributions](docs/contribut
 
 The original mirroring approach was adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
 
-[Ahmet Bora (@afbora)](https://github.com/afbora) contributed compatibility review and maintenance suggestions in [#82](https://github.com/grommasdietz/kirby-hidden-characters/pull/82).
+[Ahmet Bora (@afbora)](https://github.com/afbora) contributed the Kirby 6 migration, compatibility review and maintenance suggestions in [#82](https://github.com/grommasdietz/kirby-hidden-characters/pull/82).
 
 ---
 

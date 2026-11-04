@@ -1,13 +1,13 @@
 {
   "name": "kirby-hidden-characters",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Kirby CMS plugin for visualising hidden characters in the Panel",
   "license": "MIT",
   "packageManager": "pnpm@11.28.10+sha512.672216f06e15c109b85471d49d3fbed17e6f03ead258df08c2bf5b4a5c33321ebfbf59476bce81325efada16ace0ac78548fd0bfcd7a51369e939182a3dd50e4",
   "scripts": {
     "setup": "pnpm install --frozen-lockfile && pnpm exec playwright install chromium",
     "update:dev": "pnpm update --dev",
-    "dev": "kirbyup serve src/index.js",
+    "dev": "kirbyup dev src/index.js",
     "build": "kirbyup src/index.js",
     "build:check": "node tools/check-generated-assets.mjs index.js index.css",
     "fonts:build": "python3 tools/build-writer-font.py",
@@ -51,7 +51,7 @@
     "eslint": "^10.14.0",
     "globals": "^17.13.0",
     "husky": "^9.1.7",
-    "kirbyup": "^3.5.0",
+    "kirbyup": "^4.0.0-beta.1",
     "markdownlint-cli": "^0.50.0",
     "prettier": "^3.9.10",
     "semantic-release": "^25.0.9",
@@ -59,7 +59,7 @@
   },
   "private": true,
   "engines": {
-    "node": ">=22.22.2 <23",
+    "node": ">=24 <25",
     "pnpm": ">=11.28.10 <12"
   }
 }

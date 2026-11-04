@@ -7,13 +7,13 @@
     }
   ],
   "require": {
-    "php": "^8.2",
+    "php": "^8.3",
     "grommasdietz/kirby-hidden-characters": "*@dev",
-    "getkirby/cms": "^5.2"
+    "getkirby/cms": "^6.0@beta"
   },
   "config": {
     "platform": {
-      "php": "8.2.0"
+      "php": "8.3.0"
     },
     "allow-plugins": {
       "getkirby/composer-installer": true,
