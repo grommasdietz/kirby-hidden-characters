@@ -245,19 +245,3 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
-
-/* Keep the native textarea caption treatment separate from Writer colors. */
-.k-block-figure-caption
-  .k-writer
-  .gd-hidden-characters[data-tag="textarea"]
-  break::before,
-.k-block-figure-caption
-  .k-writer
-  .gd-hidden-characters[data-tag="textarea"]
-  shy::before,
-.k-block-figure-caption
-  .k-writer
-  .gd-hidden-characters[data-tag="textarea"]
-  tab::before {
-  color: var(--color-background) !important;
-}
