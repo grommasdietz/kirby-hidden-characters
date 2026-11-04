@@ -34,7 +34,7 @@ Full reference for [usage](docs/usage/index.md), [contributions](docs/contribut
 
 ## Credits
 
-The original mirroring approach was adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete). Thank you!
+The original mirroring approach was adapted from the [Kirby Soft Hyphens](https://github.com/hansipete/kirby-soft-hyphens) plugin by [@hansipete](https://github.com/hansipete).
 
 ---
 
@@ -52,7 +52,7 @@ See [SECURITY.md](SECURITY.md) for security policies and reporting vulnerabilit
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations. Thanks to [everyone who contributes](https://github.com/grommasdietz/kirby-hidden-characters/graphs/contributors).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations.
 
 ---
 
