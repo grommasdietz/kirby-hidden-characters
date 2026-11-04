@@ -45,8 +45,10 @@ function minimumCaretVersion(mixed $constraint): ?array
 
 function latestSemverTag(string $root): ?string
 {
+    $nullDevice = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
+
     exec(
-        'git -C ' . escapeshellarg($root) . ' tag --list ' . escapeshellarg('v[0-9]*') . ' --sort=-v:refname 2>/dev/null',
+        'git -C ' . escapeshellarg($root) . ' tag --list ' . escapeshellarg('v[0-9]*') . ' --sort=-v:refname 2>' . $nullDevice,
         $tags,
         $exitCode,
     );

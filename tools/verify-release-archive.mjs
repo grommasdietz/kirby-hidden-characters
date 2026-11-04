@@ -75,7 +75,12 @@ function archiveCurrentWorktree() {
 try {
   archiveCurrentWorktree();
 
-  const entries = execFileSync("tar", ["-tf", archivePath], { encoding: "utf8" })
+  // A relative filename also works with GNU tar on Windows, where an absolute
+  // drive path such as C:\\… would otherwise be interpreted as a remote host.
+  const entries = execFileSync("tar", ["-tf", path.basename(archivePath)], {
+    cwd: temporaryDirectory,
+    encoding: "utf8",
+  })
     .trim()
     .split(/\r?\n/)
     .filter(Boolean)
