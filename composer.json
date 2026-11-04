@@ -1,7 +1,7 @@
 {
   "name": "grommasdietz/kirby-hidden-characters",
   "description": "Kirby CMS plugin for visualising hidden characters in the Panel",
-  "version": "2.1.4",
+  "version": "2.2.1",
   "type": "kirby-plugin",
   "license": "MIT",
   "authors": [
@@ -80,5 +80,8 @@
     "post-update-cmd": "@notices:generate",
     "update:dev": "@composer update phpunit/phpunit vimeo/psalm friendsofphp/php-cs-fixer getkirby/cms --with-all-dependencies",
     "playground:update": "@composer --working-dir=playground update --with-all-dependencies"
+  },
+  "conflict": {
+    "getkirby/cms": "<6.0 || >=7.0"
   }
 }

@@ -2,6 +2,16 @@
 
 Versions are not changed manually during normal development. Conventional Commits on `main` are analyzed by Semantic Release.
 
+For breaking changes, include a `BREAKING CHANGE:` footer in the commit message that reaches `main`. The default Angular parser does not recognize `!` in a header such as `feat!:` on its own:
+
+```text
+feat(panel): support the next Kirby major
+
+BREAKING CHANGE: This release requires the new Kirby Panel runtime.
+```
+
+When merging with squash, preserve that footer in the squash commit. Verify the release toolchain with `node --test tools/release-toolchain.test.mjs` before publishing changes to release configuration or breaking-change handling.
+
 The release transaction:
 
 1. calculates the next semantic version;

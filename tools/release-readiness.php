@@ -45,8 +45,10 @@ function minimumCaretVersion(mixed $constraint): ?array
 
 function latestSemverTag(string $root): ?string
 {
+    $nullDevice = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
+
     exec(
-        'git -C ' . escapeshellarg($root) . ' tag --list ' . escapeshellarg('v[0-9]*') . ' --sort=-v:refname 2>/dev/null',
+        'git -C ' . escapeshellarg($root) . ' tag --list ' . escapeshellarg('v[0-9]*') . ' --sort=-v:refname 2>' . $nullDevice,
         $tags,
         $exitCode,
     );
@@ -123,19 +125,19 @@ if ($package !== null) {
     if (($package['private'] ?? false) !== true) {
         $errors[] = 'package.json must remain private because it is tooling-only.';
     }
-    if (preg_match('/^pnpm@12\./', (string) ($package['packageManager'] ?? '')) !== 1) {
-        $errors[] = 'packageManager must use the shared pnpm 12 baseline.';
+    if (preg_match('/^pnpm@11\./', (string) ($package['packageManager'] ?? '')) !== 1) {
+        $errors[] = 'packageManager must use the shared pnpm 11 baseline.';
     }
-    if (($package['engines']['pnpm'] ?? null) !== '>=12 <13') {
-        $errors[] = 'engines.pnpm must select the shared pnpm 12 tooling major (>=12 <13).';
+    if (($package['engines']['pnpm'] ?? null) !== '>=11.28.10 <12') {
+        $errors[] = 'engines.pnpm must select the shared pnpm 11 tooling major (>=11.28.10 <12).';
     }
-    if (($package['engines']['node'] ?? null) !== '>=22.14 <23') {
-        $errors[] = 'package.json must select Node 22.14 or newer within the shared Node 22 tooling major.';
+    if (($package['engines']['node'] ?? null) !== '>=24 <25') {
+        $errors[] = 'package.json must select Node 24 for the Kirby 6 build tooling.';
     }
 }
 
-if (trim((string) @file_get_contents($root . '/.node-version')) !== '22') {
-    $errors[] = '.node-version must select Node 22.';
+if (trim((string) @file_get_contents($root . '/.node-version')) !== '24') {
+    $errors[] = '.node-version must select Node 24.';
 }
 
 if ($composer !== null && $playground !== null) {

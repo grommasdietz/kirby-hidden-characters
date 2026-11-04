@@ -1,3 +1,5 @@
+# pnpm 11 keeps the lockfile readable by GitHub dependency scanning.
+# Revisit the pin when GitHub supports pnpm 12 multi-document lockfiles.
 packages:
   - .
 
@@ -9,3 +11,9 @@ nodeLinker: isolated
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true
+overrides:
+  # Security fixes for installed tooling; selectors stop matching fixed upstream dependencies.
+  semantic-release>@semantic-release/npm: "-"
+  minimatch@>=9 <11.0.1: ^11.0.1
+  re2js@2.8.6: ^2.8.7
+  katex@<0.18.2: ^0.18.2

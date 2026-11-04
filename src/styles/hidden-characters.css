@@ -79,14 +79,14 @@
 }
 
 .gd-hidden-characters {
-  --gd-hc-marker-color: rgba(0, 0, 0, 0.4);
+  --gd-hc-default-marker-color: rgb(0, 0, 0);
   opacity: 0;
   pointer-events: none;
   z-index: 1;
 }
 
 :where([data-theme="dark"]) .gd-hidden-characters {
-  --gd-hc-marker-color: rgba(255, 255, 255, 0.4);
+  --gd-hc-default-marker-color: rgb(255, 255, 255);
 }
 
 /* --------------------------------------------------------------------------
@@ -109,7 +109,7 @@
 }
 
 .gd-hidden-character-marker::before {
-  color: var(--gd-hc-source-color, currentColor);
+  color: var(--gd-hc-marker-color, var(--gd-hc-source-color, currentColor));
   content: attr(data-glyph);
   display: inline-block;
   font-family: "hidden-characters-writer", var(--font-sans) !important;
@@ -118,7 +118,7 @@
   font-weight: normal;
   left: 50%;
   line-height: 1;
-  opacity: var(--gd-hc-writer-marker-opacity, 0.4);
+  opacity: var(--gd-hc-marker-opacity, var(--gd-hc-writer-marker-opacity, 0.4));
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -209,10 +209,11 @@
 .gd-hidden-characters[data-tag="textarea"] shy::before,
 .gd-hidden-characters[data-tag="textarea"] tab::before,
 .gd-hidden-characters[data-tag="textarea"] space::before {
-  color: var(--gd-hc-marker-color);
+  color: var(--gd-hc-marker-color, var(--gd-hc-default-marker-color));
   display: inline-block;
   font-family: "hidden-characters-writer", var(--font-sans) !important;
   font-weight: normal;
+  opacity: var(--gd-hc-marker-opacity, 0.4);
   position: absolute;
   visibility: visible;
   width: max-content;
@@ -243,20 +244,4 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-}
-
-/* Keep the native textarea caption treatment separate from Writer colors. */
-.k-block-figure-caption
-  .k-writer
-  .gd-hidden-characters[data-tag="textarea"]
-  break::before,
-.k-block-figure-caption
-  .k-writer
-  .gd-hidden-characters[data-tag="textarea"]
-  shy::before,
-.k-block-figure-caption
-  .k-writer
-  .gd-hidden-characters[data-tag="textarea"]
-  tab::before {
-  color: var(--panel-color-back) !important;
 }
