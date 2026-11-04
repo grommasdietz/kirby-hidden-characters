@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33da3ba554acd751e97d4b534ea73225",
+    "content-hash": "23e49c69799d00ee1e66cb5322b12ad1",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -544,7 +544,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "f5c75d3b562605b09ecb8b6e6e796b3a76d82aa1"
+                "reference": "8aba6bd6f605413ce3056dc0715a7fa1d0362c87"
             },
             "require": {
                 "getkirby/composer-installer": "^1.2",
@@ -557,6 +557,7 @@
                 "friendsofphp/php-cs-fixer": "^3.93",
                 "getkirby/cms": "^6.0@beta",
                 "phpunit/phpunit": "^12.5",
+                "symfony/yaml": "7.4.23 as 7.4.21",
                 "vimeo/psalm": "^6.19.1"
             },
             "type": "kirby-plugin",
@@ -1433,16 +1434,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v7.4.21",
+            "version": "v7.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "044907929c7999814378be22da34722c7a86bad4"
+                "reference": "1e601207ffe627a2e621faa9d661f1d32dcf1cec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/044907929c7999814378be22da34722c7a86bad4",
-                "reference": "044907929c7999814378be22da34722c7a86bad4",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/1e601207ffe627a2e621faa9d661f1d32dcf1cec",
+                "reference": "1e601207ffe627a2e621faa9d661f1d32dcf1cec",
                 "shasum": ""
             },
             "require": {
@@ -1485,7 +1486,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v7.4.21"
+                "source": "https://github.com/symfony/yaml/tree/v7.4.23"
             },
             "funding": [
                 {
@@ -1505,12 +1506,19 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-12T12:34:30+00:00",
-            "published-time": "2026-10-14T06:46:00+00:00"
+            "time": "2026-11-04T08:27:22+00:00",
+            "published-time": "2026-11-04T11:28:41+00:00"
         }
     ],
     "packages-dev": [],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "symfony/yaml",
+            "version": "7.4.23.0",
+            "alias": "7.4.21",
+            "alias_normalized": "7.4.21.0"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "getkirby/cms": 10,

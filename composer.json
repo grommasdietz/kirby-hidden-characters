@@ -33,7 +33,8 @@
     "phpunit/phpunit": "^12.5",
     "vimeo/psalm": "^6.19.1",
     "friendsofphp/php-cs-fixer": "^3.93",
-    "getkirby/cms": "^6.0@beta"
+    "getkirby/cms": "^6.0@beta",
+    "symfony/yaml": "7.4.23 as 7.4.21"
   },
   "extra": {
     "kirby": {
