@@ -540,11 +540,11 @@
         },
         {
             "name": "grommasdietz/kirby-hidden-characters",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "fad23db4686d57d2af3ddd0c036413cb04221cc2"
+                "reference": "f5c75d3b562605b09ecb8b6e6e796b3a76d82aa1"
             },
             "require": {
                 "getkirby/composer-installer": "^1.2",

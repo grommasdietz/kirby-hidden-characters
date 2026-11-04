@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.2.1...v2.2.2) (2026-11-04)
+
+
+### Bug Fixes
+
+* apply Kirby 5 maintenance review ([d476e33](https://github.com/grommasdietz/kirby-hidden-characters/commit/d476e33bed33888785e9f0cce673077034d4c846))
+
 ## [2.2.1](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.2.0...v2.2.1) (2026-11-02)
 
 
