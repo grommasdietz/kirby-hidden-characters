@@ -53,3 +53,4 @@ licenses/ export-ignore
 src/ export-ignore
 tests/ export-ignore
 tools/ export-ignore
+index.dev.js export-ignore
