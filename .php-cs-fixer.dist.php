@@ -19,4 +19,5 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
     ])
+    ->setCacheFile(__DIR__ . '/vendor/.php-cs-fixer.cache')
     ->setFinder($finder);
