@@ -3,7 +3,7 @@
   "version": "2.2.2",
   "description": "Kirby CMS plugin for visualising hidden characters in the Panel",
   "license": "MIT",
-  "packageManager": "pnpm@11.28.10+sha512.672216f06e15c109b85471d49d3fbed17e6f03ead258df08c2bf5b4a5c33321ebfbf59476bce81325efada16ace0ac78548fd0bfcd7a51369e939182a3dd50e4",
+  "packageManager": "pnpm@12.21.0",
   "scripts": {
     "setup": "pnpm install --frozen-lockfile && pnpm exec playwright install chromium",
     "update:dev": "pnpm update --dev",
@@ -60,6 +60,6 @@
   "private": true,
   "engines": {
     "node": ">=22.22.2 <23",
-    "pnpm": ">=11.28.10 <12"
+    "pnpm": ">=12.21.0 <13"
   }
 }
