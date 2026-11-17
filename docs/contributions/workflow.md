@@ -81,9 +81,8 @@ Next: Continue with [Tests](./tests.md)
 
 Ordinary dependency updates retain their existing schedule. Security updates
 are grouped separately from version updates.
-pnpm 11 is pinned while GitHub cannot scan pnpm 12 multi-document lockfiles.
-Keep the single-document lockfile and revisit this exception when GitHub adds
-support.
+Use the pnpm version pinned in `package.json`. GitHub supports pnpm 12
+multi-document lockfiles for dependency scanning and Dependabot updates.
 
 CI uses lightweight checks for documentation-only changes, including existing
 documentation checks where available. Runtime, dependency, configuration and
