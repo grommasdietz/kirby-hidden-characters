@@ -37,33 +37,15 @@ composer run playground:update
 pnpm run update:dev
 ```
 
-Review changed manifests and locks, rebuild affected assets and run the repository verification commands in the [testing guide](tests.md). Dependency automation and compatibility jobs are defined in `.github/`.
+Review changed manifests and locks, rebuild affected assets and run the repository verification commands in the [testing guide](tests.md). CI and compatibility runs are configured in [ci.yml](../../.github/workflows/ci.yml).
 
 The `.pnpmfile.cjs` hook supplies the TypeScript 6 API to TypeScript ESLint while `check:types` uses the root compiler. Review this bridge when changing the compiler or linter.
 
-## Verified dependency updates
+## CI and verified dependency updates
 
-Signed Dependabot patches and stable minor updates can squash-merge after full
-PR verification succeeds for the current head and base. This covers runtime,
-development and playground dependencies; every dependency in a group must
-qualify. Majors, pre-1.0 minors, prereleases, maintainer changes and unknown
-metadata remain manual. GitHub review and branch rules still apply.
+[CI](../../.github/workflows/ci.yml) calls the shared [kirby-plugin workflow](https://github.com/grommasdietz/.github) from `grommasdietz/.github`. It runs `composer verify` and `pnpm verify`, the PHP compatibility runs listed in `ci.yml`, Conventional Commit checks for pull request titles and commits, and Actionlint. Add new checks to `composer verify` or `pnpm verify`, not to the workflow.
 
-The metadata job runs default-branch tools, verifies the official signed commit
-and retains a one-day JSON receipt. The write-enabled merge job runs only
-trusted default-branch code and responds to completed CI or metadata; no waiting
-runner, AI service, automatic approval or paid native auto-merge is needed.
-Token-based merges explicitly dispatch main verification because GitHub
-suppresses their push-triggered workflows. Existing staging and production
-approval gates remain in force.
-
-Merge jobs run serially and retain up to 100 pending runs with GitHub's
-`queue: max` setting, so a burst of completed checks does not replace a
-waiting merge notification.
-
-Dependabot rebases automatically. Conflicts, stale verification and failed
-checks stay open for correction. Major updates remain separate; the grouped
-minor/patch updates share one PR per ecosystem and directory.
+After all checks pass in the same run, Dependabot patches and stable minor updates are squash-merged for their exact head commit. Majors, pre-1.0 minors and pre-releases stay open for review. The workflow then dispatches CI on `main`, because merges made with the workflow token do not trigger push runs.
 
 ## GitHub YAML formatting
 
@@ -77,23 +59,11 @@ with a text substitution or format generated lockfiles.
 
 Next: Continue with [Tests](./tests.md)
 
-## Verification cost and security coverage
+## Releases and dependency schedule
 
-Ordinary dependency updates retain their existing schedule. Security updates
-are grouped separately from version updates.
-Use the pnpm version pinned in `package.json`. GitHub supports pnpm 12
-multi-document lockfiles for dependency scanning and Dependabot updates.
+Ordinary dependency updates are grouped monthly. Security updates are grouped separately and are not delayed until the monthly schedule. Use the pnpm version pinned in `package.json`.
 
-CI uses lightweight checks for documentation-only changes, including existing
-documentation checks where available. Runtime, dependency, configuration and
-workflow changes still receive full verification. Download caches and cancellation
-of superseded verification runs are retained.
-
-Automatic publishing waits for successful verification and skips documentation,
-CI and dependency-only maintenance. Publishing is serialized and is not cancelled
-by a newer verification run.
-An explicit CI dispatch with `force_release` enabled can retry publishing after
-a maintenance commit.
+Semantic Release runs on `main` after all checks pass. Documentation, CI and dependency-only commits do not publish. Publishing is serialized and not cancelled by a newer run; to retry a failed release, rerun the release job or dispatch CI on `main`.
 
 The release toolchain excludes Semantic Release’s unused npm publishing adapter.
 These plugins publish GitHub/Composer releases, not npm packages. CI loads the

@@ -25,7 +25,7 @@ Repository guide for the Kirby Hidden Characters plugin.
 - Add regression coverage for fixes. Keep fixtures deterministic and fictional, and never contact real services in default tests.
 - Panel copy uses sentences or commas. Avoid semicolons and centered dots as separators.
 - Prefer Kirby's built-in Panel icons. Add namespaced Remix Icon glyphs only when Kirby has no suitable icon.
-- Install with `composer run setup` and `pnpm run setup`. Before handing over changes, run `composer run verify` and `pnpm run verify`, or `pnpm run verify:all` where the repository defines it. Use the focused lint, Psalm, test and build commands while iterating.
+- Install with `composer run setup` and `pnpm run setup`. Before handing over changes, run `composer run verify` and `pnpm run verify`. CI runs the same two commands through the shared `kirby-plugin` workflow in `grommasdietz/.github`, so add new checks to them, not to workflow files. Use the focused lint, Psalm, test and build commands while iterating.
 - Keep the README a short user-facing quickstart. Follow [STYLE_GUIDE.md](STYLE_GUIDE.md) and the [documentation guidance](docs/contributions/documentation.md).
 - This file is canonical. Assistants such as Copilot read it directly, so do not add per-assistant instruction files.
 

@@ -32,13 +32,7 @@ On Linux CI, install Chromium and its operating-system packages with `pnpm exec 
 
 ## Font tooling
 
-Character-asset verification requires Python 3.10+ and the pinned fontTools/Brotli dependencies. Create a temporary environment and keep it active while running the verification commands:
-
-```bash
-python3 -m venv "${TMPDIR:-/tmp}/kirby-hidden-characters-fonts"
-. "${TMPDIR:-/tmp}/kirby-hidden-characters-fonts/bin/activate"
-python -m pip install -r tools/requirements-fonts.txt
-```
+Character-asset verification requires Python 3.10+. `pnpm fonts:check` and `pnpm fonts:build` run through [tools/font-python.sh](../../tools/font-python.sh), which creates a private virtual environment in `node_modules/.cache/font-tools` with the pinned fontTools and Brotli versions and refreshes it when `tools/requirements-fonts.txt` changes.
 
 After exporting changes to the source font from Glyphs, regenerate its Writer and color-free textarea metrics derivatives and embedded CSS, then rebuild the Panel assets:
 
