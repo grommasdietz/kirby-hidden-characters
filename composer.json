@@ -67,13 +67,24 @@
     "playground:seed": "php tools/seed-playground.php",
     "release:check": "php tools/release-readiness.php",
     "verify": [
+      "@verify:composer",
       "@lint",
       "@psalm",
-      "@test"
+      "@test",
+      "@notices:check",
+      "@release:check"
     ],
     "notices:generate": "php tools/generate-third-party-notices.php",
     "post-update-cmd": "@notices:generate",
     "update:dev": "@composer update phpunit/phpunit vimeo/psalm friendsofphp/php-cs-fixer getkirby/cms --with-all-dependencies",
-    "playground:update": "@composer --working-dir=playground update --with-all-dependencies"
+    "playground:update": "@composer --working-dir=playground update --with-all-dependencies",
+    "verify:composer": [
+      "@composer validate --strict --no-check-version",
+      "@composer check-platform-reqs"
+    ],
+    "notices:check": [
+      "@notices:generate",
+      "git diff --exit-code -- THIRD_PARTY_NOTICES.md"
+    ]
   }
 }
