@@ -10,7 +10,8 @@ Run tests after PHP or Panel changes and add coverage for bug fixes.
 ```bash
 composer run setup
 pnpm run setup
-pnpm run verify:all
+composer run verify
+pnpm run verify
 ```
 
 The command prints one concise status per check, stops at the first failure, and shows the captured output only for that failed check. Browser tests use the compact dot reporter; open the full HTML report with `pnpm run test:browser:report`, or expose the verbose list reporter and raw PHP server logs with `pnpm run test:browser:debug`.

@@ -10,8 +10,8 @@
     "dev": "kirbyup serve src/index.js",
     "build": "kirbyup src/index.js",
     "build:check": "node tools/check-generated-assets.mjs index.js index.css",
-    "fonts:build": "python3 tools/build-writer-font.py",
-    "fonts:check": "python3 tools/build-writer-font.py --check",
+    "fonts:build": "sh tools/font-python.sh tools/build-writer-font.py",
+    "fonts:check": "sh tools/font-python.sh tools/build-writer-font.py --check",
     "lint": "eslint src tests && pnpm run lint:github",
     "lint:fix": "eslint src tests --fix",
     "format": "pnpm run lint:fix",
@@ -25,12 +25,12 @@
     "test:browser:debug": "PLAYWRIGHT_SERVER_LOGS=1 pnpm exec playwright test --reporter=list",
     "test:browser:report": "pnpm exec playwright show-report playwright-report",
     "test:assets": "pnpm run fonts:check && node tools/verify-character-assets.mjs",
-    "verify": "pnpm run build:check && pnpm run lint && pnpm run check:types && pnpm run test:bundle && pnpm run test:assets && pnpm run test:archive && pnpm run docs:verify && pnpm run test:hygiene && pnpm run test:browser",
-    "verify:all": "composer validate --strict --no-check-version && composer check-platform-reqs && composer run verify && composer run release:check && pnpm run verify && git diff --check",
+    "verify": "pnpm run build:check && pnpm run lint && pnpm run check:types && pnpm run test:bundle && pnpm run test:assets && pnpm run test:archive && pnpm run docs:verify && pnpm run test:hygiene && pnpm run test:browser && pnpm run test:release",
     "prepare": "husky",
     "check:types": "tsc --version && tsc -p tsconfig.json --noEmit",
     "format:github": "prettier --write \".github/**/*.{yml,yaml}\"",
-    "lint:github": "prettier --check \".github/**/*.{yml,yaml}\""
+    "lint:github": "prettier --check \".github/**/*.{yml,yaml}\"",
+    "test:release": "node --test tools/release-toolchain.test.mjs tools/third-party-notices.test.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
