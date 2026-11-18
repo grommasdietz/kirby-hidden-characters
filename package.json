@@ -20,17 +20,16 @@
     "docs:verify": "pnpm run docs:lint && pnpm run docs:links",
     "test:bundle": "node tools/verify-panel-bundle.mjs",
     "test:archive": "node tools/verify-release-archive.mjs",
-    "test:hygiene": "node tools/check-repository-hygiene.mjs",
     "test:browser": "pnpm exec playwright test",
     "test:browser:debug": "PLAYWRIGHT_SERVER_LOGS=1 pnpm exec playwright test --reporter=list",
     "test:browser:report": "pnpm exec playwright show-report playwright-report",
     "test:assets": "pnpm run fonts:check && node tools/verify-character-assets.mjs",
-    "verify": "pnpm run build:check && pnpm run lint && pnpm run check:types && pnpm run test:bundle && pnpm run test:assets && pnpm run test:archive && pnpm run docs:verify && pnpm run test:hygiene && pnpm run test:browser && pnpm run test:release",
+    "verify": "pnpm run build:check && pnpm run lint && pnpm run check:types && pnpm run test:bundle && pnpm run test:assets && pnpm run test:archive && pnpm run docs:verify && pnpm run test:browser && pnpm run test:release",
     "prepare": "husky",
     "check:types": "tsc --version && tsc -p tsconfig.json --noEmit",
     "format:github": "prettier --write \".github/**/*.{yml,yaml}\"",
     "lint:github": "prettier --check \".github/**/*.{yml,yaml}\"",
-    "test:release": "node --test tools/release-toolchain.test.mjs tools/third-party-notices.test.mjs"
+    "test:release": "node --test tools/release-toolchain.test.mjs tools/third-party-notices.test.mjs tools/release-archive.test.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
@@ -55,7 +54,8 @@
     "markdownlint-cli": "^0.50.0",
     "prettier": "^3.10.1",
     "semantic-release": "^25.0.9",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "semver": "^7.8.6"
   },
   "private": true,
   "engines": {

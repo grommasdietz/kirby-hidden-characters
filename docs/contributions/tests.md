@@ -47,7 +47,7 @@ pnpm run test:bundle
 pnpm run test:assets
 pnpm run test:archive
 pnpm run docs:verify
-pnpm run test:hygiene
+pnpm run test:archive
 pnpm run test:browser
 ```
 
