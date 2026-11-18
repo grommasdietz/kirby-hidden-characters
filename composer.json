@@ -70,14 +70,13 @@
     "format": "@lint:fix",
     "playground:reset": "php tools/reset-playground.php --plugins",
     "playground:seed": "php tools/seed-playground.php",
-    "release:check": "php tools/release-readiness.php",
+    "release:check": "node tools/verify-release-archive.mjs",
     "verify": [
       "@verify:composer",
       "@lint",
       "@psalm",
       "@test",
-      "@notices:check",
-      "@release:check"
+      "@notices:check"
     ],
     "notices:generate": "php tools/generate-third-party-notices.php",
     "post-update-cmd": "@notices:generate",

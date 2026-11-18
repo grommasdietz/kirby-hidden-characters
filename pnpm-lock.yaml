@@ -249,6 +249,9 @@ importers:
       semantic-release:
         specifier: ^25.0.9
         version: 25.0.9(supports-color@7.2.0)(typescript@7.0.2)
+      semver:
+        specifier: ^7.8.6
+        version: 7.8.6
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
