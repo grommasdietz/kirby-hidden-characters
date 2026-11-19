@@ -36,8 +36,8 @@ each source element's color.
 
 Single-line fields render spaces through a color font rather than a marker
 layer. CSS font palettes require explicit colors, so the two properties above
-do not control these fields. Override the focused palette in your Panel CSS;
-include the desired opacity in the color:
+do not control these fields. Override the focused palette in your Panel CSS.
+Include the desired opacity in the color:
 
 ```css
 @font-palette-values --project-hidden-characters {

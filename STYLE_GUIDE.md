@@ -13,8 +13,10 @@ Write for developers using and maintaining the plugin. Prefer precise instructio
 
 ## Writing and Markdown
 
+- Use periods or commas in prose. Avoid semicolons and centered dots
+
 - Use one `#` heading per file, then short `##` and `###` headings
-- Prefer short paragraphs and parallel lists; number steps only when order matters
+- Use short paragraphs and parallel lists. Number steps when their order matters
 - Keep examples minimal and give fenced code blocks a language tag
 - Document current behavior, supported requirements and commands that exist
 - Explain permissions, persistence, destructive actions and external effects when they affect the reader's task

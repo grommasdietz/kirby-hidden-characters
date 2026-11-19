@@ -5,12 +5,12 @@ Repository guide for the Kirby Hidden Characters plugin.
 ## Kirby Hidden Characters rules
 
 - **Keep it ready-to-install.** Composer and GitHub tag-archive installs must work without running `composer` or `npm`. Keep the committed Panel build outputs and bundled WOFF2.
-- Plugin entry: `index.php` registers the compiled Panel assets; the plugin has no PHP runtime layer.
+- Plugin entry: `index.php` registers the compiled Panel assets. The plugin has no PHP runtime layer.
 - Panel source: `src/index.js`, `src/styles/hidden-characters.css` and `src/fonts/hidden-characters.glyphs` build with `kirbyup` into `index.js`/`index.css`. The compiled WOFF2 lives in `assets/fonts/`.
 - Derived fonts: `pnpm fonts:build` creates the foreground-only Writer font, the color-free textarea metrics font and their embedded CSS from the source WOFF2. Do not edit these outputs by hand. Asset checks require the [font-tooling environment](docs/contributions/setup.md#font-tooling).
 - Playground: `playground/` is the self-contained Kirby site for integration and browser tests. Add the smallest useful fixtures under `playground/site/**`.
 - Never wrap imports in `try/catch`.
-- Static analysis: if PHP source files are added beyond `index.php`, include their directories in `psalm.xml.dist`; add suppressions only for concrete framework patterns that require them.
+- Static analysis: if PHP source files are added beyond `index.php`, include their directories in `psalm.xml.dist`. Add suppressions only for concrete framework patterns that require them.
 - Use `tests/bootstrap.php`, `tests/TestCase.php` and `tests/Support/TestEnvironment.php` to boot the playground quickly. Run `pnpm run test:browser` when Panel behavior changes.
 - Write docs in `docs/` and update contributor documentation when development commands or workflows change. Call out intentionally skipped suites in commit or PR notes.
 

@@ -34,21 +34,11 @@ The original mirroring approach was adapted from the [Kirby Soft Hyphens](https:
 
 ---
 
-## Changelog
+## Project information
 
-See [CHANGELOG.md](CHANGELOG.md) for version history and changes.
-
----
-
-## Security
-
-See [SECURITY.md](SECURITY.md) for security policies and reporting vulnerabilities.
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidance and expectations.
+- [Changelog](CHANGELOG.md)
+- [Security policy and reporting](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
 
 ---
 

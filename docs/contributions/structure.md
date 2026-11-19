@@ -31,7 +31,7 @@ Packaging rules for release archives live in `.gitattributes`.
 
 ## Psalm configuration
 
-Psalm currently analyzes `index.php`, which is the plugin’s only PHP runtime file. If PHP source directories are added later, include them under `<projectFiles>` in `psalm.xml.dist`. Add directory-specific suppressions only when a concrete Kirby framework pattern requires them; YAML and static asset directories do not need Psalm configuration.
+Psalm currently analyzes `index.php`, which is the plugin’s only PHP runtime file. If PHP source directories are added later, include them under `<projectFiles>` in `psalm.xml.dist`. Add directory-specific suppressions only when a concrete Kirby framework pattern requires them. YAML and static asset directories do not need Psalm configuration.
 
 ---
 
