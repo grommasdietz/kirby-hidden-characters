@@ -1,6 +1,6 @@
 # Documentation
 
-This documentation is organized by purpose: using, contributing, and maintaining:
+[Show hidden characters in a field](usage/index.md) or [set up the development playground](contributions/setup.md).
 
 ## Users
 
@@ -19,7 +19,6 @@ This documentation is organized by purpose: using, contributing, and maintaining
 ## Maintainers
 
 - [Maintenance](./maintenance/index.md): Maintainer overview
-- [Licensing](./maintenance/license.md): License and notices
 - [Releasing](./maintenance/workflow.md): Release workflow
 
 ---

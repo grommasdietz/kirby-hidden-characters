@@ -6,7 +6,7 @@ This page covers the core developer workflow for Panel assets and tooling.
 
 ## Panel assets
 
-Panel source lives in `src/index.js` and `src/styles/hidden-characters.css`. The editable font source lives in `src/fonts/hidden-characters.glyphs`; its compiled WOFF2 is committed under `assets/fonts/`.
+Panel source lives in `src/index.js` and `src/styles/hidden-characters.css`. The editable font source lives in `src/fonts/hidden-characters.glyphs`. Its compiled WOFF2 is committed under `assets/fonts/`.
 
 Build production assets:
 
@@ -50,26 +50,26 @@ After all checks pass in the same run, Dependabot patches and stable minor updat
 ## GitHub YAML formatting
 
 Use the repository's locked Prettier version for workflows and Dependabot files.
-Run `pnpm run format:github` after editing or generating GitHub YAML;
+Run `pnpm run format:github` after editing or generating GitHub YAML.
 `pnpm run lint:github` checks it during existing verification.
 The scoped `.github/.prettierrc.json` prefers single quotes and two-space
-indentation. Prettier may choose double quotes to avoid escaping; shell, JSON
+indentation. Prettier may choose double quotes to avoid escaping. Shell, JSON
 and GitHub expression quoting follow their own syntax. Do not replace quotes
 with a text substitution or format generated lockfiles.
-
-Next: Continue with [Tests](./tests.md)
 
 ## Releases and dependency schedule
 
 Ordinary dependency updates are grouped monthly. Security updates are grouped separately and are not delayed until the monthly schedule. Use the pnpm version pinned in `package.json`.
 
-Semantic Release runs on `main` after all checks pass. Documentation, CI and dependency-only commits do not publish. Publishing is serialized and not cancelled by a newer run; to retry a failed release, rerun the release job or dispatch CI on `main`.
+Semantic Release runs on `main` after all checks pass. Documentation, CI and dependency-only commits do not publish. Publishing is serialized and not cancelled by a newer run. To retry a failed release, rerun the release job or dispatch CI on `main`.
 
 The release toolchain excludes Semantic Release’s unused npm publishing adapter.
 These plugins publish GitHub/Composer releases, not npm packages. CI loads the
 actual configured plugin pipeline to verify that publishing remains available.
 Re-enable the adapter deliberately if npm publication is introduced.
 
-Third-party notices use `pnpm licenses list --prod --json --long`; the generator
+Third-party notices use `pnpm licenses list --prod --json --long`. The generator
 preserves manual notices and fails without replacing them when license collection
 fails. It does not download a separate license-reporting tool.
+
+Next: Continue with [Tests](./tests.md)

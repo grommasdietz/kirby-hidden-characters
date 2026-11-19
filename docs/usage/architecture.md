@@ -1,18 +1,18 @@
 # Architecture
 
-The PHP entry registers the compiled Panel assets. Rendering and the extension API live in the JavaScript bundle; no PHP content transformation is performed.
+The PHP entry registers the compiled Panel assets. Rendering and the extension API live in the JavaScript bundle. No PHP content transformation is performed.
 
 ## Rendering
 
 - Writer text stays in Kirby's real ProseMirror element. A non-interactive sibling layer positions markers from DOM `Range` rectangles, preserving text layout, marks, selection and serialized content.
 - Textareas use a grid-aligned mirror for markers and a color-free whitespace font with the same advance widths as the source font.
-- Single-line text fields use the source color font directly; a horizontally scrolling mirror cannot be synchronized reliably.
+- Single-line text fields use the source color font directly. A horizontally scrolling mirror cannot be synchronized reliably.
 
 The global Vue mixin targets `k-writer-input` and `k-textarea-input`. Fonts and marker layers are hidden from accessibility APIs and do not change content.
 
 ## Updates and geometry
 
-Mutation, input, focus, resize, scroll, font and relevant style changes schedule a refresh. Requests in the same frame are coalesced. Blurred Writers skip geometry work; focusing them triggers a complete refresh. Observers and listeners are disconnected on destruction.
+Mutation, input, focus, resize, scroll, font and relevant style changes schedule a refresh. Requests in the same frame are coalesced. Blurred Writers skip geometry work. Focusing them triggers a complete refresh. Observers and listeners are disconnected on destruction.
 
 Writer refreshes scan the current text and blocks and batch marker insertion. Large documents can make this linear geometry pass noticeable. No persistent coordinate cache is maintained across edits or wrapping changes.
 
@@ -20,7 +20,7 @@ For whitespace spanning several range rectangles, the renderer prefers a positiv
 
 ## Fonts and colors
 
-Writer markers inherit their source element's text color through a foreground-only font. Writer and textarea markers share CSS color and opacity overrides; see [marker styling](index.md#marker-styling). The older Writer-only opacity property remains a fallback.
+Writer markers inherit their source element's text color through a foreground-only font. Writer and textarea markers share CSS color and opacity overrides. See [marker styling](index.md#marker-styling). The older Writer-only opacity property remains a fallback.
 
 The textarea metrics font removes the source font's color tables while retaining advance widths and variations. Its mirror exposes marker pseudo-elements while keeping mirror text hidden. Single-line inputs retain the source color font and focus palettes.
 
