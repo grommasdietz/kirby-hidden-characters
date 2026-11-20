@@ -21,6 +21,6 @@ jobs:
     with:
       php: '8.3'
       browsers: chromium webkit firefox
-      compatibility: '[{"php": "8.4", "kirby": "6.0.0-rc.1", "command": "composer test"}]'
+      compatibility: '[{"php": "8.4", "kirby": "6.0.0-rc.3", "command": "composer test"}]'
       release: false
     secrets: inherit
