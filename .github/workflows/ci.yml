@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, kirby-6]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -21,6 +21,5 @@ jobs:
     with:
       php: '8.3'
       browsers: chromium webkit firefox
-      compatibility: '[{"php": "8.4", "kirby": "6.0.0-rc.3", "command": "composer test"}]'
-      release: false
+      compatibility: '[{"php": "8.4"}, {"php": "8.5"}]'
     secrets: inherit

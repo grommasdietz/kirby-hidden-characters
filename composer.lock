@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "466de71b9a92faa8b835537a49498a6f",
+    "content-hash": "b87854d5f80e8d7c5242dd2cecd20e57",
     "packages": [
         {
             "name": "getkirby/composer-installer",
@@ -1964,16 +1964,16 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "6.0.0-rc.3",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getkirby/kirby.git",
-                "reference": "d194f65a102614a00d622ef688aafc1997b86cbd"
+                "reference": "1bf6e1e1ecc2c399a1804918687ce062002edd74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/kirby/zipball/d194f65a102614a00d622ef688aafc1997b86cbd",
-                "reference": "d194f65a102614a00d622ef688aafc1997b86cbd",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/1bf6e1e1ecc2c399a1804918687ce062002edd74",
+                "reference": "1bf6e1e1ecc2c399a1804918687ce062002edd74",
                 "shasum": ""
             },
             "require": {
@@ -2060,8 +2060,8 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-11-20T15:47:57+00:00",
-            "published-time": "2026-11-20T16:00:49+00:00"
+            "time": "2026-11-24T08:21:22+00:00",
+            "published-time": "2026-11-24T08:26:54+00:00"
         },
         {
             "name": "kelunik/certificate",
@@ -7759,9 +7759,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "getkirby/cms": 10
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

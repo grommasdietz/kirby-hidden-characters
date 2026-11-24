@@ -9,7 +9,7 @@
   "require": {
     "php": "^8.3",
     "grommasdietz/kirby-hidden-characters": "*@dev",
-    "getkirby/cms": "^6.0@beta"
+    "getkirby/cms": "^6.0"
   },
   "config": {
     "platform": {

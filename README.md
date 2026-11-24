@@ -1,7 +1,5 @@
 # Kirby Hidden Characters
 
-> Kirby 6 preview branch. The stable Kirby 5 release remains on `main`.
-
 [Kirby CMS](https://getkirby.com) plugin to visually show hidden characters like spaces, soft hyphens, tabs, line breaks, or paragraph endings in focused [writer](https://getkirby.com/docs/reference/panel/fields/writer), [textarea](https://getkirby.com/docs/reference/panel/fields/textarea), and [text fields](https://getkirby.com/docs/reference/panel/fields/text). The dimmed visual feedback is inspired by Adobe InDesign's hidden-characters mode, providing a familiar experience for content editors.
 
 ![Cover image showing an example of the plugin in use](/.github/assets/hero-image.png)
@@ -16,11 +14,11 @@ For Kirby 5, use version 2.x.
 ## Installation
 
 ```bash
-composer require grommasdietz/kirby-hidden-characters:dev-kirby-6
+composer require grommasdietz/kirby-hidden-characters
 ```
 
 > [!TIP]
-> If you don’t use Composer, you can download [this preview branch](https://github.com/grommasdietz/kirby-hidden-characters/archive/refs/heads/kirby-6.zip) and copy it to `site/plugins/kirby-hidden-characters`.
+> If you don’t use Composer, you can download this repository and copy it to `site/plugins/kirby-hidden-characters`.
 
 ## Quickstart
 

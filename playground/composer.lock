@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33da3ba554acd751e97d4b534ea73225",
+    "content-hash": "d32f9da5fddc4de063ee379f70308064",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -391,16 +391,16 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "6.0.0-rc.3",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getkirby/kirby.git",
-                "reference": "d194f65a102614a00d622ef688aafc1997b86cbd"
+                "reference": "1bf6e1e1ecc2c399a1804918687ce062002edd74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/kirby/zipball/d194f65a102614a00d622ef688aafc1997b86cbd",
-                "reference": "d194f65a102614a00d622ef688aafc1997b86cbd",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/1bf6e1e1ecc2c399a1804918687ce062002edd74",
+                "reference": "1bf6e1e1ecc2c399a1804918687ce062002edd74",
                 "shasum": ""
             },
             "require": {
@@ -487,8 +487,8 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-11-20T15:47:57+00:00",
-            "published-time": "2026-11-20T16:00:49+00:00"
+            "time": "2026-11-24T08:21:22+00:00",
+            "published-time": "2026-11-24T08:26:54+00:00"
         },
         {
             "name": "getkirby/composer-installer",
@@ -544,7 +544,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "83bf1d6b68269586351ea9688912b5b962ba4493"
+                "reference": "2bc3357c1c0dcaead74b1a5c6a78428ef9619444"
             },
             "require": {
                 "getkirby/composer-installer": "^1.2",
@@ -555,7 +555,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.93",
-                "getkirby/cms": "^6.0@beta",
+                "getkirby/cms": "^6.0",
                 "phpunit/phpunit": "^12.5",
                 "vimeo/psalm": "^7.3.2"
             },
@@ -1523,7 +1523,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "getkirby/cms": 10,
         "grommasdietz/kirby-hidden-characters": 20
     },
     "prefer-stable": true,
