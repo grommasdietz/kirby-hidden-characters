@@ -17,6 +17,11 @@ updates:
         applies-to: security-updates
         patterns:
           - '*'
+    # semantic-release 26 requires Node 26.13, and this repository pins Node 22.
+    ignore:
+      - dependency-name: semantic-release
+        update-types:
+          - version-update:semver-major
     commit-message:
       prefix: chore
       include: scope
