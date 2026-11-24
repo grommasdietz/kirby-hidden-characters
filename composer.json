@@ -1,7 +1,7 @@
 {
   "name": "grommasdietz/kirby-hidden-characters",
   "description": "Kirby CMS plugin for visualising hidden characters in the Panel",
-  "version": "2.2.2",
+  "version": "3.0.0",
   "type": "kirby-plugin",
   "license": "MIT",
   "authors": [

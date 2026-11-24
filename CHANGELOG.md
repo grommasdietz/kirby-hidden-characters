@@ -1,3 +1,24 @@
+# [3.0.0](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.2.2...v3.0.0) (2026-11-24)
+
+
+### Bug Fixes
+
+* apply Kirby 5 maintenance review ([c1904f0](https://github.com/grommasdietz/kirby-hidden-characters/commit/c1904f00f72a19ad55da98545dd125461dfd9f7e))
+* **panel:** replace the removed --color-background property ([349fac8](https://github.com/grommasdietz/kirby-hidden-characters/commit/349fac86044e54ea453ee76d0cd69aaa5894e463))
+
+
+### Features
+
+* **panel:** prepare Kirby 6 compatibility ([7e88f32](https://github.com/grommasdietz/kirby-hidden-characters/commit/7e88f3279d6d309e88063d1048e94485438490af))
+* **panel:** support Kirby 6 ([01b4377](https://github.com/grommasdietz/kirby-hidden-characters/commit/01b437732dc2d4d415aaec070968421e0688d29f))
+
+
+### BREAKING CHANGES
+
+* **panel:** This branch requires Kirby 6. Use plugin 2.x for Kirby 5.
+* **panel:** requires Kirby 6. The Panel bundle no longer loads in
+Kirby 5. Use 2.x for Kirby 5.
+
 ## [2.2.2](https://github.com/grommasdietz/kirby-hidden-characters/compare/v2.2.1...v2.2.2) (2026-11-04)
 
 
