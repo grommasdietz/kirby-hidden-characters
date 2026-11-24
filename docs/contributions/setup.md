@@ -20,6 +20,8 @@ The root dependency graph contains PHPUnit, Psalm, PHP CS Fixer and Kirby for se
 
 ## Node
 
+Use Node 24 and the pnpm version pinned in `package.json`. The Kirby 6 Panel build uses kirbyup 4.
+
 Install Node dependencies and the Playwright Chromium browser:
 
 ```bash
